@@ -198,7 +198,7 @@ public class SettingsController {
             redirectAttributes.addFlashAttribute("message", "Farm officials updated successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "An error occurred while updating farm details");
+            redirectAttributes.addFlashAttribute("error", "An error occurred while updating farm officials");
         }
         return "redirect:" + redirectUrl;
     }

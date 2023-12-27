@@ -4,11 +4,17 @@ import com.rickiey_innovates.juditonspringapp.models.Accounttransaction;
 import com.rickiey_innovates.juditonspringapp.models.Bankaccount;
 import com.rickiey_innovates.juditonspringapp.models.Farm;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface AccounttransactionRepository extends JpaRepository<Accounttransaction, Integer> {
+    @Transactional
+    @Modifying
+    @Query("delete from Accounttransaction a where a.ref = ?1 and a.farm = ?2")
+    int deleteByRefAndFarm(String ref, Farm farm);
     @Query("select (count(a) > 0) from Accounttransaction a where a.ref = ?1 and a.farm = ?2")
     boolean existsByRefAndChurch(String ref, Farm farm);
     @Query("select a from Accounttransaction a where a.ref = ?1 and a.farm = ?2")

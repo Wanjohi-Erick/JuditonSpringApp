@@ -78,8 +78,7 @@
                                             <a th:if="${voucher.status.equalsIgnoreCase('Pending')}" th:onclick="|approve('/finance/voucher/approve/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Approve</a>
                                             <a th:if="${voucher.status.equalsIgnoreCase('Pending')}" th:onclick="|approve('/finance/voucher/reject/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Reject</a>
                                             <a th:if="${voucher.status.equalsIgnoreCase('Rejected')}" th:onclick="|approve('/finance/voucher/approve/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Approve</a>
-                                            <a th:if="${voucher.status.equalsIgnoreCase('Pending')}" th:onclick="|approve('/finance/voucher/delete/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Delete</a>
-                                            <a th:if="${voucher.status.equalsIgnoreCase('Rejected')}" th:onclick="|approve('/finance/voucher/delete/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Delete</a>
+                                            <a th:onclick="|deleteVoucher('/finance/voucher/delete/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Delete</a>
                                         </div>
                                     </td>
                                 </tr>

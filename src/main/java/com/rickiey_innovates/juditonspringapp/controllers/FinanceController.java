@@ -1,6 +1,8 @@
 package com.rickiey_innovates.juditonspringapp.controllers;
 
 import com.google.gson.JsonObject;
+import com.rickiey_innovates.juditonspringapp.DuplicateRoleException;
+import com.rickiey_innovates.juditonspringapp.UnauthorisedAccessException;
 import com.rickiey_innovates.juditonspringapp.models.*;
 import com.rickiey_innovates.juditonspringapp.repositories.*;
 import com.rickiey_innovates.juditonspringapp.DbConnector;
@@ -19,10 +21,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -56,6 +55,7 @@ public class FinanceController {
         this.paymentvoucherdetailRepository = paymentvoucherdetailRepository;
         this.taxRepository = taxRepository;
     }
+
     @Value("${vouchers.path}")
     private String vouchersPath;
     private final PaymentvoucherRepository paymentvoucherRepository;
@@ -95,7 +95,7 @@ public class FinanceController {
 
     @GetMapping(value = "/chart/get/all", produces = "application/json")
     @ResponseBody
-    public List<Activity> activities () {
+    public List<Activity> activities() {
         return activityRepository.findByChurch(farm());
     }
 
@@ -166,7 +166,7 @@ public class FinanceController {
 
     @GetMapping(value = "/chart/groups/get/all", produces = "application/json")
     @ResponseBody
-    public List<Activitygroup> activitygroups () {
+    public List<Activitygroup> activitygroups() {
         return activitygroupRepository.findByChurch(farm());
     }
 
@@ -243,7 +243,7 @@ public class FinanceController {
 
     @GetMapping(value = "/banking/get/all", produces = "application/json")
     @ResponseBody
-    public List<Bankaccount> bankaccounts () {
+    public List<Bankaccount> bankaccounts() {
         return bankaccountRepository.findByChurch(farm());
     }
 
@@ -590,7 +590,7 @@ public class FinanceController {
                     "SUM(Credit) AS Amount FROM accounttransactions p " +
                     "INNER JOIN activities q ON q.`Account id` = p.account " +
                     "INNER JOIN bankaccounts b ON `Acc id` = p.Bank " +
-                    "WHERE credit != '0' and p.farm = "+ farm().getId()+" GROUP BY `Ref #` order by `Transaction id` desc) k";
+                    "WHERE credit != '0' and p.farm = " + farm().getId() + " GROUP BY `Ref #` order by `Transaction id` desc) k";
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
             while (resultSet.next()) {
                 Receipts receipt = new Receipts();
@@ -607,7 +607,7 @@ public class FinanceController {
 
             resultSet.close();
             connection.close();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -633,7 +633,7 @@ public class FinanceController {
 
     @GetMapping("/api/getAllVouchers")
     @ResponseBody
-    public List<PaymentVoucherResult> paymentvouchers () {
+    public List<PaymentVoucherResult> paymentvouchers() {
         //approveVouchers();
         List<PaymentVoucherResult> paymentVoucherResults = new ArrayList<>();
         try {
@@ -645,7 +645,7 @@ public class FinanceController {
                     "                  INNER JOIN activities a ON `account id` = p.activity\n" +
                     "                  INNER JOIN accounttransactions ac ON ac.`Ref #` = p.`Voucher #`\n" +
                     "                  INNER JOIN bankaccounts b ON b.`Acc id` = ac.Bank\n" +
-                    "         WHERE p.farm = "+ farm().getId()+" AND ac.farm = "+ farm().getId()+"\n" +
+                    "         WHERE p.farm = " + farm().getId() + " AND ac.farm = " + farm().getId() + "\n" +
                     "         GROUP BY `Pv id`\n" +
                     "\n" +
                     "         UNION ALL\n" +
@@ -655,7 +655,7 @@ public class FinanceController {
                     "                  INNER JOIN activities a ON `account id` = p.activity\n" +
                     "                  INNER JOIN pending_transaction ac ON ac.`Ref #` = p.`Voucher #`\n" +
                     "                  INNER JOIN bankaccounts b ON b.`Acc id` = ac.Bank\n" +
-                    "         WHERE p.farm = "+ farm().getId()+" AND ac.farm = "+ farm().getId()+"\n" +
+                    "         WHERE p.farm = " + farm().getId() + " AND ac.farm = " + farm().getId() + "\n" +
                     "         GROUP BY `Pv id`\n" +
                     "     ) k ORDER BY DATE DESC;\n";
             System.out.println(sql);
@@ -676,7 +676,7 @@ public class FinanceController {
 
             resultSet.close();
             connection.close();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return paymentVoucherResults;
@@ -748,7 +748,7 @@ public class FinanceController {
             paymentvoucherToProvider.setStatus("Pending");
             paymentvoucherToProvider.setFarm(farm());
 
-            Paymentvoucher savedVoucher =  paymentvoucherRepository.save(paymentvoucherToProvider);
+            Paymentvoucher savedVoucher = paymentvoucherRepository.save(paymentvoucherToProvider);
 
             VoucherSignatory voucherSignatory = new VoucherSignatory();
             voucherSignatory.setVoucher(savedVoucher);
@@ -1316,8 +1316,9 @@ public class FinanceController {
             List<VoucherSignatory> voucherSignatories = voucherSignatoryRepository.findByVoucher_Church(farm());
             System.out.println(voucherSignatories.size());
 
-            for (VoucherSignatory voucherSignatory: voucherSignatories) {
-                System.out.println("voucher: " + voucherSignatory.getId());;
+            for (VoucherSignatory voucherSignatory : voucherSignatories) {
+                System.out.println("voucher: " + voucherSignatory.getId());
+                ;
                 voucherSignatory.setAccountant(1);
                 voucherSignatory.setAccountantDate(LocalDate.now());
                 voucherSignatory.setTreasurer(1);
@@ -1327,11 +1328,11 @@ public class FinanceController {
                 voucherSignatory.setSeniorPastor(1);
                 voucherSignatory.setSpDate(LocalDate.now());
                 VoucherSignatory approvedVoucherSignatory = voucherSignatoryRepository.save(voucherSignatory);
-                System.out.println("approved voucher signatory; "+approvedVoucherSignatory.getVoucher().getId());
+                System.out.println("approved voucher signatory; " + approvedVoucherSignatory.getVoucher().getId());
 
                 Paymentvoucher approvedPaymentvoucher = paymentvoucherRepository.findById(approvedVoucherSignatory.getVoucher().getId()).get();
                 approvedPaymentvoucher.setStatus("Approved");
-                System.out.println("approved payment voucher; "+approvedPaymentvoucher.getId());
+                System.out.println("approved payment voucher; " + approvedPaymentvoucher.getId());
                 paymentvoucherRepository.save(approvedPaymentvoucher);
 
                 if (pendingTransactionRepository.existsByVoucher_Id(approvedPaymentvoucher.getId())) {
@@ -1358,10 +1359,10 @@ public class FinanceController {
                     System.out.println("voucher approved: " + pendingTransaction.getVoucher().getId());
                 }
             }
-            System.out.println( "success Message:  Success");
+            System.out.println("success Message:  Success");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println( "Error Message:  Error");
+            System.out.println("Error Message:  Error");
         }
     }
 
@@ -1374,22 +1375,31 @@ public class FinanceController {
             Set<Role> roles = userRepository.findById(userId()).get().getRoles();
             VoucherSignatory voucherSignatory = voucherSignatoryRepository.findByVoucher_Id(pvId);
 
+            Set<ERole> processedRoles = new HashSet<>();
             for (Role role : roles) {
-                if (role.getName().equals(ERole.ROLE_ACCOUNTANT)) {
-                    voucherSignatory.setAccountant(1);
-                    voucherSignatory.setAccountantDate(LocalDate.now());
+                if (!processedRoles.add(role.getName())) {
+                    throw new DuplicateRoleException("Duplicate role found: " + role.getName());
                 }
-                if (role.getName().equals(ERole.ROLE_TREASURER)) {
-                    voucherSignatory.setTreasurer(1);
-                    voucherSignatory.setTrDate(LocalDate.now());
-                }
-                if (role.getName().equals(ERole.ROLE_SENIOR_PASTOR)) {
-                    voucherSignatory.setAccountant(1);
-                    voucherSignatory.setSpDate(LocalDate.now());
-                }
-                if (role.getName().equals(ERole.ROLE_SECOND_SIGNATORY)) {
-                    voucherSignatory.setSecondSignatory(1);
-                    voucherSignatory.setSsDate(LocalDate.now());
+                System.out.println(role.getName());
+                switch (role.getName()) {
+                    case ROLE_ACCOUNTANT -> {
+                        voucherSignatory.setAccountant(1);
+                        voucherSignatory.setAccountantDate(LocalDate.now());
+                    }
+                    case ROLE_TREASURER -> {
+                        voucherSignatory.setTreasurer(1);
+                        voucherSignatory.setTrDate(LocalDate.now());
+                    }
+                    case ROLE_SENIOR_PASTOR -> {
+                        voucherSignatory.setSeniorPastor(1);
+                        voucherSignatory.setSpDate(LocalDate.now());
+                    }
+                    case ROLE_SECOND_SIGNATORY -> {
+                        voucherSignatory.setSecondSignatory(1);
+                        voucherSignatory.setSsDate(LocalDate.now());
+                    }
+                    default ->
+                            throw new UnauthorisedAccessException("You do not have the rights to approve this voucher!");
                 }
             }
 
@@ -1501,7 +1511,13 @@ public class FinanceController {
 
         try {
             System.out.println(pvId);
-            paymentvoucherRepository.deleteById(pvId);
+            if (paymentvoucherRepository.findById(pvId).get().getStatus().equalsIgnoreCase("approved")) {
+                paymentvoucherRepository.deleteById(pvId);
+                accounttransactionRepository.deleteByRefAndFarm("PV" + pvId, farm());
+            } else {
+                paymentvoucherRepository.deleteById(pvId);
+            }
+
 
             jsonObject.addProperty("response", "Success");
         } catch (Exception e) {
@@ -1511,6 +1527,7 @@ public class FinanceController {
 
         return jsonObject.toString();
     }
+
     @PostMapping("/receipt/add")
     @ResponseBody
     public String addReceipt(@RequestBody ReceiptRequest request, RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
@@ -1605,9 +1622,9 @@ public class FinanceController {
                     "               INNER JOIN accounttransactions ac ON ac.`Ref #` = p.`Voucher #`\n" +
                     "               INNER JOIN bankaccounts b ON `Acc id` = ac.Bank\n" +
                     "               left JOIN tax t ON t.`pv#` = p.`Pv id`\n" +
-                    "      WHERE pd.`pv#` = "+pv+" \n" +
-                    "        and p.farm = "+ farm().getId()+"\n" +
-                    "        and ac.farm = "+ farm().getId()+") f\n" +
+                    "      WHERE pd.`pv#` = " + pv + " \n" +
+                    "        and p.farm = " + farm().getId() + "\n" +
+                    "        and ac.farm = " + farm().getId() + ") f\n" +
                     "GROUP BY detailid\n" +
                     "\n" +
                     "union all\n" +
@@ -1648,9 +1665,9 @@ public class FinanceController {
                     "               INNER JOIN pending_transaction ac ON ac.`Ref #` = p.`Voucher #`\n" +
                     "               INNER JOIN bankaccounts b ON `Acc id` = ac.Bank\n" +
                     "               left JOIN tax t ON t.`pv#` = p.`Pv id`\n" +
-                    "      WHERE pd.`pv#` = "+pv+"\n" +
-                    "        and p.farm = "+ farm().getId()+"\n" +
-                    "        and ac.farm = "+ farm().getId()+") f\n" +
+                    "      WHERE pd.`pv#` = " + pv + "\n" +
+                    "        and p.farm = " + farm().getId() + "\n" +
+                    "        and ac.farm = " + farm().getId() + ") f\n" +
                     "GROUP BY detailid";
 
             System.out.println(getVoucherQuery);
@@ -1704,7 +1721,7 @@ public class FinanceController {
                     "      FROM accounttransactions p\n" +
                     "               INNER JOIN activities q ON q.`Account id` = p.account\n" +
                     "               INNER JOIN bankaccounts b ON `Acc id` = p.Bank\n" +
-                    "      WHERE p.farm = "+ farm().getId()+" and credit != '0'  and `Ref #` = '"+rct+"'\n" +
+                    "      WHERE p.farm = " + farm().getId() + " and credit != '0'  and `Ref #` = '" + rct + "'\n" +
                     "      ) k";
             ResultSet resultSet = conn.prepareStatement(getVoucherQuery).executeQuery();
             List<ReceiptTableRowEdit> receiptTableRows = new ArrayList<>();
