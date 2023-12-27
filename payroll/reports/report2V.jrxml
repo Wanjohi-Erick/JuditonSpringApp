@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report2" language="groovy" pageWidth="298" pageHeight="420" columnWidth="298" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="023aff57-1aa6-43a3-8087-459d280e51eb">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["H:\\Works\\2018\\Saurabh\\Program\\Report\\pic\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="payno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="payroll" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select  e.deduction,amount,date from `other deductions` a
+inner join deductions e on e.id=a.deduction
+where `PAYNO` = $P{payno}  and payroll= $P{payroll}]]>
+	</queryString>
+	<field name="deduction" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="deduction"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="deductions"/>
+	</field>
+	<field name="amount" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="amount"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="other deductions"/>
+	</field>
+	<field name="date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="other deductions"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="sums" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="184" y="0" width="71" height="12" uuid="8f904da4-0096-4f6a-993e-eb35132cb61e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="114" height="12" uuid="1022aeba-8336-45e6-afff-a3974aac5ae1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deduction}+":"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="15">
+			<staticText>
+				<reportElement x="0" y="1" width="103" height="12" uuid="ee27ef63-f7e8-4c77-91db-6af040addea6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL DEDUCTIONS]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="184" y="1" width="71" height="12" uuid="c90d919c-6e95-434b-a51b-10d9f54ae504"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sums}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="258" height="1" uuid="95a0537b-3506-4e96-8528-bce5ebe91e48">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="14" width="258" height="1" uuid="70e5733e-d737-49bc-a035-e50984cde51b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</columnFooter>
+</jasperReport>

@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>
+        List of bank/ cash accounts
+    </title>
+    <div th:replace="~{fragments/head}"></div>
+</head>
+
+<body class="g-sidenav-show text-xxs bg-gray-200">
+
+<div th:replace="~{fragments/sidenav}"></div>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragments/navbar}"></div>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">List of Bank/Cash Accounts</h6>
+                        </div>
+                    </div>
+
+                    <div id="successMessage" th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+                    <div id="errorMessage" th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                    <div class="card-body px-0 pb-2">
+                        <div class=" me-3 my-3 text-end">
+                            <button type="button" class="btn bg-gradient-dark" data-bs-toggle="modal" data-bs-target="#newMemberModal">
+                                <i class="material-icons text-sm">add</i>&nbsp;&nbsp;New Account
+                            </button>
+                        </div>
+                        <div class="table-responsive timetable p-0">
+                            <div></div>
+                            <table id="accountsTable" class="table align-items-center justify-content-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Account Name</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Account #</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Bank Name</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Balance</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Iterate through the members list and populate the table rows -->
+                                <tr th:each="account : ${accounts}">
+                                    <!-- Checkbox -->
+
+                                    <!-- Member properties -->
+                                    <td th:text="${account.accountName}"></td>
+                                    <td th:text="${account.account}"></td>
+                                    <td th:text="${account.bankName}"></td>
+                                    <td th:text="${account.type}"></td>
+                                    <td th:text="${account.getBalance()}"></td>
+                                    <td>
+                                        <button class="btn btn-link text-secondary mb-0" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-ellipsis-v text-xs"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" aria-labelledby="navbarDropdownMenuLink">
+                                            <a class="dropdown-item" th:href="@{/finance/banking/view/{accountId}(accountId=${account.id})}">View Transactions</a>
+                                            <a th:onclick="|openEditModal('account', '${account.id}')|" class="dropdown-item" href="javascript:;">Edit</a>
+                                            <a data-bs-toggle="modal" data-bs-target="#transferModal" class="dropdown-item" href="javascript:;">Transfer to another account (Withdraw/deposit)</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="~{fragments/footer}"></div>
+    </div>
+</main>
+<div th:replace="~{fragments/ui_settings}"></div>
+<div class="modal fade" id="newMemberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card card-plain">
+                    <div class="card-body pb-3">
+                        <form role="form text-left" method="post" th:action="@{/finance/bank/add}">
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Account Name</label>
+                                <input type="text" name="accountName" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Account #</label>
+                                <input type="number" name="account" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Bank Name</label>
+                                <input type="text" name="bankName" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <select name="type" class="form-select">
+                                    <option selected disabled>Account Type</option>
+                                    <option value="Bank">Bank</option>
+                                    <option value="Cash">Cash</option>
+                                </select>
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Branch</label>
+                                <input type="text" name="branch" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Branch Code</label>
+                                <input type="text" name="bankcode" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Swift Code</label>
+                                <input type="text" name="swiftcode" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Opening Balance</label>
+                                <input type="number" name="openingBalance" class="form-control">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card card-plain">
+                    <div class="card-body pb-3">
+                        <form role="form" method="post" th:action="@{/finance/bank/update}">
+                            <input type="hidden" name="id" class="form-control">
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Account Name</label>
+                                <input type="text" name="accountName" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Account #</label>
+                                <input type="text" name="account" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Bank Name</label>
+                                <input type="text" name="bankName" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <select name="type" class="form-select">
+                                    <option selected disabled>Account Type</option>
+                                    <option value="Bank">Bank</option>
+                                    <option value="Cash">Cash</option>
+                                </select>
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Branch</label>
+                                <input type="text" name="branch" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Branch Code</label>
+                                <input type="text" name="bankcode" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Swift Code</label>
+                                <input type="text" name="swiftcode" class="form-control">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="transferModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card card-plain">
+                    <div class="card-body pb-3">
+                        <form role="form" method="post" th:action="@{/finance/bank/transfer}">
+                            <input type="hidden" name="id" class="form-control">
+                            <div class="input-group input-group-outline my-3 is-filled">
+                                <label class="form-label">Date</label>
+                                <input type="date" name="date" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <select name="source" class="form-select">
+                                    <option selected disabled>Account to transfer from</option>
+                                    <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.accountName}"></option>
+                                </select>
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <select name="dest" class="form-select">
+                                    <option selected disabled>Account to transfer to</option>
+                                    <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.accountName}"></option>
+                                </select>
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Transaction # / Check #</label>
+                                <input type="text" name="transRef" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Amount</label>
+                                <input type="number" name="amount" class="form-control">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Transfer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--   Core JS Files   -->
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="../assets/js/material-dashboard.min.js?v=3.0.5"></script>
+<script !src="">
+
+   $(document).ready(function () {
+       $('#accountsTable').DataTable({
+
+       });
+   });
+    function searchPerson() {
+        var query = $('#searchPerson').val();
+        console.log(query);
+        recTypeUrl = '/api/member/search';
+        $.post(recTypeUrl, {query: query}, function(results) {
+            console.log(results);
+            var dropdown = $("#person .searchResults");
+            if (query === "") {
+                dropdown.empty();
+                return;
+            }
+            dropdown.empty();
+            for (var i = 0; i < results.length; i++) {
+                var student = results[i].student;
+                var teacher = results[i].teacher;
+                var option = $("<option>")
+                    .attr("value", results[i].admNo)
+                    .text(student)
+                    .click(function() {
+                        $('#searchPerson').val($(this).text());
+                        dropdown.empty()
+                    })
+                    .hover(function() {
+                        $(this).addClass('highlighted');
+                    }, function() {
+                        $(this).removeClass('highlighted');
+                    });
+                dropdown.append(option);
+                var teacherOption = $("<option>")
+                    .attr("value", results[i].tscNo)
+                    .text(teacher)
+                    .click(function() {
+                        $('#searchPerson').val($(this).text());
+                        dropdown.empty()
+                    })
+                    .hover(function() {
+                        $(this).addClass('highlighted-teacher');
+                    }, function() {
+                        $(this).removeClass('highlighted-teacher');
+                    });
+                dropdown.append(teacherOption);
+            }
+        });
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>
+    Vendors
+  </title>
+  <div th:replace="~{fragments/inventory/head}"></div>
+</head>
+
+<body class="g-sidenav-show bg-gray-200 text-xs">
+  <div th:replace="~{fragments/inventory/sidenav}"></div>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragments/inventory/navbar}"></div>
+    <!-- End Navbar -->
+    <div class="content" id="output">
+      <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-12">
+            <div class="card my-4">
+
+              <div class="card-header">
+                <h5 class="mb-0">Vendors</h5>
+                <p class="text-sm mb-0">
+                  A list of all school vendors.
+                </p>
+              </div>
+              <div class=" me-3 my-3 text-end">
+                <a class="btn bg-gradient-dark mb-0" onclick="addVendorModalLaunch()"><i
+                        class="material-icons text-sm">add</i>&nbsp;&nbsp;Add New
+                  Vendor</a>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-flush" id="vendorsTable">
+                  <thead class="thead-light">
+                  <tr>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Company
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Contact Person
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Items Group
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Phone
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Email
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Receivables
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Payables
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Action
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="addVendorModal" class="modal modal-lg" style="z-index: 10000;">
+
+        <div class="modal-dialog">
+
+          <form id="addVendorForm">
+            <div class="modal-content">
+
+              <div class="modal-header bg-gradient-primary" style=";max-height:50px">
+                <h4 class="modal-title" style="color:white;margin-top:-6px">Add Vendor</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+              </div>
+
+              <div class="modal-body">
+
+                <div class="content">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-lg-6 d-flex align-items-stretch" id="firstdiv">
+                        <div class="card w-100" id="left">
+
+                          <div class="card-body table-responsive">
+                            <div class="input-group input-group-dynamic mb-3">
+                              <label class="form-label">Contact Person Name</label>
+                              <input name="name" class="multisteps-form__input form-control"
+                                     type="text"/>
+                            </div>
+                            <div class="input-group input-group-dynamic mb-3">
+                              <label class="form-label">Company</label>
+                              <input name="company" class="multisteps-form__input form-control"
+                                     type="text"/>
+                            </div>
+
+                            <div class="input-group input-group-dynamic mb-3">
+                              <label class="form-label">Opening Bal</label>
+                              <input name="openingBal" class="multisteps-form__input form-control"
+                                     type="text"/>
+                            </div>
+
+                            <div class="input-group input-group-dynamic mb-3">
+                              <label class="form-label">KRA Pin</label>
+                              <input name="kraPin" class="multisteps-form__input form-control"
+                                     type="text"/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 d-flex align-items-stretch" id="firstdiv">
+                        <div class="card w-100" id="left">
+                          <div class="card-body table-responsive">
+                            <div class="d-flex align-items-center">
+                              <select id="itemGroup" name="itemGroup" class="form-select"
+                                      style="width: 197px;">
+                                <option disabled selected>Pick a group</option>
+                                <!-- Add your options here -->
+                              </select>
+                              <button id="newButton" class="btn btn-primary ms-2"
+                                      onclick="loadNewGroup(event)">New
+                              </button>
+                            </div>
+
+                            <div class="input-group input-group-dynamic mb-3">
+                              <label class="form-label">Phone</label>
+                              <input name="phone" class="multisteps-form__input form-control"
+                                     type="text"/>
+                            </div>
+
+                            <div class="input-group input-group-dynamic mb-3">
+                              <label class="form-label">Email</label>
+                              <input name="email" class="multisteps-form__input form-control"
+                                     type="text"/>
+                            </div>
+
+                            <div class="input-group input-group-dynamic mb-3">
+                              <label class="form-label">Address</label>
+                              <input name="address" class="multisteps-form__input form-control"
+                                     type="text"/>
+                            </div>
+                          </div>
+
+                        </div>
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="modal-footer">
+                <input type="submit" value="Save" class="btn btn-primary">
+                <!--
+  <button onclick="addItem()" type="submit" class="btn btn-primary" value="Submit" >Save</button>
+-->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </form>
+          <script>
+            $(document).ready(function () {
+
+              $('#pageName').text("Vendors");
+              $('#pageNameH6').text("Vendors");
+              $.ajax({
+                url: '/api/inv/getAllVendors', contentType: 'application/json'
+              }).done(function (response) {
+                $('#vendorsTable').DataTable({
+                  responsive: true, "data": response, "columns": [
+                    {
+                      "data": "company", "render": function (data, type, row, meta) {
+                        return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+                      }, "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).addClass('align-middle text-center text-sm');
+                      }
+                    }, {
+                      "data": "contactName", "render": function (data, type, row, meta) {
+                        return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+                      }, "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).addClass('align-middle text-center text-sm');
+                      }
+                    }, {
+                      "data": "itemGroup", "render": function (data, type, row, meta) {
+                        return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+                      }, "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).addClass('align-middle text-center text-sm');
+                      }
+                    }, {
+                      "data": "phone", "render": function (data, type, row, meta) {
+                        return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+                      }, "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).addClass('align-middle text-center text-sm');
+                      }
+                    }, {
+                      "data": "email", "render": function (data, type, row, meta) {
+                        return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+                      }, "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).addClass('align-middle text-center text-sm');
+                      }
+                    }, {
+                      "data": "receivablesFormatted", "render": function (data, type, row, meta) {
+                        return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+                      }, "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).addClass('align-middle text-center text-sm');
+                      }
+                    }, {
+                      "data": "payablesFormatted", "render": function (data, type, row, meta) {
+                        return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+                      }, "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).addClass('align-middle text-center text-sm');
+                      }
+                    }, {
+                      "data": "id", "render": function (data, type, row, meta) {
+                        return `
+                                          <button class="btn btn-link text-secondary mb-0" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <i class="fa fa-ellipsis-v text-xs"></i>
+                                            </button>
+                                        <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" aria-labelledby="navbarDropdownMenuLink">
+                                            <a onclick="editVendor('${data}')" class="dropdown-item" href="javascript:;">Edit</a>
+                                            <a onclick="deleteItem('/api/inv/deleteVendor/${data}')" class="dropdown-item" href="javascript:;">Delete</a>
+                                         </div>
+                                            `;
+                      }, "createdCell": function (td, cellData, rowData, row, col) {
+                        $(td).addClass('align-middle text-center text-sm');
+                      }
+                    }]
+                })
+              }).fail(function () {
+                console.log(fail);
+              })
+
+
+
+              // Bind submit event to the form
+              $('#addVendorForm').submit(function (event) {
+                // Prevent the form from submitting normally
+                event.preventDefault();
+
+                $('#addVendorModal').modal('hide');
+                // Get the form data
+                var formData = $(this).serialize();
+
+                // Send an AJAX request
+                $.ajax({
+                  type: 'POST',
+                  url: '/api/inv/addVendor',
+                  data: formData,
+                  success: function (response) {
+                    console.log(response)
+                    $('#infoModal .modal-body').empty();
+                    $('#infoModal .modal-body').append("<p>" + response.response + "</p>");
+                    $('#infoModal').modal('show');
+
+                    $('#infoModal #confirmOk').click(function () {
+                      window.location.reload();
+                    })
+                  },
+                  error: function (error) {
+                    $('#infoModal .modal-body').empty();
+                    $('#infoModal .modal-body').append("<p>" + error + "</p>");
+                    $('#infoModal').modal('show');
+                  }
+                });
+              });
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div th:replace="~{fragments/inventory/uisettings}"></div>
+
+  <!-- Modals -->
+
+  <div th:replace="~{fragments/inventory/modals}"></div>
+
+  <!--   Core JS Files   -->
+  <script type="application/javascript" src="../inventory_assets/js/core/popper.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/core/bootstrap.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/chartjs.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/material-dashboard.min.js?v=3.0.6"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- GitHub buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+</body>
+
+</html>

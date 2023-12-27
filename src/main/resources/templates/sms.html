@@ -1,0 +1,176 @@
+<!--
+=========================================================
+* Material Dashboard 2 - v3.0.5
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+    SMS
+  </title>
+  <div th:replace="~{fragments/head}"></div>
+</head>
+
+<body class="g-sidenav-show text-xxs bg-gray-200">
+<div th:replace="~{fragments/sidenav}"></div>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <!-- Navbar -->
+  <div th:replace="~{fragments/navbar}"></div>
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card h-100">
+          <div class="card-header pb-0">
+            <h6>Groups</h6>
+          </div>
+          <div class="card-body p-3">
+            <div class="table-responsive p-0">
+              <div></div>
+              <table id="accountsTable" class="table align-items-center justify-content-center mb-0">
+                <thead>
+                <tr>
+                  <th>
+                    <input id="allCheck" name="allCheck" type="checkbox">
+                  </th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">group</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="group : ${groups}">
+                  <td>
+                    <input type="checkbox" name="selectedMembers"
+                           th:id="${group.categorySms}" th:value="${group.categorySms}"
+                           th:data-sms-value="${group.categorySms}" class="sms-checkbox"
+                           onclick="getPhoneNumbers(this.getAttribute('data-sms-value'))" />
+                  </td>
+                  <td th:text="${group.group}"></td>
+                </tr>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header pb-0">
+            <div class="row">
+              <div class="col-lg-6 col-7">
+                <h6>Phone Numbers</h6>
+              </div>
+            </div>
+          </div>
+          <div class="card-body px-0 pb-2">
+            <div class="input-group input-group-outline">
+              <textarea contenteditable="false" id="phoneNumbers" class="form-control m-3" rows="15" placeholder="Phone Numbers" spellcheck="true"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header pb-0">
+            <div class="row">
+              <div class="col-lg-6 col-7">
+                <h6>Message</h6>
+              </div>
+            </div>
+          </div>
+          <div class="card-body px-0 pb-2">
+            <div class="input-group input-group-outline">
+              <textarea class="form-control m-3" name="message" id="message" rows="15" placeholder="Type message." spellcheck="true"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <button onclick="confirmThings()" class="btn btn-primary">SEND</button>
+    </div>
+    <div th:replace="~{fragments/footer}"></div>
+  </div>
+</main>
+<div th:replace="~{fragments/ui_settings}"></div>
+<!--   Core JS Files   -->
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/chartjs.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    refreshBalance();
+    // Initialize the DataTable with options
+    $('#accountsTable').DataTable({
+      "scrollY": "200px",         // Max height of 75 pixels
+      "scrollCollapse": true,    // Allow vertical scrolling
+      "paging": false,           // Disable pagination
+      "searching": false,        // Disable search box
+      "info": false,             // Disable table information display
+      "ordering": false          // Disable column sorting
+    });
+
+    $("#message").on("keyup", function () {
+      calculateSmsPerPerson();
+    });
+  });
+
+  $('#allCheck').change(function () {
+    if ($(this).prop('checked')) {
+      var nodes = $(this).closest('table').DataTable().rows().nodes();
+
+      $('input[type="checkbox"]', nodes).prop('checked', true);
+    } else {
+      var nodes = $(this).closest('table').DataTable().rows().nodes();
+
+      $('input[type="checkbox"]', nodes).prop('checked', false);
+    }
+  });
+
+  // Event listener for the table checkboxes
+  $(document).on('change', 'table input[type="checkbox"]', function () {
+    var allCheck = $('#allCheck');
+    var tableCheckboxes = $('table input[type="checkbox"]');
+    if (!$(this).prop('checked')) {
+      // If any table checkbox is unchecked, uncheck the allCheck checkbox
+      allCheck.prop('checked', false);
+    } else {
+      // If all table checkboxes are checked, check the allCheck checkbox
+      if (tableCheckboxes.filter(':not(:checked)').length === 0) {
+        allCheck.prop('checked', true);
+      }
+    }
+  });
+
+
+  var win = navigator.platform.indexOf('Win') > -1;
+  if (win && document.querySelector('#sidenav-scrollbar')) {
+    var options = {
+      damping: '0.5'
+    }
+    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+  }
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="../assets/js/material-dashboard.js"></script>
+<script src="../assets/js/sse.js"></script>
+
+</body>
+
+</html>

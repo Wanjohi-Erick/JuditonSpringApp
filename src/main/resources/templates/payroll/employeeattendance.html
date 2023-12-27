@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon.png">
+<link rel="icon" type="image/png" href="/assets/img/favicon.ico">
+<title>
+    Shule one: Attendance
+  </title>
+
+
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/nucleo-icons.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/nucleo-svg.css}" />
+<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/material-dashboard.min.css?v=3.0.6}" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/jsmuoltistepcss/MultiStep.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/stylelistview.css}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css" />
+<link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css' rel='stylesheet'>
+<link href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.min.css" rel="stylesheet"/>
+
+
+<style>
+    .async-hide {
+      opacity: 0 !important
+    }
+  </style>
+
+
+</head>
+<body class="g-sidenav-show  bg-gray-200">
+
+<div th:replace="fragments/payroll/sidenav"></div>
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+<div th:replace="fragments/payroll/header"></div>
+
+<div class="container-fluid py-n1">
+
+<div class="row">
+
+	<div class="card card-calendar">
+	<div class="card-header p-3 pb-0">
+		<h5 class="mb-0 text-success" >002 JAMES MUNENE MUOKI</h5>
+		<h6 class="mb-0">Employee attendance Calendar</h6>
+	</div>
+	<div class="card-body p-3">
+	<div class="calendar" data-bs-toggle="calendar" id="calendar"></div>
+	</div>
+	</div>
+
+</div>
+
+</div>
+
+
+<div th:replace="fragments/biometrics/footer"></div>
+
+</main>
+
+
+
+
+
+
+
+
+<div th:replace="fragments/biometrics/uisettings"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/core/popper.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/jquery.autocomplete.js}"></script> 
+<script type="application/javascript" th:src="@{/assetsbio/js/core/bootstrap.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/perfect-scrollbar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/smooth-scrollbar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/chartjs.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/material-dashboard.min.js?v=3.0.6}"></script>
+
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/fullcalendar.min.js}"></script>
+
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/dropzone.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/quill.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/choices.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/dynamicjs/dynamicjshr.js}"></script>
+
+
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/datatables.js}"></script>
+
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+
+
+<script type="application/javascript" th:src="@{/assetsbio/jsmuoltistepjs/MultiStep.js}"></script>
+
+
+<script>
+
+	var calendar = new FullCalendar.Calendar(document.getElementById("calendar"), {
+      contentHeight: 'auto',
+      initialView: "dayGridMonth",
+      headerToolbar: {
+        start: 'title', // will normally be on the left. if RTL, will be on the right
+        center: '',
+        end: 'today prev,next' // will normally be on the right. if RTL, will be on the left
+      },
+      selectable: true,
+      editable: true,
+      initialDate: '2023-06-01',
+      events: [{
+          title: 'Out',
+          start: '2023-06-18',
+          end: '2023-06-18',
+          className: 'text-center bg-gradient-danger'
+        },
+
+        {
+          title: 'Out',
+          start: '2023-06-21',
+          end: '2023-06-22',
+          className: 'text-center bg-gradient-danger'
+        },
+
+        {
+          title: 'In',
+          start: '2023-06-29',
+          end: '2023-06-29',
+          className: 'text-center bg-gradient-success'
+        },
+
+        {
+          title: 'Absent',
+          start: '2023-06-01',
+          end: '2023-06-01',
+          className: 'text-center bg-gradient-danger'
+        },
+
+        {
+          title: 'Out',
+          start: '2023-06-03',
+          end: '2023-06-03',
+          className: 'text-center bg-gradient-danger'
+        },
+
+        {
+          title: 'In',
+          start: '2023-06-07',
+          end: '2023-06-07',
+          className: 'text-center bg-gradient-success'
+        },
+
+        {
+          title: 'Present',
+          start: '2023-06-10',
+          end: '2023-06-10',
+          className: 'text-center bg-gradient-success'
+        },
+
+        {
+          title: 'Present',
+          start: '2023-06-19',
+          end: '2023-06-19',
+          className: 'text-center bg-gradient-success'
+        },
+
+        {
+          title: 'Absent',
+          start: '2023-06-23',
+          end: '2023-06-23',
+          className: 'text-center bg-gradient-danger'
+        },
+
+        {
+          title: 'Present',
+          start: '2023-06-02',
+          end: '2023-06-02',
+          className: 'text-center bg-gradient-success'
+        },
+		{
+          title: 'Present',
+          start: '2023-06-04',
+          end: '2023-06-04',
+          className: 'text-center bg-gradient-success'
+        },
+		{
+          title: 'Absent',
+          start: '2023-06-05',
+          end: '2023-06-05',
+          className: 'text-center bg-gradient-danger'
+        },
+		
+		{
+          title: 'Present',
+          start: '2023-06-14',
+          end: '2023-06-14',
+          className: 'text-center bg-gradient-success'
+        },
+		{
+          title: 'Present',
+          start: '2023-06-15',
+          end: '2023-06-15',
+          className: 'text-center bg-gradient-success'
+        },
+		{
+          title: 'Absent',
+          start: '2023-06-16',
+          end: '2023-06-16',
+          className: 'text-center bg-gradient-danger'
+        },
+
+      ],
+      views: {
+        month: {
+          titleFormat: {
+            month: "long",
+            year: "numeric"
+          }
+        },
+        agendaWeek: {
+          titleFormat: {
+            month: "long",
+            year: "numeric",
+            day: "numeric"
+          }
+        },
+        agendaDay: {
+          titleFormat: {
+            month: "short",
+            year: "numeric",
+            day: "numeric"
+          }
+        }
+      },
+    });
+
+    calendar.render();
+	
+	
+
+
+    const dataTableSearch = new simpleDatatables.DataTable("#employeestable", {
+      searchable: true,
+      fixedHeight: false
+    });
+	
+	
+	$("#employeestable").DataTable({
+					  "responsive": true,"bLengthChange": false,"bFilter": false,"bInfo": false,"bPaginate": false,pageLength: 7,
+					  	  'columnDefs' : [{ 'visible': false, 'targets': [0]},{
+					 'render': function ( data, type, row ){							 	 	
+						 return '';
+					 }}]
+	});
+	
+	
+	$(".btn-delete").on("click", function (e) {
+        e.preventDefault();
+        link = $(this);
+        reasonTitle = link.attr("reasonTitle");
+        $("#yesBtn").attr("href", link.attr("href"));
+        $("#confirmText").html("Do you want to delete employee \<strong\>" + reasonTitle + "\<\/strong\>?");
+	});
+
+    document.querySelectorAll(".export").forEach(function(el) {
+      el.addEventListener("click", function(e) {
+        var type = el.dataset.type;
+
+        var data = {
+          type: type,
+          filename: "material-" + type,
+        };
+
+        if (type === "csv") {
+          data.columnDelimiter = "|";
+        }
+
+        dataTableSearch.export(data);
+      });
+    });
+ 
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+
+</body>
+</html>

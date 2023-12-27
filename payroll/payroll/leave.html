@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon.png">
+<link rel="icon" type="image/png" href="/assets/img/favicon.ico">
+<title>
+    Shule one: leave
+  </title>
+
+
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/nucleo-icons.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/nucleo-svg.css}" />
+<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/material-dashboard.min.css?v=3.0.6}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css" />
+<link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css' rel='stylesheet'>
+<link href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.min.css" rel="stylesheet"/>
+  	
+
+<style>
+    .async-hide {
+      opacity: 0 !important
+    }
+  </style>
+
+
+</head>
+<body class="g-sidenav-show  bg-gray-200">
+
+<div th:replace="fragments/payroll/sidenav"></div>
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+<div th:replace="fragments/payroll/header"></div>
+
+<div class="container-fluid py-n1">
+<div class="col-lg-12  mb-2">
+<button type="button" onclick="getlistofemployees()" data-bs-target="#leavemodal" data-bs-toggle="modal" class="btn bg-gradient-primary mb-0 mt-0 mt-md-n9 mt-lg-0">
+<i class="material-icons text-white position-relative text-md pe-2" >add</i>Add New
+</button>
+</div>
+
+
+<div class="row">
+<div class="col-12">
+<div class="card">
+<div class="card-header">
+<h5 class="mb-n2">Employee leave</h5>
+</div>
+
+
+
+<div class="table-responsive">
+<table class="table table-flush" id="leavetable">
+
+<thead class="thead-light">
+<tr>
+ 
+    <th style="display:none;"></th>
+    <th>Pay no</th>
+    <th>Employee</th>
+	<th>Leave category</th>
+	<th>Date range</th>
+	<th>Comments</th>
+	<th>Status</th>
+    <th></th>
+  
+</tr>
+</thead>
+
+<tbody>
+
+<tr th:block th:each="student: ${leave}">
+
+<td style="display:none;">
+      <span class="text-secondary" th:text="${student.activeProperty('id').getValue()}"></span>
+</td>			
+
+<td>
+	<div class="d-flex align-items-center">
+	<p class="text-xs font-weight-normal ms-2 mb-0" th:text="${student.activeProperty('Payno').getValue()}"></p>
+	</div>			
+</td>         
+
+<td>			
+	<div class="d-flex align-items-center">
+	<p class="text-xs font-weight-normal ms-2 mb-0" th:text="${student.activeProperty('Employee').getValue()}"></p>
+	</div>			
+</td>
+
+<td>			
+	<div class="d-flex align-items-center">
+	<p class="text-xs font-weight-normal ms-2 mb-0" th:text="${student.activeProperty('Category').getValue()}"></p>
+	</div>			
+</td>
+
+<td>			
+	<div class="d-flex align-items-center">
+	<p class="text-xs font-weight-normal ms-2 mb-0" th:text="${student.activeProperty('Daterange').getValue()}"></p>
+	</div>			
+</td>  
+
+<td>			
+	<div class="d-flex align-items-center">
+	<p class="text-xs font-weight-normal ms-2 mb-0" th:text="${student.activeProperty('Comments').getValue()}"></p>
+	</div>			
+</td> 
+
+<td class="text-xs font-weight-normal">
+                <div class="d-flex align-items-center" th:if="${student.activeProperty('Status').getValue()} == Approved">
+                    <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-sm" aria-hidden="true">done</i></button>
+                    <span>Approved</span>
+                </div>
+                
+                <div class="d-flex align-items-center" th:if="${student.activeProperty('Status').getValue()} == Declined">
+                    <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-sm" aria-hidden="true">clear</i></button>
+                    <span>Declined</span>
+                </div>
+
+				<div class="d-flex align-items-center" th:if="${student.activeProperty('Status').getValue()} == 'Pending Approval'">
+                <button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-sm" aria-hidden="true">refresh</i></button>
+				<span>Pending Approval</span>
+				</div>
+</td>         
+		
+<td class="align-middle">
+                  <button class="btn btn-link text-secondary mb-0" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v text-xs"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" aria-labelledby="navbarDropdownMenuLink">
+                    <a th:href="@{/api/hr/approveordeclineleave/{id}/{status}(id=${student.activeProperty('id').getValue()},status='Approved')}" class="dropdown-item" href="javascript:;">Approved</a>
+                    <a th:href="@{/api/hr/approveordeclineleave/{id}/{status}(id=${student.activeProperty('id').getValue()},status='Declined')}" class="dropdown-item" href="javascript:;">Decline</a>
+                    <a th:onclick="getleave([[${student.activeProperty('id').getValue()}]]);" data-bs-target="#leavemodal" data-bs-toggle="modal" class="dropdown-item">Edit</a>
+                    <a th:href="@{/api/hr/deleteleave/{id}(id=${student.activeProperty('id').getValue()})}" th:reasonTitle="${student.activeProperty('Employee').getValue()}+ '--' +${student.activeProperty('Category').getValue()}" 
+                       id="btnDelete" class="dropdown-item btn-delete" data-bs-target="#confirmModal" data-bs-toggle="modal" href="javascript:;">Delete</a>
+				  </div>
+</td>
+
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+
+</div>
+</div>
+</div>
+
+
+
+
+
+</div>
+
+
+<div th:replace="fragments/biometrics/footer"></div>
+
+</main>
+
+
+<div class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold">Delete Confirmation</h5>
+          <button aria-label="Close" class="btn-close text-dark" data-bs-dismiss="modal" type="button">
+                        <span class="material-icons text-primary fs-3 mt-n2"  aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <span id="confirmText"></span>
+        </div>
+
+        <div class="modal-footer">
+          <a type="button" id="yesBtn" class="btn btn-danger">Yes</a>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+<div aria-hidden="true"  data-bs-backdrop="static" class="modal fade" id="leavemodal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-normal">New leave</h5>
+                    <button aria-label="Close" class="btn-close text-dark" data-bs-dismiss="modal" type="button">
+                        <span class="material-icons text-primary fs-3 mt-n2"  aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                      <form  method="post" id="leaveform" onsubmit="submitForm(event,'leaveform')" class="multisteps-form__form">
+                        
+                            <div class="row mt-3">
+                                <div class="input-group input-group-dynamic">
+                                    <label class="form-label">Search employee</label>
+                                    <input id="searchemployee"  name="payno" class="multisteps-form__input form-control" type="text" required />
+                                </div>
+                            </div>
+							
+							
+                                <label class="form-control ms-0">Leave category</label>
+                                <select class="form-control" name="category" id="choices-state" required>
+                                    <option value="Annual leave">Annual leave</option>
+                                    <option value="Sick leave">Sick leave</option>
+									<option value="Maternity/Paternity leave">Maternity/Paternity leave</option>
+									<option value="Compassionate leave">Compassionate leave</option>
+									<option value="Sabbatical leave">Sabbatical leave</option>
+									<option value="Public holiday">Public holiday</option>
+									<option value="Unpaid leave">Unpaid leave</option>
+									<option value="Other">Other</option>
+								</select>
+                            
+							
+							<div class="row mt-3">
+                                <div class="input-group input-group-dynamic">
+                                    <label class="form-label">Start date</label>
+                                    <input id="from" name="from" class="multisteps-form__input form-control"  type="date" required />
+                                </div>
+                            </div>							
+							
+							<div class="row mt-3">
+                                <div class="input-group input-group-dynamic">
+                                    <label class="form-label">End date</label>
+                                    <input id="to" name="to" class="multisteps-form__input form-control" type="date" required />
+                                </div>
+                            </div>
+							
+							<div class="row mt-3">
+                                <div class="input-group input-group-dynamic">
+								<textarea name="comments" class="multisteps-form__textarea form-control" rows="4" placeholder="Comments"></textarea>
+								</div>
+                            </div>
+							
+                           
+                            <input type="hidden" id="id"  name="id">
+
+                        </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary"  form="leaveform" type="submit">Save</button>
+                </div>
+                
+            </div>
+        </div>
+</div>
+
+
+<div th:replace="fragments/biometrics/uisettings"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/jquery.autocomplete.js}"></script> 
+<script type="application/javascript" th:src="@{/assetsbio/js/core/popper.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/core/bootstrap.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/perfect-scrollbar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/smooth-scrollbar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/chartjs.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/material-dashboard.min.js?v=3.0.6}"></script>
+
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/dropzone.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/quill.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/choices.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/dynamicjs/dynamicjshr.js}"></script>
+
+
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/datatables.js}"></script>
+
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+
+
+
+
+<script>
+	
+	if (document.getElementById('choices-state')) {
+      var element = document.getElementById('choices-state');
+      const example = new Choices(element, {
+        searchEnabled: false
+      });
+    };
+
+    const dataTableSearch = new simpleDatatables.DataTable("#leavetable", {
+      searchable: true,
+      fixedHeight: false
+    });
+	
+	
+	$("#leavetable").DataTable({
+					  "responsive": true,"bLengthChange": false,"bFilter": false,"bInfo": false,"bPaginate": false,pageLength: 7,
+					  	  'columnDefs' : [{ 'visible': false, 'targets': [0]},{
+					 'render': function ( data, type, row ){							 	 	
+						 return '';
+		}}]
+	});
+	
+	
+	$(".btn-delete").on("click", function (e) {
+        e.preventDefault();
+        link = $(this);
+        reasonTitle = link.attr("reasonTitle");
+        $("#yesBtn").attr("href", link.attr("href"));
+        $("#confirmText").html("Do you want to delete Leave \<strong\>" + reasonTitle + "\<\/strong\>?");
+	});
+
+
+    document.querySelectorAll(".export").forEach(function(el) {
+      el.addEventListener("click", function(e) {
+        var type = el.dataset.type;
+
+        var data = {
+          type: type,
+          filename: "material-" + type,
+        };
+
+        if (type === "csv") {
+          data.columnDelimiter = "|";
+        }
+
+        dataTableSearch.export(data);
+      });
+    });
+ 
+ 
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+	
+  </script>
+
+</body>
+</html>

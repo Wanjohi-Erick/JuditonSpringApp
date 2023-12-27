@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>
+    Issue Items
+  </title>
+  <div th:replace="~{fragments/inventory/head}"></div>
+</head>
+
+<body class="g-sidenav-show bg-gray-200 text-xs">
+  <div th:replace="~{fragments/inventory/sidenav}"></div>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragments/inventory/navbar}"></div>
+    <!-- End Navbar -->
+    <div class="content" th:fragment="issueItems" id="output">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header card-header-primary">
+                <h4 class="card-title">Issue Item</h4>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div id="searchMemberDiv" class="ms-3 my-3 text-start">
+                      <input type="hidden" name="recipientId" id="recipientId">
+                      <div class="input-group input-group-outline">
+                        <label class="form-label">Search</label>
+                        <input id="searchInput" type="text" name="search"
+                               class="multisteps-form__input form-control">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div id="book" class="input-group input-group-outline">
+                      <input type="text" class="multisteps-form__input form-control" id="searchTitle"
+                             placeholder="Search Item">
+                      <div class="searchResults"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="input-group input-group-outline">
+                      <input type="date" class="form-control" id="returnDate" placeholder=" ">
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="row">
+                      <div class="input-group input-group-dynamic col-md-6">
+                        <label class="form-label">Quantity</label>
+                        <input id="quantity" name="quantity" class="multisteps-form__input form-control"
+                               type="number"/>
+                      </div>
+                      <div class="form-group bmd-form-group col-md-6">
+                        <div class="input-group">
+                          <button onclick="addItemToIssueList()" class="btn btn-primary w-100">Add
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="table-responsive card py-5 px-1" id="table-container">
+                      <table id="pendingIssueTable"
+                             class="table dt-responsive nowrap text-center align-items-center"
+                             style="width:100%">
+                        <thead class="text-primary">
+                        <tr>
+                          <th class="text-center">Image</th>
+                          <th class="text-center"><input type="hidden" name="itemId" id="itemId">Item
+                          </th>
+                          <th class="text-center">Quantity</th>
+                          <th class="text-center">Value</th>
+                          <th class="text-center">Return Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <div class="d-flex flex-row-reverse">
+                        <button class="btn btn-primary" id="saveButton" onclick="SaveIssue()">Save
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group bmd-form-group">
+                      <label>Total Issued:</label>
+                      <label class="labelTotalIssued" id="labelTotalIssued"></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </main>
+  <div th:replace="~{fragments/inventory/uisettings}"></div>
+
+  <!-- Modals -->
+
+  <div th:replace="~{fragments/inventory/modals}"></div>
+
+  <!--   Core JS Files   -->
+  <script>
+    $(document).ready(function () {
+      $('#pageName').text("Issue Items");
+      $('#pageNameH6').text("Issue Items");
+      $('#pendingIssueTable').DataTable({
+        responsive: true
+      });
+    })
+  </script>
+  <script type="application/javascript" src="../inventory_assets/js/core/popper.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/core/bootstrap.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/chartjs.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/material-dashboard.min.js?v=3.0.6"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- GitHub buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+</body>
+
+</html>

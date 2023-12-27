@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon.png">
+<link rel="icon" type="image/png" href="/assets/img/favicon.ico">
+<title>
+    Shule one: employees
+  </title>
+
+
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/nucleo-icons.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/nucleo-svg.css}" />
+<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/material-dashboard.min.css?v=3.0.6}" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/jsmuoltistepcss/MultiStep.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/stylelistview.css}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css" />
+<link href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css' rel='stylesheet'>
+<link href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.min.css" rel="stylesheet"/>
+
+
+<style>
+    .async-hide {
+      opacity: 0 !important
+    }
+  </style>
+
+
+</head>
+<body class="g-sidenav-show  bg-gray-200">
+
+<div th:replace="fragments/payroll/sidenav"></div>
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+<div th:replace="fragments/payroll/header"></div>
+
+<div class="container-fluid py-n1">
+
+<div class="col-lg-12">
+<button type="button" data-bs-target="#newemployeemodal" data-bs-toggle="modal" class="btn bg-gradient-primary mb-0 mt-0 mt-md-n9 mt-lg-0">
+<i class="material-icons text-white position-relative text-md pe-2" >add</i>Add New
+</button>
+<div class="d-flex  py-2">
+<div class="dropdown d-inline">
+<a href="javascript:;" class="btn btn-outline-dark dropdown-toggle " data-bs-toggle="dropdown" id="navbarDropdownMenuLink2">
+Filters
+</a>
+<ul class="dropdown-menu dropdown-menu-lg-start px-2 py-3" aria-labelledby="navbarDropdownMenuLink2" data-popper-placement="left-start">
+<li><a class="dropdown-item border-radius-md" href="javascript:;">Status: Active</a></li>
+<li><a class="dropdown-item border-radius-md" href="javascript:;">Status: Inactive</a></li>
+<li><a class="dropdown-item border-radius-md" href="javascript:;">Status: Pending Approval</a></li>
+<li>
+<hr class="horizontal dark my-2">
+</li>
+<li><a class="dropdown-item border-radius-md text-danger" href="javascript:;">Remove Filter</a></li>
+</ul>
+</div>
+<button class="btn btn-icon btn-outline-dark ms-2 export" data-type="csv" type="button">
+<i class="material-icons text-xs position-relative">archive</i>
+Export CSV
+</button>
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-12">
+<div class="card">
+<div class="card-header">
+<h5 class="mb-0">Employees</h5>
+<p class="text-sm mb-n2">
+View all list of employees.
+</p>
+</div>
+
+
+
+<div class="table-responsive">
+<table class="table table-flush" id="employeestable">
+
+<thead class="thead-light">
+<tr>
+	<th style="display:none;"></th>
+    <th>Payno</th>
+    <th>Employee</th>
+	<th>Gender</th>
+	<th>Status</th>
+	<th>Category</th>
+    <th>Present</th>
+    <th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+
+<tr th:block th:each="student: ${employees}">
+
+ <td style="display:none;">
+    <span class="text-secondary" th:text="${student.activeProperty('id').getValue()}"></span>
+</td>			
+
+<td>
+	<div class="d-flex align-items-center">
+	<p class="text-xs font-weight-normal ms-2 mb-0" th:text="${student.activeProperty('Payno').getValue()}"></p>
+	</div>
+</td>
+
+		
+<td class="text-xs font-weight-normal">
+	<div class="d-flex align-items-center">
+	<img th:src="@{'~/'+${student.activeProperty('Image').getValue()}}" onerror="this.onerror=null; this.src='https://www.shutterstock.com/image-vector/male-user-icon-vector-260nw-175066871.jpg'" class="avatar avatar-xs me-2" alt="user image">
+	<a th:onclick="getemployeesdata();" href="javascript:;" data-bs-target="#modalemployeepayslip" data-bs-toggle="modal" class="link-success"><p class="my-2 text-xs fw-bold" th:text="${student.activeProperty('Employee').getValue()}"></p></a>
+	</div>
+</td>
+
+<td>
+	<div class="d-flex align-items-center">
+	<p class="text-xs font-weight-normal ms-2 mb-0" th:text="${student.activeProperty('Gender').getValue()}"></p>
+	</div>
+</td>	
+            
+<td class="text-xs font-weight-normal">
+                <div class="d-flex align-items-center" th:if="${student.activeProperty('Status').getValue()} == Active">
+                    <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-sm" aria-hidden="true">done</i></button>
+                    <span>Active</span>
+                </div>
+                
+                <div class="d-flex align-items-center" th:if="${student.activeProperty('Status').getValue()} == Inactive">
+                    <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-sm" aria-hidden="true">clear</i></button>
+                    <span>Inactive</span>
+                </div>
+
+				<div class="d-flex align-items-center" th:if="${student.activeProperty('Status').getValue()} == 'Pending Approval'">
+                <button class="btn btn-icon-only btn-rounded btn-outline-dark mb-0 me-2 btn-sm d-flex align-items-center justify-content-center"><i class="material-icons text-sm" aria-hidden="true">refresh</i></button>
+				<span>Pending Approval</span>
+				</div>
+</td>
+
+<td>
+	<div class="d-flex align-items-center">
+	<p class="my-2 text-xs" th:text="${student.activeProperty('employeetype').getValue()}"></p>
+	</div>
+</td>
+
+
+<td>
+	<div class="d-flex align-items-center">
+		<h5 class="font-weight-bolder mb-0 text-success" th:text="${student.activeProperty('Dayspresent').getValue()}"></h5>
+	</div>
+</td>
+            
+<td class="align-middle">
+                  <button class="btn btn-link text-secondary mb-0" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v text-xs"></i>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" aria-labelledby="navbarDropdownMenuLink">
+                    <a th:href="@{/api/hr/employeeattendance/{id}(id=${student.activeProperty('id').getValue()})}" class="dropdown-item" href="javascript:;">View attendance</a>
+                    <a th:onclick="getemployee([[${student.activeProperty('id').getValue()}]]);" data-bs-target="#newemployeemodal" data-bs-toggle="modal" class="dropdown-item" href="javascript:;">Edit</a>
+                    <a th:href="@{/api/hr/approveemployee/{id}(id=${student.activeProperty('id').getValue()})}" class="dropdown-item" href="javascript:;">Approve</a>
+                    <a th:href="@{/api/hr/deleteemployee/{id}(id=${student.activeProperty('id').getValue()})}" th:reasonTitle="${student.activeProperty('Employee').getValue()}" 
+                       id="btnDelete" class="dropdown-item btn-delete" data-bs-target="#confirmModal" data-bs-toggle="modal" href="javascript:;">Delete</a>
+					<a th:href="@{/api/hr/activateordeactivateemployee/{id}/{status}(id=${student.activeProperty('id').getValue()},status='Active')}" class="dropdown-item" href="javascript:;">Activate</a>
+                    <a th:href="@{/api/hr/activateordeactivateemployee/{id}/{status}(id=${student.activeProperty('id').getValue()},status='Inactive')}" class="dropdown-item" href="javascript:;">Deactivate</a>
+                  </div>
+</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+
+
+</div>
+</div>
+</div>
+
+
+
+
+
+</div>
+
+
+<div th:replace="fragments/biometrics/footer"></div>
+
+</main>
+
+<div aria-hidden="true"  data-bs-backdrop="static" class="modal fade text-center" id="confirmModal" role="dialog" style="z-index:40003"    tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold">Delete Confirmation</h5>
+          <button aria-label="Close" class="btn-close text-primary" data-bs-dismiss="modal" type="button">
+                        <span class="material-icons text-primary fs-3 mt-n2"  aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <span id="confirmText"></span>
+        </div>
+
+        <div class="modal-footer">
+          <a type="button" id="yesBtn" class="btn btn-danger">Yes</a>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+<div aria-hidden="true"  data-bs-backdrop="static" class="modal fade" id="newemployeemodal" role="dialog" style="z-index:40000"    tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-normal">Add new employee</h5>
+                    <button aria-label="Close" onclick="reloadcurrentpage()" class="btn-close text-primary" data-bs-dismiss="modal" type="button">
+                        <span class="material-icons text-primary fs-3 mt-n2"  aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                      
+					
+					<div class="col-12 text-center mt-3">
+					
+					<form id="employeesform" onsubmit="submitForm(event,'employeesform')">
+					
+					<input type="hidden" id="id"  name="id">
+						
+						<div class="progress"><div class="progress-bar"></div> </div> 
+						
+						<ul id="progressbar">
+							<li class="active" id="step1"><strong>Personal details</strong></li>
+							<li id="step2"><strong>Bank/Statutory</strong></li>
+							<li id="step3"><strong>Contact details</strong></li>
+							<li id="step4"><strong>Finalize</strong></li>
+						</ul>
+
+						<br>
+						
+						<fieldset class="mt-n4">
+						
+							<div class="row">
+							
+								<div class="col-12 col-sm-3">
+								
+									<div class="input-group input-group-dynamic mb-3">
+									<label for="exampleFormControlInput1" class="form-label">Employee code</label>
+									<input class="multisteps-form__input form-control" required name="payno" type="text" />
+									</div>
+									
+									<div class="input-group input-group-dynamic mb-3">
+									<label for="exampleFormControlInput1" class="form-label">First Name</label>
+									<input class="multisteps-form__input form-control"  required name="fname"  type="text" />
+									</div>
+									
+									<div class="input-group input-group-dynamic mb-3">
+									<label for="exampleFormControlInput1" class="form-label">Second Name</label>
+									<input class="multisteps-form__input form-control"   required name="sname"  type="text" />
+									</div>
+									
+									<div class="input-group input-group-dynamic mb-3">
+									<label for="exampleFormControlInput1" class="form-label">Surname</label>
+									<input class="multisteps-form__input form-control"  name="surname"  type="text" />
+									</div>
+									
+								
+								</div>
+								
+								<div class="col-12 col-sm-3">
+								
+									<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Id nu</label>
+										<input class="multisteps-form__input form-control"   required name="idnu"  type="text" />
+									</div>														
+									
+									<div class="input-group input-group-dynamic mb-3">
+									<label for="exampleFormControlInput1" class="form-label">Dob</label>
+									<input class="multisteps-form__input form-control"  name="dob"  type="date" />
+									</div>
+									
+									<div class="form-check form-check-info text-start ps-0">
+										<label class="form-control ms-0">Gender</label>
+										<select class="form-control" name="gender"   required   id="gender">
+										<option value="Male" selected="">Male</option>
+										<option value="Female">Female</option>
+										</select>
+									</div>
+									
+								</div>
+								
+								<div class="col-12 col-sm-3">
+								
+									<div class="input-group input-group-dynamic mb-3">
+									<label for="exampleFormControlInput1" class="form-label">Occupation</label>
+									<input class="multisteps-form__input form-control"  name="occupation"  type="text" />
+									</div>
+									
+									
+									<div class="form-check form-check-info text-start ps-0">
+										<label class="form-control ms-0">Category</label>
+										<select class="form-control" name="employeetype"   id="employeetype">
+											<option value="Other">Other</option>
+											<option value="Teacher">Teacher</option>
+											<option value="Support staff">Support staff</option>
+										</select>
+									</div>
+									
+									<div id="listofteachersemployeediv" class="form-check form-check-info text-start ps-0" style="display:none">
+										<label  class="form-control ms-0">Select teacher</label>
+										<select class="form-control"  name="linktoteacher" id="linktoteacher">
+											<option th:each="settingsteacher: ${teachers}" th:value="${settingsteacher.activeProperty('biometricsid').getValue()}" th:text="${settingsteacher.activeProperty('teacher').getValue()}"></option>
+										</select>
+									</div>
+									
+									<div id="listofstaffemployeediv" class="form-check form-check-info text-start ps-0" style="display:none">
+										<label  class="form-control ms-0">Selsect staff</label>
+										<select  class="form-control" name="linktostaff" id="linktostaff">
+											<option th:each="settingsteacher: ${staff}" th:value="${settingsteacher.activeProperty('biometricsid').getValue()}" th:text="${settingsteacher.activeProperty('staff').getValue()}"></option>
+										</select>
+									</div>
+										
+								
+								</div>
+								
+								<div class="col-12 col-sm-3">									
+								
+									<div class="avatar avatar-xxl position-relative">
+										<img src="../assets/img/team-2.jpg"  name="simage" onerror="this.onerror=null; this.src='https://www.shutterstock.com/image-vector/male-user-icon-vector-260nw-175066871.jpg'" class="border-radius-md" alt="team-2">
+										<a href="javascript:;" class="btn btn-sm btn-icon-only bg-gradient-primary position-absolute bottom-0 end-0 mb-n2 me-n2">
+										<span class="material-icons text-xs top-0 mt-n2" data-bs-toggle="tooltip" data-bs-placement="top" title aria-hidden="true" data-bs-original-title="Edit Image" aria-label="Edit Image">
+										edit
+										</span>
+										</a>
+									</div>
+									
+									<div class="form-check form-check-info text-start mt-5">
+									  <input class="form-check-input" type="checkbox"  name="housed"  value="" id="flexCheckDefault" >
+									  <label class="form-check-label" for="flexCheckDefault">
+										Housed 
+									  </label>
+									</div>
+									
+								
+								</div>
+							
+							
+							
+							</div>
+							
+
+							<input type="button" name="next-step" class="next-step" value="Next" />
+						</fieldset>
+						
+						<fieldset class="mt-n4">
+						
+							<div class="row">
+							
+									<div class="col-12 col-sm-4">
+										
+										<div class="form-check form-check-info text-start ps-0">
+											<label class="form-control ms-0">Pay method</label>
+											<select class="form-control" name="paymeth"   id="paymeth">
+											<option value="Cash">Cash</option>
+											<option value="Cheque">Cheque</option>
+											<option value="Electronic transfer">Electronic transfer</option>
+											<option value="Mobile Money">Mobile Money</option>
+											</select>
+										</div>
+										
+										
+										<div class="input-group input-group-dynamic mb-3">
+                                            <label for="exampleFormControlInput1" class="form-label">Bank</label>
+                                            <input class="multisteps-form__input form-control"  name="bankname" type="text" />
+										</div>
+                                        
+                                        
+                                        <div class="form-check form-check-info text-start ps-0">
+											<label class="form-control ms-0">Housing levy</label>
+											<select class="form-control" name="housinglev"   id="housinglev">
+											<option value="1">Eligible</option>
+											<option value="0">Not eligible</option>
+											</select>
+										</div>
+                                        
+                                     
+									</div>
+										
+									<div class="col-12 col-sm-4">
+									
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Branch</label>
+										<input class="multisteps-form__input form-control"  name="branchname" type="text" />
+										</div>
+									
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Account Holder name</label>
+										<input class="multisteps-form__input form-control"  name="accholdername" type="text" />
+										</div>
+										
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Account Number</label>
+										<input class="multisteps-form__input form-control"  name="accountnumber" type="text" />
+										</div>
+										
+									</div>
+									
+									
+									<div class="col-12 col-sm-4">
+									
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Tax number</label>
+										<input class="multisteps-form__input form-control"  name="kra pin" type="text" />
+										</div>
+										
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Nhif number</label>
+										<input class="multisteps-form__input form-control"  name="nhif number" type="text" />
+										</div>
+										
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Nssf number</label>
+										<input class="multisteps-form__input form-control"  name="nssf number" type="text" />
+										</div>
+										
+									</div>
+							</div>
+								
+							
+							
+							<input type="button" name="next-step" class="next-step" value="Next" />							
+							<input type="button" name="previous-step" class="previous-step" value="Previous" />
+							
+						</fieldset>
+						
+						
+						
+						<fieldset class="mt-n4">
+							
+							<div class="row">
+																
+										
+									<div class="col-12 col-sm-6">
+									
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Phone</label>
+										<input class="multisteps-form__input form-control"  name="phone" type="text" />
+										</div>
+									
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Address</label>
+										<input class="multisteps-form__input form-control"  name="raddress" type="text" />
+										</div>
+										
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Next of kin</label>
+										<input class="multisteps-form__input form-control"  name="nextofkin" type="text" />
+										</div>
+										
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Next of kin number</label>
+										<input class="multisteps-form__input form-control"  name="nextofkinnumber" type="text" />
+										</div>
+										
+									</div>
+									
+									
+									<div class="col-12 col-sm-6">
+									
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Email</label>
+										<input class="multisteps-form__input form-control"  name="email" type="text" />
+										</div>
+										
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">City</label>
+										<input class="multisteps-form__input form-control"  name="city" type="text" />
+										</div>
+										
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Street name</label>
+										<input class="multisteps-form__input form-control"  name="streetname" type="text" />
+										</div>
+										
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Street number</label>
+										<input class="multisteps-form__input form-control"  name="streetnum" type="text" />
+										</div>
+										
+									</div>
+							</div>
+							
+							<input name="next-step" class="next-step"  type="submit" form="employeesform" value="Submit" />
+							<input type="button" name="previous-step"class="previous-step"value="Previous" />
+							
+						</fieldset>
+						
+						<fieldset class="mt-n5">
+							<div class="finish">
+								<h2 class="text text-center">
+									<strong id="registrationmessagelebel"></strong>
+								</h2>
+							</div>
+						</fieldset>
+						
+					</form>
+			</div>
+		
+					  
+                </div>
+               
+            </div>
+        </div>
+</div>
+
+
+
+
+
+<div aria-hidden="true"  data-bs-backdrop="static" class="modal fade" id="modalemployeeearning" style="z-index:50000;" role="dialog"tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-normal">New earning</h5>
+                    <button aria-label="Close" class="btn-close text-primary" data-bs-dismiss="modal" type="button">
+                        <span class="material-icons text-primary fs-3 mt-n2"  aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+						<form  method="post" id="employeeallowanceform" onsubmit="submitForm(event,'employeeallowanceform')" class="multisteps-form__form">
+                        
+							<div class="form-check form-check-info text-start ps-0 ms-0">
+								<label class="form-control ms-0">Item</label>
+								<select class="form-control mb-3" name="item" id="itemallowance" required>
+									<option th:each="student: ${allownces}" th:value="${student.activeProperty('id').getValue()}" th:text="${student.activeProperty('earning').getValue()}"></option>
+								</select>
+							</div>
+							
+							<div class="input-group input-group-dynamic mb-3">
+							    <div class="input-group input-group-dynamic m-3">
+                                    <label class="form-label">Amount</label>
+                                    <input id="amount" name="amount" class="multisteps-form__input form-control" type="number" required />
+                                </div>
+                            </div>
+							
+							<div class="input-group input-group-dynamic mb-3">
+									<label for="exampleFormControlInput1" class="form-label">Start date</label>
+									<input class="multisteps-form__input form-control"  name="startdate"  type="date" required />
+							</div>
+							
+							
+							<div class="input-group input-group-dynamic mb-3">
+									<label for="exampleFormControlInput1" class="form-label">End date</label>
+									<input class="multisteps-form__input form-control"  name="enddate"  type="date" required />
+							</div>
+							
+							<div class="form-check form-check-info text-start ps-0">
+							  <input class="form-check-input" type="checkbox" value="1" name="reccurrent"  id="reccurrentalowancecheck">
+							  <label class="form-check-label" for="flexCheckDefault">
+								Set to <a href="javascript:;" class="text-dark font-weight-bolder">Recurrent</a>
+							  </label>
+							</div>
+										
+                           
+                            <input type="hidden" id="id"  name="id">
+
+                        </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" form="employeeallowanceform" data-toggle="modal" value="Submit" type="submit">Save</button>
+                </div>
+                
+            </div>
+        </div>
+</div>
+
+
+
+
+<div aria-hidden="true"  data-bs-backdrop="static" class="modal fade" id="modalemployeedeductions" style="z-index:50000;" role="dialog"tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-normal">New deduction</h5>
+                    <button aria-label="Close" class="btn-close text-primary" data-bs-dismiss="modal" type="button">
+                        <span class="material-icons text-primary fs-3 mt-n2"  aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+						<form  method="post" id="employeedeductionsform" onsubmit="submitForm(event,'employeedeductionsform')" class="multisteps-form__form">
+                        
+							<div class="form-check form-check-info text-start ps-0 ms-0">
+								<label class="form-control ms-0">Item</label>
+								<select class="form-control mb-3" name="item" id="itemdeduction" required>
+									<option th:each="student: ${deductions}" th:value="${student.activeProperty('id').getValue()}" th:text="${student.activeProperty('deduction').getValue()}"></option>
+								</select>
+							</div>
+							
+							<div class="input-group input-group-dynamic mb-3">
+							    <div class="input-group input-group-dynamic m-3">
+                                    <label class="form-label">Amount</label>
+                                    <input id="amount" name="amount" class="multisteps-form__input form-control" type="number" required />
+                                </div>
+                            </div>
+							
+							<div class="input-group input-group-dynamic mb-3">
+									<label for="exampleFormControlInput1" class="form-label">Start date</label>
+									<input class="multisteps-form__input form-control"  name="startdate"  type="date" required />
+							</div>
+							
+							
+							<div class="input-group input-group-dynamic mb-3">
+									<label for="exampleFormControlInput1" class="form-label">End date</label>
+									<input class="multisteps-form__input form-control"  name="enddate"  type="date" required />
+							</div>
+							
+							<div class="form-check form-check-info text-start ps-0">
+							  <input class="form-check-input" type="checkbox"  value="1" name="reccurrent" id="reccurrentalowancecheck">
+							  <label class="form-check-label" for="flexCheckDefault">
+								Set to <a href="javascript:;" class="text-dark font-weight-bolder">Recurrent</a>
+							  </label>
+							</div>
+										
+                           
+                            <input type="hidden" id="id"  name="id">
+
+                        </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" form="employeedeductionsform" data-toggle="modal" value="Submit" type="submit">Save</button>
+                </div>
+                
+            </div>
+        </div>
+</div>
+
+
+
+
+
+
+<div aria-hidden="true"  data-bs-backdrop="static" class="modal fade" id="modalemployeepayslip" role="dialog" style="z-index:9999;"  >
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-normal">Edit employee payslip</h5>
+                    <button aria-label="Close" class="btn-close text-primary" data-bs-dismiss="modal" type="button">
+                        <span class="material-icons text-primary fs-3 mt-n2"  aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                      
+					
+					<div class="col-12 text-center mt-1">
+					
+						<form id="formlistofemployees" >	
+						
+						<input type="hidden" id="id"  name="id">
+							
+							<div class="row">
+							
+								<div class="col-md-4">
+								
+										<div class="input-group input-group-dynamic mb-3">
+										<label for="exampleFormControlInput1" class="form-label">Search employee</label>
+										<input class="multisteps-form__input form-control" onkeyup="search_text()" id="formlistofemployeeupdatepayroll" type="text" />
+										</div>
+								
+									 <main class="leaderboard__profiles" id="listemployeeseditpayslip">
+									 
+										
+									 </main>
+								
+								</div>
+								
+								<div class="col-md-8">
+								
+									<div class="row">
+										<article  class="leaderboard__profile">
+											<img  id="imageemployebeingedited" class="leaderboard__picture">
+											<h5 class="mb-1" id="nameemployebeingedited" ></h5>
+											<span id="valueemployebeingedited" class="leaderboard__value h4">
+											<span>kes</span></span>
+										</article>
+									</div>
+								
+									<div class="row mt-3 overflow-auto">
+
+										<div class="col-lg-6 d-flex align-items-stretch">
+
+
+											<div class="card" style="width: 100%">
+
+												<div class="card-header card-header-primary d-flex justify-content-between">
+												  <h6 class="font-weight-normal" >Earnings</h6>
+												  <a onclick="openmodal('#modalemployeeearning','#employeeallowanceform')" href="#" ><i class="material-icons text-primary fs-3" >add</i></a>										
+												</div>
+												
+												
+												<div id="divemployeeallowances" style="margin-left:-16px" class="table-responsive" >
+												
+												
+												</div>
+											</div>
+
+
+										</div>
+										
+										<div class="col-lg-6 d-flex align-items-stretch">
+
+											<div class="card" style="width: 100%">
+
+											  <div class="card-header card-header-primary d-flex justify-content-between">
+												<h6 class="font-weight-normal" >Deductions</h6>
+												<a onclick="openmodal('#modalemployeedeductions','#employeedeductionsform')" href="#" ><i class="material-icons text-primary fs-3" >add</i></a>	
+											  </div>
+											  
+											  <div id="divemployeedeductions" style="margin-left:-16px" class="table-responsive" >
+											   
+											  </div>
+
+											</div>
+
+										</div>
+								
+								
+
+									</div>
+									
+									
+									<div class="row mt-2 bottom-0">
+									
+										<div class="col-md-4">
+											<h6 class="font-weight-normal" >Deduct PAYE</h6>
+											<div class="form-check form-check-inline">
+											  <input class="form-check-input" type="radio" name="inlinepayeeRadioOptions" id="chargepayee"  value="1" onclick="notify(this)" data-type="success" data-content="Deduct PAYE for this employee" data-title="success" data-icon="ni ni-bell-55">
+											  <label class="form-check-label" for="inlineRadio1">Yes</label>
+											</div>
+											
+											<div class="form-check form-check-inline">
+											  <input class="form-check-input" type="radio" name="inlinepayeeRadioOptions" id="exceptpayee"  value="0" onclick="notify(this)" data-type="warning" data-content="Excempt PAYE for this employee" data-title="success" data-icon="ni ni-bell-55">
+											  <label class="form-check-label" for="inlineRadio2">No</label>
+											</div>
+											
+										</div>
+
+										<div class="col-md-4">
+										
+											<h6 class="font-weight-normal" >Deduct NHIF</h6>
+											<div class="form-check form-check-inline">
+											  <input class="form-check-input" type="radio" name="inlinenhifRadioOptions" id="chargenhif"  value="1" onclick="notify(this)" data-type="success" data-content="Deduct NHIF for this employee" data-title="success" data-icon="ni ni-bell-55">
+											  <label class="form-check-label" for="inlineRadio1">Yes</label>
+											</div>
+											
+											<div class="form-check form-check-inline">
+											  <input class="form-check-input" type="radio" name="inlinenhifRadioOptions" id="exceptnhif"  value="0" onclick="notify(this)" data-type="warning" data-content="Excempt NHIF for this employee" data-title="success" data-icon="ni ni-bell-55">
+											  <label class="form-check-label" for="inlineRadio2">No</label>
+											</div>
+											
+										</div>
+										
+										<div class="col-md-4">
+										
+											<h6 class="font-weight-normal" >Deduct NSSF</h6>
+											<div class="form-check form-check-inline">
+											  <input class="form-check-input" type="radio" name="inlinenssfRadioOptions" id="chargenssf"  value="1" onclick="notify(this)" data-type="success" data-content="Deduct NSSF for this employee" data-title="success" data-icon="ni ni-bell-55">
+											  <label class="form-check-label" for="inlineRadio1">Yes</label>
+											</div>
+											
+											<div class="form-check form-check-inline">
+											  <input class="form-check-input" type="radio" name="inlinenssfRadioOptions" id="exceptnssf"  value="0" onclick="notify(this)" data-type="warning" data-content="Excempt NSSF for this employee" data-title="success" data-icon="ni ni-bell-55">
+											  <label class="form-check-label" for="inlineRadio2">No</label>
+											</div>
+											
+										</div>
+       
+									</div>
+									
+								</div>
+								
+								
+								
+							</div>
+							
+						</form>
+						
+					</div>
+		
+					  
+                </div>
+               
+            </div>
+        </div>
+</div>
+
+
+
+
+<div id="myModal" class="modal fade"  style="z-index: 10000000000000 !important;">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<div class="icon-box">
+					<i class="material-icons">&#xE876;</i>
+				</div>				
+				<h4 class="modal-title w-100" id="messageid"></h4>	
+			</div>
+			
+			<div class="modal-footer">
+				<button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+			</div>
+		</div>
+	</div>
+</div>  
+
+
+
+
+
+
+
+
+
+<div th:replace="fragments/biometrics/uisettings"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/core/popper.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/jquery.autocomplete.js}"></script> 
+<script type="application/javascript" th:src="@{/assetsbio/js/core/bootstrap.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/perfect-scrollbar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/smooth-scrollbar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/chartjs.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/material-dashboard.min.js?v=3.0.6}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/fullcalendar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/dropzone.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/quill.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/choices.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/dynamicjs/dynamicjshr.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/datatables.js}"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script type="application/javascript" th:src="@{/assetsbio/jsmuoltistepjs/MultiStep.js}"></script>
+
+
+<script>
+
+	var element = document.getElementById('itemallowance');
+	const itemallowance= new Choices(element, {
+		searchEnabled: false
+	});
+	   
+		
+		
+	var element = document.getElementById('itemdeduction');
+	const itemdeduction = new Choices(element, {
+		searchEnabled: false
+	});
+
+	var element = document.getElementById('employeetype');
+	const employeetypeselect = new Choices(element, {
+		searchEnabled: false
+	});
+
+
+	var element = document.getElementById('gender');
+	const employeegenderselect = new Choices(element, {
+		searchEnabled: false
+	});
+	  
+	  
+	var element = document.getElementById('paymeth');
+	const employeepaymethselect = new Choices(element, {
+		searchEnabled: false
+	});
+    
+    
+    var element = document.getElementById('housinglev');
+	const housinglev = new Choices(element, {
+		searchEnabled: false
+	});
+    
+    
+
+	var element = document.getElementById('linktoteacher');
+	const employeelinktoteacherselect = new Choices(element, {
+		searchEnabled: true
+	});
+
+	var element = document.getElementById('linktostaff');
+	const employeelinktostaffselect = new Choices(element, {
+		searchEnabled: true
+	});
+
+
+
+    const dataTableSearch = new simpleDatatables.DataTable("#employeestable", {
+      searchable: true,
+      fixedHeight: false
+    });
+	
+	
+	$("#employeestable").DataTable({
+					  "responsive": true,"bLengthChange": false,"bFilter": false,"bInfo": false,"bPaginate": false,pageLength: 7,
+					  	  'columnDefs' : [{ 'visible': false, 'targets': [0]},{
+					 'render': function ( data, type, row ){							 	 	
+						 return '';
+					 }}]
+	});
+	
+	
+	$(".btn-delete").on("click", function (e) {
+        e.preventDefault();
+        link = $(this);
+        reasonTitle = link.attr("reasonTitle");
+        $("#yesBtn").attr("href", link.attr("href"));
+        $("#confirmText").html("Do you want to delete employee \<strong\>" + reasonTitle + "\<\/strong\>?");
+	});
+
+    document.querySelectorAll(".export").forEach(function(el) {
+      el.addEventListener("click", function(e) {
+        var type = el.dataset.type;
+
+        var data = {
+          type: type,
+          filename: "material-" + type,
+        };
+
+        if (type === "csv") {
+          data.columnDelimiter = "|";
+        }
+
+        dataTableSearch.export(data);
+      });
+    });
+ 
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+
+</body>
+</html>

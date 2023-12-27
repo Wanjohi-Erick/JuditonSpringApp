@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="P10A" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="66a83b40-ea1c-44af-b18b-d727865d1753">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="159"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="833"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT Schoolname,Employercode,TaxRelief, concat('static/',uploadpath,'/taxauthorityimage.jpeg') as image, employees.`KRA PIN`, year, surname,fname,sname, `monthly pays`.`PAYNO`,  SUM(`NET SALARY`), SUM(`monthly pays`.`KRA TAX`) FROM `monthly pays`  INNER JOIN employees ON `monthly pays`.`PAYNO` = employees.id  inner join schooldetails s on employees.school = s.id  WHERE employees.school=14 and year = 2023  GROUP BY `monthly pays`.`PAYNO`
+]]>
+	</queryString>
+	<field name="Schoolname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Schoolname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="schooldetails"/>
+	</field>
+	<field name="Employercode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Employercode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="schooldetails"/>
+	</field>
+	<field name="TaxRelief" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="TaxRelief"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="schooldetails"/>
+	</field>
+	<field name="image" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="image"/>
+	</field>
+	<field name="KRA PIN" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="KRA PIN"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employees"/>
+	</field>
+	<field name="year" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="year"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="monthly pays"/>
+	</field>
+	<field name="surname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="surname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employees"/>
+	</field>
+	<field name="fname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employees"/>
+	</field>
+	<field name="sname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employees"/>
+	</field>
+	<field name="PAYNO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="PAYNO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="monthly pays"/>
+	</field>
+	<field name="SUM(`NET SALARY`)" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="SUM(`NET SALARY`)"/>
+	</field>
+	<field name="SUM(`monthly pays`.`KRA TAX`)" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="SUM(`monthly pays`.`KRA TAX`)"/>
+	</field>
+	<variable name="pos" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[0]]></variableExpression>
+	</variable>
+	<variable name="totalEmoluments" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM(`NET SALARY`)}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="totalDeductions" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM(`monthly pays`.`KRA TAX`)}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="73" splitType="Stretch">
+			<image onErrorType="Blank">
+				<reportElement x="190" y="2" width="175" height="50" uuid="76bb9b0c-defe-40db-9ec6-a161473dc259"/>
+				<imageExpression><![CDATA[$F{image}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="182" y="55" width="190" height="18" uuid="b9a48708-f4d3-4777-9d9a-19e4bee3a83d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Income Tax Department]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="112" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="42" height="18" uuid="627f1a04-7b1a-4079-a2c5-76fbf3de4b72">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[P. 10A]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="22" width="366" height="18" uuid="0446ede8-1500-4b18-b4cc-f5f00bb40790">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[P.A.Y.E SUPPORTING LIST FOR END OF YEAR CERTIFICATE : YEAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="344" y="44" width="210" height="18" uuid="26a9b261-9284-4d9f-b956-bef6b3f84354">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMPLOYER'S PIN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="372" y="27" width="66" height="20" uuid="81f965f3-5aff-4ac9-86d3-b8b397201b40"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="69" width="154" height="21" uuid="24fdca76-4871-4c0f-ae51-40ede5ea5ec2"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Employercode}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="92" width="130" height="18" uuid="861384a5-e1c6-4f5b-9086-b6e4344769bb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMPLOYER'S NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="94" width="424" height="18" uuid="85ba43ec-eef4-4848-90c5-4fda82e5fe54">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[..................................................................................................................]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="93" width="380" height="14" uuid="ea8563c7-db8a-4d4b-a0c8-26b277eeaf15"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Schoolname}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="37" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="3" y="0" width="107" height="20" uuid="b0903498-b51d-4408-b90c-69338af89df2"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMPLOYEE'S PIN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="116" y="1" width="144" height="34" uuid="78b0f1bb-26f3-4ba8-921b-18a9da5a4164"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMPLOYEE'S NAME]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="35" width="554" height="1" forecolor="#000000" uuid="4d757ad8-9ccd-4a7c-9beb-8227c65f956b"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="554" height="1" forecolor="#000000" uuid="259ad773-2141-4b45-a1b0-02b9bad23102"/>
+			</line>
+			<line>
+				<reportElement x="554" y="0" width="1" height="37" uuid="29cea539-8b05-454e-b5b7-028fc588d048">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="113" y="0" width="1" height="37" uuid="acce71f6-066c-4d83-b3cf-51ce71842edc"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="1" height="37" uuid="9c5d0fd1-3459-408a-a920-b7df11574e98">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="280" y="2" width="138" height="33" uuid="94c0154b-495d-45a7-a47c-0614b1b57b99"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL EMOLUMENTS KSHS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="277" y="0" width="1" height="37" uuid="29758953-d0f9-402d-ae04-3423c6a6f080"/>
+			</line>
+			<line>
+				<reportElement x="415" y="0" width="1" height="37" uuid="587a62e2-d3f1-4e6b-ab5b-e8bc79dc2c6e"/>
+			</line>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="416" y="2" width="137" height="33" uuid="75dfaf71-166c-41fe-b75f-f11185ca2bdb"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL PAYE DEDUCTED  KSH]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="14" width="554" height="1" forecolor="#000000" uuid="7d6bb02c-539c-41da-9291-11a3c03c1043"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="554" y="-1" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="75a5d1e9-584c-4c14-b6e4-357d3d4cb498"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="113" y="-1" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="11858bf0-253b-4831-84dd-d37082dd4f45">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="-1" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="1f2d07ff-810f-457a-be5b-8b977d6e1df5"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="277" y="-1" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="16db63f4-6bac-4d37-a176-94b0d4a07c71">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="415" y="-1" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="30ab3db3-fc56-4824-bb56-384d465fd5c0"/>
+			</line>
+			<textField>
+				<reportElement x="6" y="0" width="104" height="14" uuid="7b3af226-803c-4aa7-9dc9-8d846f19a38c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{KRA PIN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="113" y="0" width="164" height="14" uuid="1cbc8c5c-9e4e-42dc-a94a-a71aebb0834e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{surname}+" "+$F{fname}+" "+$F{sname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="278" y="-1" width="137" height="14" uuid="dde10b1c-5360-43f7-85f4-8e2c0a5ea3f2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{SUM(`NET SALARY`)}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="416" y="-1" width="139" height="14" uuid="33a2f73f-2ce2-46a8-bba6-b75300f33ef8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{SUM(`monthly pays`.`KRA TAX`)}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<textField>
+				<reportElement x="433" y="0" width="80" height="20" uuid="0ef1381b-09e5-418d-a782-a00db97698c7"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="513" y="0" width="42" height="20" uuid="4f78fbd0-f428-40d7-b59c-b6e12a55bab2"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="177" splitType="Stretch">
+			<staticText>
+				<reportElement x="-1" y="109" width="130" height="18" uuid="1f889aee-3156-4bda-bcc3-42150abd7858">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ADDRESS ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="131" width="130" height="18" uuid="7660de43-2bc6-4868-b9fe-51f916b505fc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SIGNATURE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="155" width="130" height="18" uuid="3dc3c136-87b4-4ada-8591-4c9129e81716">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="110" width="424" height="18" uuid="9c8f0019-21cc-4f8f-89de-06c6bbd5cc48">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[..................................................................................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="132" width="424" height="18" uuid="52199c74-43a0-4ecc-a34e-15c17d7e9795">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[..................................................................................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="159" width="424" height="18" uuid="f498fd8f-4406-4b07-ac57-5b82d04c9601">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[..................................................................................................................]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="129" y="150" width="183" height="17" uuid="8342195c-d2d2-4f88-a6a1-691009835f7f"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="113" y="10" width="134" height="14" uuid="dd0a5113-bd1e-4f7b-962d-66463e03c735">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL EMOLUMENTS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="24" width="554" height="1" forecolor="#000000" uuid="8558702a-f59c-4d73-b0ba-dc00beaf0882"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="9" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="38e3e810-c767-47bc-bfd6-fac38a68c4cd"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="277" y="9" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="24136018-2fab-4093-8f99-e79abf7f4a76">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="415" y="9" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="7a496dae-da3e-4669-8c79-ed6e7aee9f12"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="554" y="9" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="eaf0611e-c1fe-4d82-9b63-b0896c8e9bfb"/>
+			</line>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="280" y="9" width="135" height="14" uuid="e8b8e3d6-bd07-4eb8-987e-05408cf36031">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalEmoluments}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="113" y="25" width="134" height="14" uuid="cb4a0e7f-5caf-410f-a86a-caef9d562da1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL PAYE TAX]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="39" width="554" height="1" forecolor="#000000" uuid="1f6fb0d9-1ef6-421f-bedc-44215fcf42c0"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="24" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="a1b2ef55-d2a9-44cd-9a76-9fa6af4fbc9f"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="277" y="24" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="6fa11310-0b89-48ad-940a-188185faa9c9">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="415" y="24" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="767b8d9b-293c-4d00-a467-a361855c30fe"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="554" y="24" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="eb779c6a-2676-451f-b470-9e0fd00ea10c"/>
+			</line>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="418" y="25" width="135" height="14" uuid="dbec3ad5-dbd8-419a-b60b-b0e1aed0e7ec">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalDeductions}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="113" y="40" width="134" height="14" uuid="1c5304e8-5582-442d-9347-5499224b33a0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL WCPS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="54" width="554" height="1" forecolor="#000000" uuid="18c1d886-c06e-4b5b-89a4-e5bb4a7b7fd5"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="39" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="1c15a001-20ba-4705-a26b-82cb02774260"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="554" y="39" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="2feb2590-dc9d-4433-9e13-b67d91f888d7"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="54" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="64cba5a4-d0f7-4eb5-93c4-a1bd3bd96d65"/>
+			</line>
+			<line>
+				<reportElement x="0" y="69" width="554" height="1" forecolor="#000000" uuid="2bb7f73b-b6a1-4339-8b34-fda23e769b55"/>
+			</line>
+			<staticText>
+				<reportElement x="113" y="55" width="347" height="14" uuid="523ee2db-aed3-4f63-b0f6-0bb69cf6f603">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[* TOTAL ON LUMPSUMS/ AUDIT/PENALTY/INTEREST]]></text>
+			</staticText>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="554" y="54" width="1" height="15" isPrintWhenDetailOverflows="true" uuid="c862c7b3-3273-400f-84ef-846bf5618e28"/>
+			</line>
+			<line>
+				<reportElement x="0" y="9" width="554" height="1" forecolor="#000000" uuid="97a1815f-e54b-4ee2-bece-3843a999406f"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

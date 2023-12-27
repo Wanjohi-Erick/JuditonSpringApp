@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SCHOOLLOGO" language="groovy" pageWidth="842" pageHeight="252" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f7067004-a8d9-421b-a6ce-7f99b04780c0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="production"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[SELECT Programme,project,logo,`budget period`,`budget currency`,`exchange rate`,`name`,partnertype FROM budgets CROSS JOIN companydetails]]>
+	</queryString>
+	<field name="Programme" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Programme"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="budgets"/>
+	</field>
+	<field name="project" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="project"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="budgets"/>
+	</field>
+	<field name="logo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="logo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="companydetails"/>
+	</field>
+	<field name="budget period" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="budget period"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="budgets"/>
+	</field>
+	<field name="budget currency" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="budget currency"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="budgets"/>
+	</field>
+	<field name="exchange rate" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="exchange rate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="budgets"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="companydetails"/>
+	</field>
+	<field name="partnertype" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partnertype"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="companydetails"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="114">
+			<frame>
+				<reportElement x="0" y="10" width="800" height="104" uuid="61e5c670-21fb-42f9-b9ed-0b723e1d4e94">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<line>
+					<reportElement x="0" y="11" width="800" height="1" uuid="2f6ae31d-05df-4a37-aeac-7c8863b0a44f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<line>
+					<reportElement x="0" y="22" width="800" height="1" uuid="9ae924d2-df76-4e24-9ebe-1908deb91ba1">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<line>
+					<reportElement x="0" y="34" width="800" height="1" uuid="e0f43d3c-146d-4334-8ccb-dd1a5ddf1734">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<staticText>
+					<reportElement x="4" y="1" width="191" height="9" uuid="33f2cb27-c4b8-4d17-9d68-725f57b59f4d">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Name of organization]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="46" width="800" height="1" uuid="15a441f2-e0fd-446c-ab5c-45851ba4476f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<line>
+					<reportElement x="0" y="58" width="800" height="1" uuid="69dd09ac-4b17-4420-b0fc-2f60a769fc73">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<line>
+					<reportElement x="0" y="70" width="800" height="1" uuid="96b540d3-90b4-4b6e-8306-e3ae62ec68a5">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<line>
+					<reportElement x="0" y="82" width="800" height="1" uuid="4adf1f03-d766-46f8-aaee-03f59bdfe927">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<line>
+					<reportElement x="0" y="93" width="800" height="1" uuid="0af502fa-0dd5-4cc5-9a9a-1b9136dc6ce4">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<staticText>
+					<reportElement x="4" y="12" width="191" height="9" uuid="02f5ca94-743f-4a49-8d83-d8053a0399f6">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Name of the project :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="23" width="191" height="9" uuid="99db3b31-724c-403e-b834-f7d1dc5f6705">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Programme:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="35" width="191" height="9" uuid="0de025b1-aa2c-4d14-94e4-c457c0920c66">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Type of Partner :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="47" width="191" height="9" uuid="0a1b79c1-b7d0-46cf-ba6a-d49c72ad1d82">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Country :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="59" width="191" height="9" uuid="4803ad6c-2442-44b0-bdaf-4143b64c0ca9">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Budget Period : ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="71" width="191" height="9" uuid="a27d0e7f-7a4a-414b-99a2-c530b6c65767">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Budget Currency :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="83" width="191" height="9" uuid="740cbcff-53c8-4dbf-b915-13f1a9c1f629">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Exchange Rate : ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="95" width="216" height="9" uuid="93eef5de-d70b-4e34-b455-bdf30f883e29">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Country,Project & Outcome NO. (8 digits)]]></text>
+				</staticText>
+				<line>
+					<reportElement x="228" y="0" width="1" height="104" uuid="cd0dfeb1-0b2f-470d-a35c-8ac4ace8f16c">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</line>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="235" y="1" width="419" height="9" uuid="15cb06df-3e98-4aec-920a-4754d4cce842">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="235" y="12" width="419" height="9" uuid="b9641a33-00bd-4344-a9e7-6d192e109399"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{project}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="235" y="23" width="419" height="9" uuid="67c726ed-8ca5-4ca9-bcc3-61514c31540d"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Programme}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="235" y="35" width="419" height="9" uuid="9b2442fc-d04e-434d-8230-c81b28e08107"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{partnertype}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="235" y="47" width="419" height="9" uuid="f80d9e86-68d9-4996-82ad-d8602288c8be"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Kenya"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="235" y="59" width="419" height="9" uuid="dc95bf71-905e-4ad9-8fd8-a5159c994290"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{budget period}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="235" y="71" width="419" height="9" uuid="b335a289-75a5-4f2f-9617-ef48186caacb"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{budget currency}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="235" y="83" width="419" height="9" uuid="7a34e610-03cb-41cf-973e-9347f21bfbfd"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["1 SEK = "+$F{exchange rate}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="4" y="0" width="419" height="9" uuid="c1c703e4-02c2-475e-bb70-2f5a23256beb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["EXPENDITURE TRACKING "+$F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

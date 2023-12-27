@@ -1,0 +1,247 @@
+<nav class="navbar navbar-main navbar-expand-lg position-sticky mt-4 top-1 px-0 mx-4 shadow-none border-radius-xl z-index-sticky" id="navbarBlur" data-scroll="true">
+  <div class="container-fluid py-1 px-3">
+
+    <div class="sidenav-toggler sidenav-toggler-inner d-xl-block d-none ">
+      <a href="javascript:;" class="nav-link text-body p-0">
+        <div class="sidenav-toggler-inner">
+          <i class="sidenav-toggler-line"></i>
+          <i class="sidenav-toggler-line"></i>
+          <i class="sidenav-toggler-line"></i>
+        </div>
+      </a>
+    </div>
+
+    <ul class="navbar-nav navbar-nav-hover mx-auto" >
+
+
+      <li class="nav-item dropdown dropdown-hover mx-2">
+        <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" id="dropdownMenuQuickView" data-bs-toggle="dropdown" aria-expanded="false">
+          Quick view
+          <img th:src="@{'/assets/img/down-arrow-white.svg'}" alt="down-arrow" class="arrow ms-1 d-lg-block d-none">
+          <img th:src="@{'/assets/img/down-arrow-dark.svg'}"  alt="down-arrow" class="arrow ms-1 d-lg-none d-block">
+        </a>
+        <div class="dropdown-menu dropdown-menu-animation dropdown-lg p-3 border-radius-xl mt-0 mt-lg-3" aria-labelledby="dropdownMenuQuickView">
+          <div class="row d-none d-lg-block">
+            <div class="col-12 px-4 py-2">
+              <div class="row">
+
+
+
+                <div class="col-6 position-relative">
+
+
+                  <div class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-0">
+                    <i class="material-icons opacity-6 me-2 text-md">bar_chart</i>
+                    Quick View
+                  </div>
+                  <a th:href="@{/api/member/groups}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Member Groups</span>
+                  </a>
+                  <a th:href="@{/api/member/services}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Services</span>
+                  </a>
+                  <a th:href="@{/api/member/zones}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Zones</span>
+                  </a>
+                  <a th:href="@{/api/member/talents}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Talents</span>
+                  </a>
+                  <a th:href="@{/api/member/committees}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Committees</span>
+                  </a>
+
+                  <a th:href="@{/api/member/departments}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Departments</span>
+                  </a>
+                  <a th:href="@{/registration}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Members</span>
+                  </a>
+                  <a th:href="@{/finance/groups}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Account groups/types</span>
+                  </a>
+
+                  <a th:href="@{/finance/chart}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Chart of accounts</span>
+                  </a>
+                  <a th:href="@{/finance/banking}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">banking</span>
+                  </a>
+                  <a th:href="@{/finance/vouchers}" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Payment Vouchers</span>
+                  </a>
+                  <a  data-bs-target="#openingBalanceModal" data-bs-toggle="modal" class="dropdown-item border-radius-md">
+                    <span class="ps-2">Update account opening balance</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-lg-none">
+
+            <div class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-0">
+              <i class="material-icons opacity-6 me-2 text-md">bar_chart</i>
+              Quick View
+            </div>
+            <a th:href="@{/api/member/groups}" class="dropdown-item border-radius-md">
+              <span class="ps-2">Member Groups</span>
+            </a>
+            <a th:href="@{/api/member/services}" class="dropdown-item border-radius-md">
+              <span class="ps-2">Services</span>
+            </a>
+            <a th:href="@{/api/member/zones}" class="dropdown-item border-radius-md">
+              <span class="ps-2">Zones</span>
+            </a>
+            <a th:href="@{/api/member/talents}" class="dropdown-item border-radius-md">
+              <span class="ps-2">Talents</span>
+            </a>
+            <a th:href="@{/api/member/committees}" class="dropdown-item border-radius-md">
+              <span class="ps-2">Committees</span>
+            </a>
+
+            <a th:href="@{/api/member/departments}" class="dropdown-item border-radius-md">
+              <span class="ps-2">Departments</span>
+            </a>
+            <a th:href="@{/registration}" class="dropdown-item border-radius-md">
+              <span class="ps-2">Members</span>
+            </a>
+            <a th:href="@{/finance/groups}" class="dropdown-item border-radius-md">
+              <span class="ps-2">Account groups/types</span>
+            </a>
+
+            <a th:href="@{/finance/chart}" class="dropdown-item border-radius-md">
+              <span class="ps-2">Chart of accounts</span>
+            </a>
+            <a th:href="@{/finance/banking}" class="dropdown-item border-radius-md">
+              <span class="ps-2">banking</span>
+            </a>
+            <a th:href="@{/finance/vouchers}" class="dropdown-item border-radius-md">
+              <span class="ps-2">Payment Vouchers</span>
+            </a>
+            <a  data-bs-target="#openingBalanceModal" data-bs-toggle="modal" class="dropdown-item border-radius-md">
+              <span class="ps-2">Update account opening balance</span>
+            </a>
+
+          </div>
+        </div>
+      </li>
+      <li class="nav-item dropdown dropdown-hover mx-2">
+        <a role="button" class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center" id="dropdownMenuEcommerce" data-bs-toggle="dropdown" aria-expanded="false">
+          Reports
+          <img th:src="@{'/assets/img/down-arrow-white.svg'}" alt="down-arrow" class="arrow ms-1 d-lg-block d-none">
+          <img th:src="@{'/assets/img/down-arrow-dark.svg'}"  alt="down-arrow" class="arrow ms-1 d-lg-none d-block">
+        </a>
+        <div class="dropdown-menu dropdown-menu-animation dropdown-lg p-3 border-radius-xl mt-0 mt-lg-3" aria-labelledby="dropdownMenuEcommerce">
+          <div class="row d-none d-lg-block">
+            <div class="col-12 px-4 py-2">
+              <div class="row">
+                <div class="col-6 position-relative">
+                  <div class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-0">
+                    <i class="material-icons opacity-6 me-2 text-md">bar_chart</i>
+                    Reports
+                  </div>
+                  <a href="#"  data-bs-target="#membersReportModal" data-bs-toggle="modal" class="dropdown-item border-radius-md">
+                    List of members
+                  </a>
+                  <a href="#" data-bs-target="#receiptsReportModal" data-bs-toggle="modal" onclick="reportType('receipts')" data-bs-type="receipts" class="dropdown-item border-radius-md reports">
+                    List of receipts
+                  </a>
+                  <a href="#"  data-bs-target="#receiptsReportModal" data-bs-toggle="modal" onclick="reportType('vouchers')" data-bs-type="vouchers" class="dropdown-item border-radius-md reports">
+                    List of payment vouchers
+                  </a>
+                  <!--<a href="#" data-bs-target="#receiptsReportModal" data-bs-toggle="modal" onclick="reportType('transactions')" data-bs-type="transactions" class="dropdown-item border-radius-md reports">
+                    Transaction listing
+                  </a>
+                  <a href="#"  data-bs-target="#bankReconciliationReportModal" data-bs-toggle="modal" onclick="reportType('reconciliation')" data-bs-type="reconciliation" class="dropdown-item border-radius-md reports">
+                    Bank reconciliation
+                  </a>
+                  <a href="#" data-bs-target="#reconciliationReportModal" data-bs-toggle="modal" onclick="reportType('quarterlyReconciliation')" data-bs-type="quarterlyReconciliation" class="dropdown-item border-radius-md reports">
+                    Quarterly reconciliation
+                  </a>
+                  <a href="#"  data-bs-target="#reconciliationReportModal" data-bs-toggle="modal" onclick="reportType('journal')" data-bs-type="journal" class="dropdown-item border-radius-md reports">
+                    Cash Journal
+                  </a>-->
+                  <!--<a href="#" data-bs-target="#expenditureModal" data-bs-toggle="modal" onclick="reportType('expenditure')" data-bs-type="incomeAndExpenditure" class="dropdown-item border-radius-md reports">
+                    Income and Expenditure per Account
+                  </a>-->
+                  <a href="#" data-bs-target="#reconciliationReportModal" data-bs-toggle="modal" onclick="reportType('incomeAndExpenditure')" data-bs-type="incomeAndExpenditure" class="dropdown-item border-radius-md reports">
+                    Income & Expenditure
+                  </a>
+                  <!--<a href="#"  data-bs-target="#receiptsReportModal" data-bs-toggle="modal" onclick="reportType('ledger')" data-bs-type="ledger" class="dropdown-item border-radius-md reports">
+                    Detailed ledger
+                  </a>-->
+                  <a href="#" data-bs-target="#trialBalanceModal" data-bs-toggle="modal" onclick="reportType('trial')" data-bs-type="trial" class="dropdown-item border-radius-md reports">
+                    Trial balance
+                  </a>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-lg-none">
+            <div class="dropdown-header text-dark font-weight-bolder d-flex align-items-center px-0">
+              <i class="material-icons opacity-6 me-2 text-md">bar_chart</i>
+              Reports
+            </div>
+            <a href="#"  data-bs-target="#membersReportModal" data-bs-toggle="modal" class="dropdown-item border-radius-md">
+              List of members
+            </a>
+            <a href="#" data-bs-target="#receiptsReportModal" data-bs-toggle="modal" onclick="reportType('receipts')" data-bs-type="receipts" class="dropdown-item border-radius-md reports">
+              List of receipts
+            </a>
+            <a href="#"  data-bs-target="#receiptsReportModal" data-bs-toggle="modal" onclick="reportType('vouchers')" data-bs-type="vouchers" class="dropdown-item border-radius-md reports">
+              List of payment vouchers
+            </a>
+            <!--<a href="#" data-bs-target="#receiptsReportModal" data-bs-toggle="modal" onclick="reportType('transactions')" data-bs-type="transactions" class="dropdown-item border-radius-md reports">
+              Transaction listing
+            </a>
+            <a href="#"  data-bs-target="#bankReconciliationReportModal" data-bs-toggle="modal" onclick="reportType('reconciliation')" data-bs-type="reconciliation" class="dropdown-item border-radius-md reports">
+              Bank reconciliation
+            </a>
+            <a href="#" data-bs-target="#reconciliationReportModal" data-bs-toggle="modal" onclick="reportType('quarterlyReconciliation')" data-bs-type="quarterlyReconciliation" class="dropdown-item border-radius-md reports">
+              Quarterly reconciliation
+            </a>
+            <a href="#"  data-bs-target="#reconciliationReportModal" data-bs-toggle="modal" onclick="reportType('journal')" data-bs-type="journal" class="dropdown-item border-radius-md reports">
+              Cash Journal
+            </a>-->
+            <!--<a href="#" data-bs-target="#expenditureModal" data-bs-toggle="modal" onclick="reportType('expenditure')" data-bs-type="incomeAndExpenditure" class="dropdown-item border-radius-md reports">
+              Income and Expenditure per Account
+            </a>-->
+            <a href="#" data-bs-target="#reconciliationReportModal" data-bs-toggle="modal" onclick="reportType('incomeAndExpenditure')" data-bs-type="incomeAndExpenditure" class="dropdown-item border-radius-md reports">
+              Income & Expenditure
+            </a>
+            <!--<a href="#"  data-bs-target="#receiptsReportModal" data-bs-toggle="modal" onclick="reportType('ledger')" data-bs-type="ledger" class="dropdown-item border-radius-md reports">
+              Detailed ledger
+            </a>-->
+            <a href="#" data-bs-target="#trialBalanceModal" data-bs-toggle="modal" onclick="reportType('trial')" data-bs-type="trial" class="dropdown-item border-radius-md reports">
+              Trial balance
+            </a>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+
+      <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+
+      </div>
+      <ul class="navbar-nav  justify-content-end">
+
+        <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+          <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+            <div class="sidenav-toggler-inner">
+              <i class="sidenav-toggler-line"></i>
+              <i class="sidenav-toggler-line"></i>
+              <i class="sidenav-toggler-line"></i>
+            </div>
+          </a>
+        </li>
+        <div class="hidden" id="accountBalanceDiv">
+          <li class="nav-item dropdown pe-2">
+            <h6 id="walletBalance"></h6>
+          </li>
+        </div>
+      </ul>
+    </div>
+  </div>
+</nav>

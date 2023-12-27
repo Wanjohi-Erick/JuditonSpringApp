@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>
+    Dashboard
+  </title>
+  <div th:replace="~{fragments/inventory/head}"></div>
+</head>
+
+<body class="g-sidenav-show bg-gray-200 text-xs">
+  <div th:replace="~{fragments/inventory/sidenav}"></div>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragments/inventory/navbar}"></div>
+    <!-- End Navbar -->
+    <div class="content" id="output">
+      <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+              <div class="card-header p-3 pt-2">
+                <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                  <i class="material-icons opacity-10">weekend</i>
+                </div>
+                <div class="text-end pt-1">
+                  <p class="text-sm mb-0 text-capitalize">Items Held</p>
+                  <h4 id="items_held" class="mb-0">0</h4>
+                </div>
+              </div>
+              <hr class="dark horizontal my-0">
+              <div class="card-footer p-3">
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+              <div class="card-header p-3 pt-2">
+                <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
+                  <i class="material-icons opacity-10">person</i>
+                </div>
+                <div class="text-end pt-1">
+                  <p class="text-sm mb-0 text-capitalize">Non Refundable</p>
+                  <h4 id="non_refundable" class="mb-0">0</h4>
+                </div>
+              </div>
+              <hr class="dark horizontal my-0">
+              <div class="card-footer p-3">
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+              <div class="card-header p-3 pt-2">
+                <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
+                  <i class="material-icons opacity-10">person</i>
+                </div>
+                <div class="text-end pt-1">
+                  <p class="text-sm mb-0 text-capitalize">To Be Invoiced</p>
+                  <h4 id="to_be_invoiced" class="mb-0">0</h4>
+                </div>
+              </div>
+              <hr class="dark horizontal my-0">
+              <div class="card-footer p-3">
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-sm-6">
+            <div class="card">
+              <div class="card-header p-3 pt-2">
+                <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
+                  <i class="material-icons opacity-10">weekend</i>
+                </div>
+                <div class="text-end pt-1">
+                  <p class="text-sm mb-0 text-capitalize">To Be Delivered</p>
+                  <h4 id="to_be_delivered" class="mb-0">0</h4>
+                </div>
+              </div>
+              <hr class="dark horizontal my-0">
+              <div class="card-footer p-3">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-6">
+          <div class="col-lg-4 col-md-4 mt-4 mb-4">
+            <div class="card z-index-2 ">
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent ">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg py-1 pe-1">
+                  <h6 class="text-sm mb-4, m-2 " >Inventory Summary</h6>
+                </div>
+              </div>
+              <div class="card-body px-2 pb-2">
+                <h6 class="text-sm mb-0, m-2" >Quantity In Hand</h6>
+                <div class="col-lg-6 col-7 m-2">
+                  <p id="quantity_in_hand">44</h6>
+                </div>
+                <hr class="dark horizontal my-0">
+
+                <h6 class="text-sm mb-0, m-2" >Quantity To Be Received</h6>
+                <div class="col-lg-6 col-7 m-2">
+                  <p id="quantity_to_be_received">0</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 mt-4 mb-4">
+            <div class="card z-index-2  ">
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                <div class="bg-gradient-success shadow-success border-radius-lg py-1 pe-1">
+                  <h6 class="text-sm mb-4, m-2 " >Product Details</h6>
+                </div>
+              </div>
+              <div class="card-body px-2 pb-2">
+                <h6 class="text-sm mb-0, m-2" >Low Stock Items</h6>
+                <div class="col-lg-6 col-7 m-2">
+                  <p id="low_stock_items">2</h6>
+                </div>
+                <hr class="dark horizontal my-0">
+                <h6 class="text-sm mb-0, m-2" >All Items</h6>
+                <div class="col-lg-6 col-7 m-2">
+                  <p id="all_items">6</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-4 mt-4 mb-4">
+            <div class="card z-index-2 ">
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent ">
+                <div class="bg-gradient-info shadow-primary border-radius-lg py-1 pe-1">
+                  <h6 class="text-sm text-sm mb-4, m-2 " >Purchase Order</h6>
+                </div>
+              </div>
+              <div class="card-body px-2 pb-2">
+                <div class="row mx-2">
+                  <div class="col-6">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="radioOptions" id="radioMonth" checked>
+                      <label class="form-check-label text-black-50" for="radioMonth">
+                        This Month
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-6 ">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="radioOptions" id="radioYear">
+                      <label class="form-check-label text-black-50 " for="radioYear">
+                        This Year
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <hr class="bg-white horizontal my-0">
+                <h6 class="text-sm mb-0 m-2">Quantity Ordered</h6>
+                <div class="col-lg-6 col-7 m-2">
+                  <p id="this_month_purchase_order_quantity">0</h6>
+                </div>
+                <hr class="dark horizontal my-0">
+                <h6 class="text-sm mb-0 m-2">Total Cost</h6>
+                <div class="col-lg-6 col-7 m-2">
+                  <p id="this_month_purchase_order_total">0</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4 m-3">
+            <div class="card my-4">
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg p-1">
+                  <h6 class="text-sm text-white text-capitalize ps-3">Fastest Moving Items</h6>
+                </div>
+              </div>
+              <div class="card-body px-0 pb-2">
+                <div class="table-responsive p-0">
+                  <table id="fastestMovingItemsTable" class="table align-items-center justify-content-center mb-0">
+                    <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7">Image</th>
+                      <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7">Items</th>
+                      <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">Time(s) Issued</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-7 m-3 height-800">
+            <div class="card z-index-2 my-4">
+              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg py-2">
+                  <h6 id="inventoryActivityTitle" class="card-title ms-4">Inventory Activity Per Day</h6>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="myChart" class="chart-canvas" height="170"></canvas>
+                </div>
+                <div class="d-flex ">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="footer py-4  ">
+          <div class="container-fluid">
+            <div class="row align-items-center justify-content-lg-between">
+              <div class="col-lg-6 mb-lg-0 mb-4">
+                <div class="copyright text-center text-sm text-muted text-lg-start">
+                  © <script>
+                  document.write(new Date().getFullYear())
+                </script>, All Rights Reserved
+                  <a href="https://www.walgotech.co.ke" class="font-weight-bold" target="_blank">Walgotech solutions</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </main>
+  <div th:replace="~{fragments/inventory/uisettings}"></div>
+
+  <!-- Modals -->
+
+  <div th:replace="~{fragments/inventory/modals}"></div>
+
+  <!--   Core JS Files   -->
+  <script>
+    $(document).ready(function () {
+      $.ajax({
+        url: '/api/inv/initDashboard',
+        method: 'GET',
+        contentType: 'application/json'
+      }).done(function(response) {
+        console.log(response);
+        $('#items_held').text(response.items_held);
+        $('#non_refundable').text(response.non_refundable);
+        $('#to_be_invoiced').text(response.to_be_invoiced);
+        $('#to_be_delivered').text(response.to_be_delivered);
+        $('#quantity_to_be_received').text(response.to_be_delivered)
+        $('#quantity_in_hand').text(response.total_amount);
+        $('#all_item_groups').text(response.all_item_groups);
+        $('#all_items').text(response.all_items);
+        $('#low_stock_items').text(response.reorder_status);
+        var checkedOption = $('input[name=radioOptions]:checked').attr('id');
+
+        if (checkedOption === 'radioMonth') {
+          let this_month_purchase_order_total = 0;
+          let this_month_purchase_order_quantity = 0;
+          $.each(response.this_month_purchase_orders, function (index, data) {
+            this_month_purchase_order_total = this_month_purchase_order_total + data.total;
+            this_month_purchase_order_quantity = this_month_purchase_order_quantity + data.item_quantity;
+          })
+          $('#this_month_purchase_order_quantity').empty();
+          $('#this_month_purchase_order_total').empty();
+          $('#this_month_purchase_order_quantity').text(this_month_purchase_order_quantity);
+          $('#this_month_purchase_order_total').text(this_month_purchase_order_total);
+          initMonthInventoryChart(response.this_month_purchase_orders);
+        } else if (checkedOption === 'radioYear') {
+          let this_month_purchase_order_total = 0;
+          let this_month_purchase_order_quantity = 0;
+          $.each(response.this_year_purchase_orders, function (index, data) {
+            this_month_purchase_order_total = this_month_purchase_order_total + data.total;
+            this_month_purchase_order_quantity = this_month_purchase_order_quantity + data.item_quantity;
+          })
+          $('#this_month_purchase_order_quantity').empty();
+          $('#this_month_purchase_order_total').empty();
+          $('#this_month_purchase_order_quantity').text(this_month_purchase_order_quantity);
+          $('#this_month_purchase_order_total').text(this_month_purchase_order_total);
+          initYearInventoryChart(response.this_year_purchase_orders);
+        } else {
+          console.log("No radio button is checked");
+        }
+        $('#fastestMovingItemsTable').DataTable({
+          dom: 'r',
+          responsive: true,
+          "data": response.fastest_moving_items, "columns": [{
+            "data": "image", "render": function (data, type, row, meta) {
+              return '<div class="d-flex px-2 py-1">\n' + ' <div>\n' + ' <img src="' + data + '" class="avatar avatar-sm me-3 border-radius-lg" alt="">\n' + '</div>\n' + '</div>';
+            }, "createdCell": function (td, cellData, rowData, row, col) {
+              $(td).addClass('align-middle text-center text-sm');
+            }
+          }, {
+            "data": "item_name", "render": function (data, type, row, meta) {
+              return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+            }, "createdCell": function (td, cellData, rowData, row, col) {
+              $(td).addClass('align-middle text-center text-sm');
+            }
+          }, {
+            "data": "counts", "render": function (data, type, row, meta) {
+              return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+            }, "createdCell": function (td, cellData, rowData, row, col) {
+              $(td).addClass('align-middle text-center text-sm');
+            }
+          }]
+        })
+        $('input[name=radioOptions]').change(function() {
+          var checkedOption = $('input[name=radioOptions]:checked').attr('id');
+
+          if (checkedOption === 'radioMonth') {
+            let this_month_purchase_order_total = 0;
+            let this_month_purchase_order_quantity = 0;
+            $.each(response.this_month_purchase_orders, function (index, data) {
+              this_month_purchase_order_total = this_month_purchase_order_total + data.total;
+              this_month_purchase_order_quantity = this_month_purchase_order_quantity + data.item_quantity;
+            })
+            $('#this_month_purchase_order_quantity').empty();
+            $('#this_month_purchase_order_total').empty();
+            $('#this_month_purchase_order_quantity').text(this_month_purchase_order_quantity);
+            $('#this_month_purchase_order_total').text(this_month_purchase_order_total);
+            initMonthInventoryChart(response.this_month_purchase_orders);
+          } else if (checkedOption === 'radioYear') {
+            let this_month_purchase_order_total = 0;
+            let this_month_purchase_order_quantity = 0;
+            $.each(response.this_year_purchase_orders, function (index, data) {
+              this_month_purchase_order_total = this_month_purchase_order_total + parseFloat(data.total);
+              this_month_purchase_order_quantity = this_month_purchase_order_quantity + parseFloat(data.item_quantity);
+            })
+            $('#this_month_purchase_order_quantity').empty();
+            $('#this_month_purchase_order_total').empty();
+            $('#this_month_purchase_order_quantity').text(this_month_purchase_order_quantity);
+            $('#this_month_purchase_order_total').text(this_month_purchase_order_total);
+            initYearInventoryChart(response.this_year_purchase_orders);
+          }
+        });
+      }).fail(function(fail) {
+        console.log(fail);
+      })
+    })
+  </script>
+  <script type="application/javascript" src="../inventory_assets/js/core/popper.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/core/bootstrap.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/chartjs.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/material-dashboard.min.js?v=3.0.6"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- GitHub buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+</body>
+
+</html>

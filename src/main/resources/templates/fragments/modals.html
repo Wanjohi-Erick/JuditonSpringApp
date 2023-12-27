@@ -1,0 +1,631 @@
+<div id="infoModal" class="modal fade">
+  <div class="modal-dialog modal-confirmmcee">
+    <div class="modal-content">
+      <div class="modal-header flex-column">
+        <h4 class="modal-title w-100">Warning</h4>
+        <a type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</a>
+      </div>
+      <div class="modal-body">
+        <p>Please use Registration module for this function.</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" id="confirmOk" data-bs-dismiss="modal" class="btn btn-danger">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="myModaldelete" class="modal fade">
+  <div class="modal-dialog modal-static modal-confirmmcee">
+    <div class="modal-content">
+      <div class="modal-header flex-column">
+        <div class="icon-box">
+          <i class="material-icons">&#xE5CD;</i>
+        </div>
+        <h4 class="modal-title text-dark w-100">Are you sure?</h4>
+        <a type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</a>
+      </div>
+      <div class="modal-body">
+        <p id="delete-modal-body">Do you really want to delete these records? This process cannot be undone.</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" data-bs-dismiss="modal" class="btn btn-warning">Cancel</button>
+        <button type="button" id="confirmdeletebutt" data-bs-dismiss="modal" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="myModalErrorstop" class="modal fade" style="z-index: 10000000000000 !important;">
+  <div class="modal-dialog modal-confirmmcee">
+    <div class="modal-content">
+      <div class="modal-header flex-column">
+        <div class="icon-box">
+          <i class="material-icons">&#xE5CD;</i>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h4 class="modal-title w-100" id="errormessage"></h4>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div id="myModal" class="modal fade"  style="z-index: 10000000000000 !important;">
+  <div class="modal-dialog modal-confirm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="icon-box">
+          <i class="material-icons">&#xE876;</i>
+        </div>
+        <h4 class="modal-title w-100" id="messageid"></h4>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="modalprogress2" class="modal fade">
+  <div class="modal-dialog modal-confirmloading">
+    <div class="modal-content">
+
+      <div class="modal-header flex-column">
+        <h4 class="alignleft" style="margin-top:-20px">Please wait..</h4>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="row" >
+          <div class="column">
+            <div class="main-">
+              <div class="double-lines-spinner" style="margin-left:0px"></div>
+            </div>
+          </div>
+          <div class="column" style="margin-left:30px">
+            <h4 class="modal-title w-100" style="font-size: 20px;">Loading data</h4>
+          </div>
+        </div>
+
+      </div>
+      ``
+    </div>
+  </div>
+</div>
+
+<div style="z-index: 11000;" aria-hidden="true" aria-labelledby="newTagModalLabel" class="modal fade" id="addGroupModal" role="dialog"
+     tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title font-weight-normal" id="newTagModalLabel">New Group</h5>
+        <button aria-label="Close" class="btn-close text-dark" data-bs-target="#addGroupModal" data-bs-toggle="modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="addGroupForm" method="post">
+        <div class="modal-body">
+          <div class="floating-form-group mb-3">
+            <input id="itemGroupEdit" class="floating-form-control" name="groupName" placeholder=" " type="text">
+            <label class="label1" for="itemGroupEdit">Item Group</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" onclick="addItemGroup()" type="submit">Add</button>
+          <button class="btn bg-gradient-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="resetPassModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card card-plain">
+          <div class="card-body pb-3">
+            <form role="form" method="post" th:action="@{/api/resetPass}">
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Old password</label>
+                <input type="password" name="old" class="form-control">
+              </div>
+
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">New password</label>
+                <input type="password" name="newPass" class="form-control">
+              </div>
+
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Confirm password</label>
+                <input type="password" name="confirm" class="form-control">
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Reset</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="churchDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card card-plain">
+          <div class="card-body pb-3">
+            <form role="form text-left" method="post" th:action="@{/settings/farm/update}">
+              <input type="hidden" name="id">
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Church Name</label>
+                <input type="text" name="name" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Phone</label>
+                <input type="tel" name="phone" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Address</label>
+                <input type="text" name="address" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Region</label>
+                <input type="text" name="region" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Postal Code</label>
+                <input type="text" name="zip" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Country</label>
+                <input type="text" name="country" class="form-control">
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="churchOfficialsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card card-plain">
+          <div class="card-body pb-3">
+            <form role="form text-left" method="post" th:action="@{/settings/official/update}">
+              <input type="hidden" name="id">
+
+              <div class="input-group input-group-outline my-3">
+                <select name="accountant" class="form-select">
+                  <option selected disabled>Accountant</option>
+                </select>
+
+                <script>
+                  populateUsers(null).then(function (optionsHtml) {
+                    $('#churchOfficialsModal select[name= "accountant"]').append(optionsHtml);
+                    $('#churchOfficialsModal select[name= "treasurer"]').append(optionsHtml);
+                    $('#churchOfficialsModal select[name= "seniorPastor"]').append(optionsHtml);
+                    $('#churchOfficialsModal select[name= "secondSignatory"]').append(optionsHtml);
+                  });
+                </script>
+              </div>
+
+              <div class="input-group input-group-outline my-3">
+                <select name="seniorPastor" class="form-select">
+                  <option selected disabled>Senior Pastor</option>
+                </select>
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <select name="secondSignatory" class="form-select">
+                  <option selected disabled>Second Signatory</option>
+                </select>
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <select name="treasurer" class="form-select">
+                  <option selected disabled>Treasurer</option>
+                </select>
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="membersReportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card card-plain">
+          <div class="card-body pb-3">
+            <form>
+              <div class="input-group input-group-outline my-3">
+                <select name="category" id="category" class="form-select">
+                  <option selected disabled>Select Category</option>
+                  <option value="all">All</option>
+                  <option value="group">Group</option>
+                  <option value="zone">Zone</option>
+                  <option value="officials">Officials</option>
+                  <option value="committee">Committee</option>
+                  <option value="department">Department</option>
+                </select>
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <select disabled name="choice" id="choice" class="form-select">
+                  <option selected disabled>Select category</option>
+                </select>
+              </div>
+
+              <div class="text-center">
+                <button onclick="printMembers(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Ok</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="trialBalanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card card-plain">
+          <div class="card-body pb-3">
+            <form>
+              <div class="input-group input-group-outline my-3">
+                <select name="activity" class="form-select">
+                  <option selected disabled>Select Activity</option>
+                  <option value="all">All</option>
+                </select>
+
+                <script>
+                  populateOptions(null).then(function (optionsHtml) {
+                    $('#trialBalanceModal select[name= "activity"]').append(optionsHtml);
+                  });
+                </script>
+              </div>
+              <!--<div class="input-group input-group-outline my-3">
+                <select name="type" class="form-select">
+                  <option selected disabled>Select One</option>
+                  <option value="income">Income</option>
+                  <option value="expenditure">Expenditure</option>
+                </select>
+              </div>-->
+
+              <div class="input-group input-group-outline my-3">
+                <select name="groupBy" class="form-select">
+                  <option selected disabled>Summarise By</option>
+                  <option value="year">Year</option>
+                  <option value="month">Month</option>
+                </select>
+              </div>
+
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Upto</label>
+                <input type="date" name="date" class="form-control">
+              </div>
+
+              <div class="text-center">
+                <button onclick="printTrialBalance(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Ok</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="expenditureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card card-plain">
+          <div class="card-body pb-3">
+            <form>
+              <div class="input-group input-group-outline my-3">
+                <select id="reportActivities" name="activity" class="form-select">
+                  <option selected disabled>Select Activity</option>
+                  <option value="all">All</option>
+                </select>
+
+                <script>
+                  populateOptions(null).then(function (optionsHtml) {
+                    $('#reportActivities').append(optionsHtml);
+                  });
+                </script>
+              </div>
+              <!--<div class="input-group input-group-outline my-3">
+                <select name="type" class="form-select">
+                  <option selected disabled>Select One</option>
+                  <option value="income">Income</option>
+                  <option value="expenditure">Expenditure</option>
+                </select>
+              </div>-->
+
+              <div class="input-group input-group-outline my-3">
+                <select id="group-by-select" name="groupBy" class="form-select">
+                  <option selected disabled>Summarise By</option>
+                  <option value="year">Year</option>
+                  <option value="month">Month</option>
+                </select>
+              </div>
+
+              <div class="input-group input-group-outline my-3" id="year-month-select-container">
+                <select id="year-month-select" name="year-month" class="form-select">
+                  <option selected disabled>Select Year or Month</option>
+                </select>
+              </div>
+
+              <div style="display: none;" class="input-group input-group-outline my-3" id="year-select-container">
+                <select id="year-select" name="year" class="form-select">
+                  <option selected disabled>Select Year</option>
+                </select>
+              </div>
+
+              <script>
+                const $groupBySelect = $("#group-by-select");
+                const $yearMonthSelectContainer = $("#year-month-select-container");
+                const $yearMonthSelect = $("#year-month-select");
+                const $yearSelectContainer = $("#year-select-container");
+                const $yearSelect = $("#year-select");
+
+                function populateYearMonthSelect(selectedOption) {
+                  $yearMonthSelect.empty();
+                  $yearSelect.empty();
+                  if (selectedOption === "year") {
+                    const currentYear = new Date().getFullYear();
+                    for (let i = currentYear - 10; i <= currentYear; i++) {
+                      $yearMonthSelect.append($('<option>', {
+                        value: i,
+                        text: i
+                      }));
+                    }
+                    $yearMonthSelectContainer.show();
+                    $yearSelectContainer.hide();
+                  } else if (selectedOption === "month") {
+                    const monthNames = [
+                      "January", "February", "March", "April",
+                      "May", "June", "July", "August",
+                      "September", "October", "November", "December"
+                    ];
+                    for (let i = 0; i < 12; i++) {
+                      $yearMonthSelect.append($('<option>', {
+                        value: i + 1,
+                        text: monthNames[i]
+                      }));
+                    }
+                    const currentYear = new Date().getFullYear();
+                    for (let i = currentYear - 10; i <= currentYear; i++) {
+                      $yearSelect.append($('<option>', {
+                        value: i,
+                        text: i
+                      }));
+                    }
+                    $yearSelectContainer.show();
+                    $yearMonthSelectContainer.show();
+                  } else {
+                    $yearMonthSelect.append($('<option>', {
+                      selected: true,
+                      disabled: true,
+                      text: "Select Year or Month"
+                    }));
+                    $yearSelectContainer.hide();
+                    $yearMonthSelectContainer.show();
+                  }
+                }
+
+                // Show or hide the year or month select based on the selection
+                $groupBySelect.change(function() {
+                  const selectedOption = $groupBySelect.val();
+                  populateYearMonthSelect(selectedOption);
+                });
+              </script>
+
+
+
+              <div class="text-center">
+                <button onclick="printIncomeOrExpenditureSummary(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Ok</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="receiptsReportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card card-plain">
+          <div class="card-body pb-3">
+            <form>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">From</label>
+                <input type="date" name="from" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">To</label>
+                <input type="date" name="to" class="form-control">
+              </div>
+
+              <div class="text-center">
+                <button onclick="printDateRange(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Ok</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="bankReconciliationReportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card card-plain">
+          <div class="card-body pb-3">
+            <form id="bankReconciliationForm">
+              <div class="input-group input-group-outline my-3">
+                <select name="bank" class="form-select">
+                  <option selected disabled>Select Account</option>
+                </select>
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Date</label>
+                <input type="date" name="transactionDate" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Balance per statement</label>
+                <input type="number" name="statementBalance" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Payments in bank not recorded in journal</label>
+                <input type="number" name="unrecordedPayments" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Receipts in journal but not in bank</label>
+                <input type="number" name="missingReceipts" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Receipts in statement but not in journal</label>
+                <input type="number" name="missingJournalReceipts" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Payments in journal not in statement</label>
+                <input type="number" name="unmatchedJournalPayments" class="form-control">
+              </div>
+              <div class="text-center">
+                <button onclick="printBankReconciliation(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Ok</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="reconciliationReportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card card-plain">
+          <div class="card-body pb-3">
+            <form>
+              <div class="input-group input-group-static mb-3">
+                <label class="ms-0">Select Activity Group</label>
+                <select class="form-control form-dark-select" name="activity" required>
+                  <option value="all">All</option>
+                </select>
+                <script>
+                  populateGroups(null).then(function (optionsHtml) {
+                    $('#reconciliationReportModal select[name= "activity"]').append(optionsHtml);
+                  });
+                </script>
+              </div>
+              <div class="input-group input-group-outline my-3" id="year-container">
+                <select id="year" name="year" class="form-select">
+                  <option selected disabled>Select Year</option>
+                </select>
+              </div>
+
+              <div class="input-group input-group-outline my-3" id="month-container">
+                <select id="month" name="month" class="form-select">
+                  <option selected disabled>Select Month</option>
+                </select>
+              </div>
+
+              <script>
+                const $year = $("#year");
+                $year.empty();
+                const currentYear = new Date().getFullYear();
+                for (let i = currentYear - 10; i <= currentYear; i++) {
+                  $year.append($('<option>', {
+                    value: i,
+                    text: i
+                  }));
+                }
+
+                const month = $("#month");
+                month.empty();
+
+                const monthNames = [
+                  "January", "February", "March", "April",
+                  "May", "June", "July", "August",
+                  "September", "October", "November", "December"
+                ];
+
+                let currentMonth = new Date().getMonth() + 1;
+
+                for (let i = 0; i < 12; i++) {
+                  month.append($('<option>', {
+                    value: i + 1,
+                    text: monthNames[i]
+                  }));
+
+                  month.val(currentMonth);
+                }
+              </script>
+
+              <div class="text-center">
+                <button onclick="printDate(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Ok</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="openingBalanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0">
+        <div class="card card-plain">
+          <div class="card-body pb-3">
+            <form method="post" th:action="@{/finance/banking/openingBalance/update}">
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Date</label>
+                <input type="date" name="date" class="form-control">
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <select name="bank" class="form-select">
+                  <option selected disabled>Select Account</option>
+                </select>
+              </div>
+              <div class="input-group input-group-outline my-3">
+                <label class="form-label">Amount</label>
+                <input type="number" name="amount" class="form-control">
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Ok</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

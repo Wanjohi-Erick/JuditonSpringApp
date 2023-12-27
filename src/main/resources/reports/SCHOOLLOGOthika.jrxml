@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SCHOOLLOGO" language="groovy" columnCount="2" pageWidth="360" pageHeight="86" columnWidth="180" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f7067004-a8d9-421b-a6ce-7f99b04780c0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="267"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="721"/>
+	<queryString>
+		<![CDATA[SELECT *  FROM farms where churchid = 3]]>
+	</queryString>
+	<field name="churchid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="churchid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="region" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="region"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="address" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="address"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="zip" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="zip"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="phone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="country" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="country"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="SMSKEY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMSKEY"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="SMSUSERNAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMSUSERNAME"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="SMSID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SMSID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="sms_account" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sms_account"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="logo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="logo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="83">
+			<image scaleImage="RetainShape" onErrorType="Blank">
+				<reportElement x="3" y="1" width="80" height="80" uuid="6c90619a-45d4-4cf2-bef9-30e67d8d6d71"/>
+			</image>
+			<staticText>
+				<reportElement x="83" y="0" width="276" height="20" uuid="53b51a1d-7680-4172-b86c-67fb6a4e8d59"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ST. ANDREW'S CATHEDRAL THIKA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="83" y="20" width="276" height="15" uuid="688ed4f5-9f6d-4ce7-bce6-3f748251f640"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[214 - 01000 THIKA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="83" y="34" width="276" height="15" uuid="44438203-3481-42c9-87eb-c848d11aea44"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[10200]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="83" y="49" width="276" height="15" uuid="ecc875f1-91d0-4e4c-bc2d-920969bd21bb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[STANDREWSCATHEDRALSTHIKA@gmail.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="83" y="65" width="276" height="15" uuid="9076ea50-1936-4f99-846f-b0cdda45927a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[0721941704/073922557]]></text>
+			</staticText>
+		</band>
+	</title>
+</jasperReport>

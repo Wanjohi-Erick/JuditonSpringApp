@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>
+    Payment Request
+  </title>
+  <div th:replace="~{fragments/inventory/head}"></div>
+</head>
+
+<body class="g-sidenav-show bg-gray-200 text-xs">
+  <div th:replace="~{fragments/inventory/sidenav}"></div>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragments/inventory/navbar}"></div>
+    <!-- End Navbar -->
+    <div class="content" id="output">
+      <div class="container-fluid py-4">
+        <div class="row mt-4">
+          <div class="col-12">
+            <div class="card">
+
+              <div class="card-header">
+                <h5 class="mb-0">Payment Requests</h5>
+                <p class="text-sm mb-0">
+                  Payment Requests Table.
+                </p>
+              </div>
+              <div class=" me-3 my-3 text-end">
+                <a class="btn bg-gradient-dark mb-0" onclick="addRequestModalLaunch()"><i
+                        class="material-icons text-sm">add</i>&nbsp;&nbsp; New
+                  Request</a>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-flush" id="paymentRequestsTable">
+                  <thead class="thead-light">
+                  <tr>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Requested On
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Amount
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Description
+                    </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                      Status
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="z-index: 11000;" aria-hidden="true" aria-labelledby="addPaymentRequestModalLabel" class="modal fade"
+           id="addPaymentRequestModal" role="dialog"
+           tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title font-weight-normal" id="newTagModalLabel">New Group</h5>
+              <button aria-label="Close" class="btn-close text-dark" data-bs-target="#addGroupModal"
+                      data-bs-toggle="modal" type="button">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form id="addRequestForm" method="post">
+              <div class="modal-body">
+                <div class="floating-form-group mb-3">
+                  <input id="amount" class="floating-form-control" name="amount" placeholder=" "
+                         type="number">
+                  <label class="label1" for="amount">Amount</label>
+                </div>
+
+                <div class="input-group input-group-outline mt-3 col-md-12">
+                            <textarea id="description" name="description" class="form-control" rows="3"
+                                      placeholder="description"></textarea>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" onclick="addRequest()" type="submit">Add</button>
+                <button class="btn bg-gradient-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <div th:replace="~{fragments/inventory/uisettings}"></div>
+
+  <!-- Modals -->
+
+  <div th:replace="~{fragments/inventory/modals}"></div>
+
+  <!--   Core JS Files   -->
+  <script>
+    $(document).ready(function () {
+      $('#pageName').text("Payment Requests");
+      $('#pageNameH6').text("Payment Requests");
+      $.ajax({
+        url: '/api/inv/getAllPaymentRequests', contentType: 'application/json'
+      }).done(function (response) {
+        $('#paymentRequestsTable').DataTable({
+          responsive: true, "data": response, "columns": [
+            {
+              "data": "createdOn", "render": function (data, type, row, meta) {
+                let date = new Date(data);
+                const formattedDate = date.toLocaleDateString();
+                const formattedTime = date.toLocaleTimeString();
+
+                let formatted = formattedDate + " " + formattedTime;
+                return '<p class="text-xs text-secondary mb-0">' + formatted + '</p>';
+              }, "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).addClass('align-middle text-center text-sm');
+              }
+            }, {
+              "data": "amount", "render": function (data, type, row, meta) {
+                return '<p class="text-xs text-secondary mb-0">' + data.toLocaleString() + '</p>';
+              }, "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).addClass('align-middle text-center text-sm');
+              }
+            }, {
+              "data": "details", "render": function (data, type, row, meta) {
+                return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+              }/*, "createdCell": function (td, cellData, rowData, row, col) {
+                            $(td).addClass('align-middle text-center text-sm');
+                        }*/
+            }, {
+              "data": "status", "render": function (data, type, row, meta) {
+                if (data === "Approved") {
+                  $(row).css('background-color', 'green');
+                } else if (data === "Reviewed") {
+                  $(row).css('background-color', 'blue');
+                } else if (data === "Pending") {
+                  $(row).css('background-color', 'yellow');
+                }
+                return '<p class="text-xs text-secondary mb-0">' + data + '</p>';
+              }, "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).addClass('align-middle text-center text-sm');
+              }
+            }]
+        })
+      }).fail(function () {
+        console.log(fail);
+      })
+    })
+  </script>
+  <script type="application/javascript" src="../inventory_assets/js/core/popper.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/core/bootstrap.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/chartjs.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/material-dashboard.min.js?v=3.0.6"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- GitHub buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+</body>
+
+</html>

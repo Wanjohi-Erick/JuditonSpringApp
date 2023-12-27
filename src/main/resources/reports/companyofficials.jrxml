@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.5.final using JasperReports Library version 6.20.5-3efcf2e67f959db3888d79f73dde2dbd7acb4f8e  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="companyofficials" pageWidth="595" pageHeight="135" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b22259f2-66b2-456e-98c8-9c83afe703a0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="pvid" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT co.accountant  AS accountant,
+       u1.signature   AS accountant_signature,
+       vs1.acc_date   AS accountant_date,
+       vs2.accountant AS second_signatory,
+       vs2.ss_date    AS second_signatory_date,
+       u2.signature   AS second_signatory_signature,
+       vs3.accountant AS senior_pastor,
+       vs3.sp_date    AS senior_pastor_date,
+       u3.signature   AS senior_pastor_signature,
+       vs4.accountant AS treasurer,
+       vs4.tr_date    AS treasurer_date,
+       u4.signature   AS treasurer_signature
+FROM companyofficials co
+         LEFT JOIN voucher_signatory vs1 ON co.id = vs1.accountant
+         LEFT JOIN voucher_signatory vs2 ON co.id = vs2.second_signatory
+         LEFT JOIN voucher_signatory vs3 ON co.id = vs3.senior_pastor
+         LEFT JOIN voucher_signatory vs4 ON co.id = vs4.treasurer
+         LEFT JOIN users u1 ON vs1.accountant = u1.id
+         LEFT JOIN users u2 ON vs2.second_signatory = u2.id
+         LEFT JOIN users u3 ON vs3.senior_pastor = u3.id
+         LEFT JOIN users u4 ON vs4.treasurer = u4.id
+WHERE vs1.voucher_id = $P{pvid};]]>
+	</queryString>
+	<field name="accountant" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="accountant"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="companyofficials"/>
+	</field>
+	<field name="senior_pastor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="senior_pastor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="companyofficials"/>
+	</field>
+	<field name="second_signatory" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="second_signatory"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="companyofficials"/>
+	</field>
+	<field name="treasurer" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="treasurer"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="companyofficials"/>
+	</field>
+	<field name="accountant_date" class="java.sql.Date"/>
+	<field name="accountant_signature" class="java.lang.String"/>
+	<field name="treasurer_date" class="java.sql.Date"/>
+	<field name="treasurer_signature" class="java.lang.String"/>
+	<field name="senior_pastor_date" class="java.sql.Date"/>
+	<field name="senior_pastor_signature" class="java.lang.String"/>
+	<field name="second_signatory_date" class="java.sql.Date"/>
+	<field name="second_signatory_signature" class="java.lang.String"/>
+	<summary>
+		<band height="131" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="111" y="9" width="268" height="17" uuid="24e9fd07-8e69-40f7-b4e5-da65bb9e3cca">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Signature: .........................................................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="10" width="91" height="15" uuid="ebe20cf4-4dae-4084-a3bc-a2a097b1656b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Church Accountant:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="9" width="160" height="17" uuid="56b5dda6-6d1b-4595-b4ac-f2b45d0082fd">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date: .....................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="41" width="91" height="15" uuid="01426e22-efe6-4ade-8de4-220c733e818e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Senior Pastor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="40" width="268" height="17" uuid="d802a97d-d635-4af3-8610-9054164cce3f">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Signature: .........................................................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="40" width="160" height="17" uuid="14d95d82-e56e-47f7-977d-122e6897c585">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date: .....................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="71" width="91" height="15" uuid="0bbb0abc-3a5a-4692-9e7a-186b81e3744e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[2nd Signatory:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="70" width="268" height="17" uuid="da871f8a-7a45-4904-90f3-fecddd4a5058">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Signature: .........................................................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="70" width="160" height="17" uuid="36e49f7a-3041-4003-958c-69df054669a6">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date: .....................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="6" y="101" width="91" height="15" uuid="82552fd6-2b17-4466-aed5-d2d39bc7df77">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Church Treasurer:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="100" width="268" height="17" uuid="540d5f1d-c871-474b-bdf2-3baafcc72a9e">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Signature: .........................................................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="100" width="160" height="17" uuid="75bdc425-5f10-40a5-bc39-9a37684781fe">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Date: .....................................................]]></text>
+			</staticText>
+			<image onErrorType="Blank">
+				<reportElement x="170" y="86" width="150" height="27" uuid="1e5b4e8f-bec9-442f-8e3d-c566e330ca0e"/>
+				<imageExpression><![CDATA[$F{treasurer_signature}]]></imageExpression>
+			</image>
+			<image scaleImage="RetainShape" onErrorType="Blank">
+				<reportElement x="170" y="-2" width="150" height="27" uuid="5aba51da-5dd9-40cb-9067-a329ea8a8865"/>
+				<imageExpression><![CDATA[$F{accountant_signature}]]></imageExpression>
+			</image>
+			<image onErrorType="Blank">
+				<reportElement x="170" y="30" width="150" height="27" uuid="92218c7c-207a-4127-a98e-b1c7c4516966"/>
+				<imageExpression><![CDATA[$F{senior_pastor_signature}]]></imageExpression>
+			</image>
+			<image onErrorType="Blank">
+				<reportElement x="170" y="59" width="150" height="27" uuid="bed4522d-0311-45b3-a7b1-4cbcfc997c3d"/>
+				<imageExpression><![CDATA[$F{second_signatory_signature}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="429" y="0" width="100" height="25" uuid="2fabe30e-9c56-4837-9301-2a795225ce35"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{accountant_date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="429" y="87" width="100" height="25" uuid="1879905d-a525-4297-b73a-d684eb01fda3"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{treasurer_date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="429" y="53" width="100" height="25" uuid="7b42f01e-97f9-489b-931f-92252c949494"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{second_signatory_date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="430" y="26" width="100" height="25" uuid="b2968d48-5f1a-4f3f-9a80-73d689ddea96"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{senior_pastor_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

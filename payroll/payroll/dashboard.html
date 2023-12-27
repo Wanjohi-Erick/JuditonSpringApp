@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="apple-touch-icon" sizes="76x76" href="assets/img/favicon.png">
+<link rel="icon" type="image/png" href="/assets/img/favicon.ico">
+  <title>
+    Shule one : Hr
+  </title>
+
+
+<link rel="canonical" href="https://www.shuleone.co.ke" />
+
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/nucleo-icons.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/nucleo-svg.css}" />
+<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/material-dashboard.min.css?v=3.0.6}" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css" />
+<link rel='stylesheet' type="text/css" href='https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css'>
+    
+<link rel="stylesheet" type="text/css" th:href="@{/assetsbio/jsmuoltistepcss/MultiStep.css}" />
+
+
+</head>
+<body class="g-sidenav-show  bg-gray-200">
+
+
+
+<div th:replace="fragments/payroll/sidenav"></div>
+
+
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+<div th:replace="fragments/payroll/header"></div>
+
+
+<div class="container-fluid py-4" id="output" style="margin-top:-30px" >
+<div class="row">
+
+<div class="col-sm-3">
+<div class="card">
+<div class="card-body p-3 position-relative">
+<div class="row">
+<div class="col-12 text-start">
+<p class="text-sm mb-1 text-capitalize font-weight-bold">Active employees</p>
+<h5 class="font-weight-bolder mb-0" th:text="${activeemployees}"></h5>
+<span class="text-sm text-end text-success font-weight-bolder mt-auto mb-0" th:text="${activecasualemployees}"></span>
+<span class="font-weight-normal text-secondary"> Casual</span>
+<span class="text-sm text-end text-success font-weight-bolder mt-auto mb-0 " th:text="${activepermanentemployees}">
+</span><span class="font-weight-normal text-secondary">  Permanent</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="col-sm-3 mt-sm-0 mt-3">
+<div class="card">
+<div class="card-body p-3 position-relative">
+<div class="row">
+<div class="col-12 text-start">
+<p class="text-sm mb-1 text-capitalize font-weight-bold">Male</p>
+<h5 class="font-weight-bolder mb-0" th:text="${activemaleemployees}"></h5>
+
+<span class="text-sm text-end text-success font-weight-bolder mt-auto mb-0" th:text="${activemalecasualemployees}"></span>
+<span class="font-weight-normal text-secondary"> Casual</span>
+<span class="text-sm text-end text-success font-weight-bolder mt-auto mb-0 " th:text="${activemalepermanentemployees}"></span>
+<span class="font-weight-normal text-secondary">  Permanent</span>
+
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="col-sm-3 mt-sm-0 mt-3">
+<div class="card">
+<div class="card-body p-3 position-relative">
+<div class="row">
+<div class="col-12 text-start">
+<p class="text-sm mb-1 text-capitalize font-weight-bold">Female</p>
+<h5 class="font-weight-bolder mb-0" th:text="${activefemaleemployees}"></h5>
+<span class="text-sm text-end text-success font-weight-bolder mt-auto mb-0" th:text="${activefemalecasualemployees}"></span>
+<span class="font-weight-normal text-secondary"> Casual</span>
+<span class="text-sm text-end text-success font-weight-bolder mt-auto mb-0 " th:text="${activefemalepermanentemployees}"></span>
+<span class="font-weight-normal text-secondary">  Permanent</span>
+</div>
+
+ </div>
+</div>
+</div>
+</div>
+
+
+<div class="col-sm-3 mt-sm-0 mt-3">
+<div class="card">
+<div class="card-body p-3 position-relative">
+<div class="row">
+<div class="col-12 text-start">
+<p class="text-sm mb-1 text-capitalize font-weight-bold">On leave</p>
+<h5 class="font-weight-bolder mb-0" th:text="${onleave}"></h5>
+<span class="text-sm text-end text-success font-weight-bolder mt-auto mb-0" th:text="${onleavemale}"></span>
+<span class="font-weight-normal text-secondary"> Male</span>
+<span class="text-sm text-end text-success font-weight-bolder mt-auto mb-0 " th:text="${onleavefemale}"></span>
+<span class="font-weight-normal text-secondary">  Female</span>
+</div>
+
+ </div>
+</div>
+</div>
+</div>
+
+
+</div>
+
+<div class="row mt-4" >
+
+<div class="col-lg-12 col-sm-6 mt-sm-0 mt-4">
+<div class="card h-100">
+<div class="card-header pb-0 p-3">
+<div class="d-flex justify-content-between">
+<h6 class="mb-0">Annual summary</h6>
+</div>
+</div>
+<div class="card-body p-3">
+<div class="chart">
+<canvas id="chart-bar" class="chart-canvas" height="340"></canvas>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+
+
+<div th:replace="fragments/biometrics/footer"></div>
+
+</main>
+
+<div th:replace="fragments/biometrics/uisettings"></div>
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/core/popper.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/jquery.autocomplete.js}"></script> 
+<script type="application/javascript" th:src="@{/assetsbio/js/core/bootstrap.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/perfect-scrollbar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/smooth-scrollbar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/chartjs.min.js}"></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/material-dashboard.min.js?v=3.0.6}"></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<script type="application/javascript" th:src="@{/assetsbio/dynamicjs/dynamicjshr.js}"></script>
+
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/dropzone.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/quill.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/choices.min.js}"></script>
+
+
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/datatables.js}"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.2/js/intlTelInput.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js'></script>
+
+<script type="application/javascript" th:src="@{/assetsbio/jsmuoltistepjs/MultiStep.js}"></script>
+
+
+<script>
+    var ctx3 = document.getElementById("chart-bar").getContext("2d");
+  
+
+    // Bar chart
+    new Chart(ctx3, {
+      type: "bar",
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+          label: "Total Payouts",
+          weight: 5,
+          borderWidth: 0,
+          borderRadius: 4,
+          backgroundColor: '#3A416F',
+          data: [150000, 160000, 155000, 139000, 180000, 161500, 115699,145893, 134567, 190300,149500,180000],
+          fill: false
+        }],
+      },
+       options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          }
+        },
+        scales: {
+          y: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderDash: [5, 5],
+              color: '#c1c4ce5c'
+            },
+            ticks: {
+              display: true,
+              padding: 10,
+              color: '#9ca2b7',
+              font: {
+                size: 14,
+                weight: 300,
+                family: "Roboto",
+                style: 'normal',
+                lineHeight: 2
+              },
+            }
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: false,
+              drawOnChartArea: true,
+              drawTicks: true,
+              color: '#c1c4ce5c'
+            },
+            ticks: {
+              display: true,
+              color: '#9ca2b7',
+              padding: 10,
+              font: {
+                size: 14,
+                weight: 300,
+                family: "Roboto",
+                style: 'normal',
+                lineHeight: 2
+              },
+            }
+          },
+        },
+      },
+    });
+  </script>
+  
+  <script>
+    if (document.getElementById('edit-deschiption')) {
+      var quill = new Quill('#edit-deschiption', {
+        theme: 'snow' // Specify theme in configuration
+      });
+    };
+
+    if (document.getElementById('choices-category')) {
+      var element = document.getElementById('choices-category');
+      const example = new Choices(element, {
+        searchEnabled: false
+      });
+    };
+
+    if (document.getElementById('choices-sizes')) {
+      var element = document.getElementById('choices-sizes');
+      const example = new Choices(element, {
+        searchEnabled: false
+      });
+    };
+
+    if (document.getElementById('choices-currency')) {
+      var element = document.getElementById('choices-currency');
+      const example = new Choices(element, {
+        searchEnabled: false
+      });
+    };
+
+    if (document.getElementById('choices-tags')) {
+      var tags = document.getElementById('choices-tags');
+      const examples = new Choices(tags, {
+        removeItemButton: true
+      });
+
+      examples.setChoices(
+        [{
+            value: 'One',
+            label: 'Expired',
+            disabled: true
+          },
+          {
+            value: 'Two',
+            label: 'Out of Stock',
+            selected: true
+          }
+        ],
+        'value',
+        'label',
+        false,
+      );
+    }
+  </script>
+  
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+
+</body>
+</html>

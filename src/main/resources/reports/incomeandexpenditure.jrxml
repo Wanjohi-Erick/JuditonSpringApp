@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="595" pageHeight="842" columnWidth="572" leftMargin="20" rightMargin="3" topMargin="5" bottomMargin="20" uuid="a48f292d-b739-4538-8520-960318e80873">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="farm.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="325"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="664"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="title" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{title}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select grp,Account,credit,crtot-drtot AS total FROM (
+SELECT 'Revenue' as grp,b.Account,credit,(SELECT sum(credit) FROM accounttransactions  
+WHERE credit>0 AND description!='Deposit to Bank' 
+AND description!='Cash Deposit') as crtot,(SELECT sum(debit) FROM accounttransactions  
+WHERE debit>0 AND description!='Deposit to Bank' 
+AND description!='Cash Deposit') as drtot FROM accounttransactions a 
+INNER JOIN activities b ON a.Account=b.`Account id`
+WHERE credit>0 AND description!='Deposit to Bank' 
+AND description!='Cash Deposit'
+
+UNION ALL 
+
+SELECT 'Expenses' as grp,b.Account,debit,(SELECT sum(credit) FROM accounttransactions  
+WHERE credit>0 AND description!='Deposit to Bank' 
+AND description!='Cash Deposit') as crtot,(SELECT sum(debit) FROM accounttransactions  
+WHERE debit>0 AND description!='Deposit to Bank' 
+AND description!='Cash Deposit') as drtot FROM accounttransactions a 
+INNER JOIN activities b ON a.Account=b.`Account id`
+WHERE debit>0 AND description!='Deposit to Bank' 
+AND description!='Cash Deposit')s]]>
+	</queryString>
+	<field name="grp" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grp"/>
+	</field>
+	<field name="Account" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Account"/>
+	</field>
+	<field name="credit" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="credit"/>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="total"/>
+	</field>
+	<variable name="sno" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[0]]></variableExpression>
+	</variable>
+	<variable name="Groupt" class="java.lang.Double" resetType="Group" resetGroup="Group1" calculation="Sum">
+		<variableExpression><![CDATA[$F{credit}]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{credit}]]></initialValueExpression>
+	</variable>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{grp}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<textField>
+					<reportElement mode="Opaque" x="26" y="0" width="528" height="20" forecolor="#FFFFFF" backcolor="#006699" uuid="ca2e7816-7816-4d76-a682-b8ec3da2e5d0">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" "+$F{grp}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="384" y="0" width="1" height="21" forecolor="#006699" uuid="d3aa9ba5-2fd1-4aae-a366-fa9968db3179">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+				</line>
+				<line>
+					<reportElement x="554" y="0" width="1" height="21" forecolor="#006699" uuid="9ea37f40-de3d-463a-b0b9-3404dfe2c866">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16">
+				<textField pattern="#,###.###;(#,###.###-)" isBlankWhenNull="true">
+					<reportElement x="384" y="0" width="169" height="13" forecolor="#006699" uuid="28a432e2-4b14-4027-9bc0-2c9f6a687d8d">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Groupt}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="384" y="15" width="170" height="1" forecolor="#BDB2B1" uuid="fc94f367-4dd3-4a6e-912e-aa0968b82358">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</line>
+				<line>
+					<reportElement x="384" y="0" width="1" height="16" forecolor="#BDB2B1" uuid="2bf1eaef-1198-4024-9380-1d8b91e4982d">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</line>
+				<line>
+					<reportElement x="554" y="0" width="1" height="16" forecolor="#BDB2B1" uuid="c6bf5021-c92d-49ba-8257-9eebca3b9be8">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</line>
+				<textField pattern="#,###.###;(#,###.###-)" isBlankWhenNull="true">
+					<reportElement x="47" y="0" width="169" height="13" forecolor="#006699" uuid="a1913ff3-8589-4793-8147-b9a6ccd5aa7e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total "+$F{grp}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="39" splitType="Stretch">
+			<subreport>
+				<reportElement x="-11" y="0" width="47" height="29" uuid="8d52ec5d-4ba8-45f4-b4c8-3f5b353178c3"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "reports/SCHOOLLOGO.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="410" y="1" width="164" height="17" forecolor="#0987E0" uuid="ca8faa00-ea2b-432b-9eda-0d3e6b07aaec">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INCOME STATEMENT]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="410" y="20" width="164" height="16" uuid="561e9ae7-5d8e-4573-82bc-69a54127e142"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{title}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="28"/>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="47" y="1" width="334" height="15" uuid="8f446b8d-3cfc-4694-9ba4-106a4a2c1bd9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Account}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="390" y="1" width="163" height="15" uuid="3931a6ea-9bf7-4fed-8def-595de402c18b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{credit}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="384" y="18" width="170" height="1" forecolor="#BDB2B1" uuid="8ea1da28-8318-4374-8581-4ab0cfa116ab">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="384" y="0" width="1" height="19" forecolor="#BDB2B1" uuid="2b6d6358-a3d2-4b84-92f0-5189fa61431e">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="554" y="0" width="1" height="19" forecolor="#BDB2B1" uuid="15f5301c-ac71-483c-b00a-2aff214f3af3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="21" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="436" y="0" width="80" height="20" uuid="a1c82f38-9846-4dc0-8151-4a0e45a8d9f1"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="516" y="0" width="40" height="20" uuid="da12512a-a762-4311-8c1b-6920197d9a5d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="381" y="0" width="172" height="16" uuid="5db7627b-2b53-4584-98ea-458c4e2be7da"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="13" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="28" y="0" width="92" height="16" forecolor="#050505" backcolor="#FFFCFC" uuid="0e2d8980-5877-4873-9e2f-7c83c6fecf3a">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Net Income]]></text>
+			</staticText>
+			<line>
+				<reportElement x="385" y="18" width="168" height="1" uuid="a8244ec3-6ec8-4f7c-a86a-7260c260e4bb"/>
+			</line>
+			<line>
+				<reportElement x="554" y="0" width="1" height="18" forecolor="#BDB2B1" uuid="45c71d21-94c5-4b53-9fa4-ff6640355876">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="384" y="0" width="1" height="18" forecolor="#BDB2B1" uuid="fb8f549b-6a42-4997-a81f-8e0f866c6650">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

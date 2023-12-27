@@ -1,0 +1,104 @@
+.previous-step, .next-step {
+	width: 100px;
+	font-weight: bold;
+	color: white;
+	border: 0 none;
+	border-radius: 0px;
+	cursor: pointer;
+	margin: 10px 0px 20px 20px;
+	float: right
+}
+
+.finish {
+	text-align: center
+}
+
+.form, .previous-step {
+	background: #616161;
+}
+
+.form, .next-step {
+	background: #2F8D46;
+}
+
+
+
+.text {
+	color: #2F8D46;
+	font-weight: normal
+}
+
+.progressbarregistrations {
+	margin-bottom: 30px;
+	margin-left: -35px;
+	overflow: hidden;
+	color: lightgrey
+}
+
+.progressbarregistrations .active {
+	color: #2F8D46
+}
+
+.progressbarregistrations li {
+	list-style-type: none;
+	font-size: 15px;
+	width: 25%;
+	float: left;
+	position: relative;
+	font-weight: 400
+}
+
+.progressbarregistrations #step1:before {
+	content: "1"
+}
+
+.progressbarregistrations #step2:before {
+	content: "2"
+}
+
+.progressbarregistrations #step3:before {
+	content: "3"
+}
+
+.progressbarregistrations #step4:before {
+	content: "4"
+}
+
+.progressbarregistrations li:before {
+	width: 50px;
+	height: 50px;
+	line-height: 45px;
+	display: block;
+	font-size: 20px;
+	color: #ffffff;
+	background: lightgray;
+	border-radius: 50%;
+	margin: 0 auto 10px auto;
+	padding: 2px
+}
+
+.progressbarregistrations li:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+	background: lightgray;
+	position: absolute;
+	left: 0;
+	top: 25px;
+	z-index: -1
+}
+
+.progressbarregistrations li.active:before,
+.progressbarregistrations li.active:after {
+	background: #2F8D46
+}
+
+.progress {
+	height: 5px;
+	margin-bottom:-28px;
+}
+
+.progress-bar-registrations {
+	background-color: #2F8D46;
+    transition: width 0.4s ease-in-out;
+}

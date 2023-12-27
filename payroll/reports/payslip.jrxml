@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="609" pageHeight="481" columnWidth="579" leftMargin="20" rightMargin="10" topMargin="10" bottomMargin="20" uuid="8a16114d-afcc-49e7-851f-3de1034a9f27">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sec 2.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="448"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="541"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="330"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="663"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="schid" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[Select Schoolname,concat(address,' ',city) as address,phone,TaxRelief, 124 as payroll,a.Payno,pn,`NSSF NUMBER`,`NHIF NUMBER`,`KRA PIN`,`MONTH`,YEAR ,Name,`Basic income`,Gross,Taxable,Paye,Nhif,Nssf,Housing,`Total deductions`,`Net pay` from  ( SELECT Payno,Taxable,Paye,Nhif,Nssf,Housing,SUM(`MAGITA COOP`) as `MAGITA COOP`, SUM(`WAUMINI SACCO SOCIETY`) as `WAUMINI SACCO SOCIETY`, SUM(`ELECTRICITY`) as `ELECTRICITY`, SUM(`DISPENSARY`) as `DISPENSARY`, SUM(`SALARY ADVANCE`) as `SALARY ADVANCE`, SUM(`HELB`) as `HELB`, SUM(`BEEF OSWARD`) as `BEEF OSWARD`, SUM(`PLEDGE PIUS`) as `PLEDGE PIUS`, SUM(`ABSENTISM`) as `ABSENTISM`, SUM(`PLEDGE MBUBA`) as `PLEDGE MBUBA`, SUM(`PLEDGE JOY KAWIRA`) as `PLEDGE JOY KAWIRA`, SUM(`CAPITAL SACCO LOANS`) as `CAPITAL SACCO LOANS`, SUM(`PLEDGE GICHUNGE`) as `PLEDGE GICHUNGE`, SUM(`MADISON INS`) as `MADISON INS`, SUM(`PLEDGE TITUS`) as `PLEDGE TITUS`, SUM(`PLEDGE MBAE`) as `PLEDGE MBAE`, SUM(`PLEDGE JULIUS GITONGA`) as `PLEDGE JULIUS GITONGA`, SUM(`PLEDGE DENIS`) as `PLEDGE DENIS`, SUM(`MATERI WELFARE FUND`) as `MATERI WELFARE FUND`, SUM(`PLEDGE GRACE WILSON`) as `PLEDGE GRACE WILSON`, SUM(`SIR-CHARGE`) as `SIR-CHARGE`, SUM(`PLEDGE NDEGWA`) as `PLEDGE NDEGWA`, SUM(`PLEDGE KARUGIA`) as `PLEDGE KARUGIA`, SUM(`PLEDGE MBERIA`) as `PLEDGE MBERIA`, SUM(`PLEDGE H. MUTHENGI`) as `PLEDGE H. MUTHENGI`, SUM(`PLEDGE KABURU`) as `PLEDGE KABURU`, SUM(`PLEDGE RUCHA`) as `PLEDGE RUCHA`, SUM(`KUDHEHIA`) as `KUDHEHIA`, SUM(`PLEDGE DOUGLAS`) as `PLEDGE DOUGLAS`, SUM(`PLEDGE MUSA`) as `PLEDGE MUSA`, SUM(`PLEDGE KIMOTHO`) as `PLEDGE KIMOTHO`, SUM(`PLEDGE KIRIMI OSAMA`) as `PLEDGE KIRIMI OSAMA`, SUM(`SCHOOL CANTEEN`) as `SCHOOL CANTEEN`, SUM(`PLEDGE MARIGU`) as `PLEDGE MARIGU`, SUM(`PLEDGE JOMO`) as `PLEDGE JOMO`, SUM(`PLEDGE ELIZABETH`) as `PLEDGE ELIZABETH`, SUM(`PLEDGE ALBINA MBAE`) as `PLEDGE ALBINA MBAE`, SUM(`ADVANCE`) as `ADVANCE`, SUM(`PLEDGE MUCEE`) as `PLEDGE MUCEE`, SUM(`PLEDGE LUCIANA`) as `PLEDGE LUCIANA`, (nhif+nssf+housing+paye+SUM(`MAGITA COOP`)+ SUM(`WAUMINI SACCO SOCIETY`)+ SUM(`ELECTRICITY`)+ SUM(`DISPENSARY`)+ SUM(`SALARY ADVANCE`)+ SUM(`HELB`)+ SUM(`BEEF OSWARD`)+ SUM(`PLEDGE PIUS`)+ SUM(`ABSENTISM`)+ SUM(`PLEDGE MBUBA`)+ SUM(`PLEDGE JOY KAWIRA`)+ SUM(`CAPITAL SACCO LOANS`)+ SUM(`PLEDGE GICHUNGE`)+ SUM(`MADISON INS`)+ SUM(`PLEDGE TITUS`)+ SUM(`PLEDGE MBAE`)+ SUM(`PLEDGE JULIUS GITONGA`)+ SUM(`PLEDGE DENIS`)+ SUM(`MATERI WELFARE FUND`)+ SUM(`PLEDGE GRACE WILSON`)+ SUM(`SIR-CHARGE`)+ SUM(`PLEDGE NDEGWA`)+ SUM(`PLEDGE KARUGIA`)+ SUM(`PLEDGE MBERIA`)+ SUM(`PLEDGE H. MUTHENGI`)+ SUM(`PLEDGE KABURU`)+ SUM(`PLEDGE RUCHA`)+ SUM(`KUDHEHIA`)+ SUM(`PLEDGE DOUGLAS`)+ SUM(`PLEDGE MUSA`)+ SUM(`PLEDGE KIMOTHO`)+ SUM(`PLEDGE KIRIMI OSAMA`)+ SUM(`SCHOOL CANTEEN`)+ SUM(`PLEDGE MARIGU`)+ SUM(`PLEDGE JOMO`)+ SUM(`PLEDGE ELIZABETH`)+ SUM(`PLEDGE ALBINA MBAE`)+ SUM(`ADVANCE`)+ SUM(`PLEDGE MUCEE`)+ SUM(`PLEDGE LUCIANA`)) as 'Total deductions', round(`GROSS SALARY`-(nhif+nssf+housing+paye+SUM(`MAGITA COOP`)+ SUM(`WAUMINI SACCO SOCIETY`)+ SUM(`ELECTRICITY`)+ SUM(`DISPENSARY`)+ SUM(`SALARY ADVANCE`)+ SUM(`HELB`)+ SUM(`BEEF OSWARD`)+ SUM(`PLEDGE PIUS`)+ SUM(`ABSENTISM`)+ SUM(`PLEDGE MBUBA`)+ SUM(`PLEDGE JOY KAWIRA`)+ SUM(`CAPITAL SACCO LOANS`)+ SUM(`PLEDGE GICHUNGE`)+ SUM(`MADISON INS`)+ SUM(`PLEDGE TITUS`)+ SUM(`PLEDGE MBAE`)+ SUM(`PLEDGE JULIUS GITONGA`)+ SUM(`PLEDGE DENIS`)+ SUM(`MATERI WELFARE FUND`)+ SUM(`PLEDGE GRACE WILSON`)+ SUM(`SIR-CHARGE`)+ SUM(`PLEDGE NDEGWA`)+ SUM(`PLEDGE KARUGIA`)+ SUM(`PLEDGE MBERIA`)+ SUM(`PLEDGE H. MUTHENGI`)+ SUM(`PLEDGE KABURU`)+ SUM(`PLEDGE RUCHA`)+ SUM(`KUDHEHIA`)+ SUM(`PLEDGE DOUGLAS`)+ SUM(`PLEDGE MUSA`)+ SUM(`PLEDGE KIMOTHO`)+ SUM(`PLEDGE KIRIMI OSAMA`)+ SUM(`SCHOOL CANTEEN`)+ SUM(`PLEDGE MARIGU`)+ SUM(`PLEDGE JOMO`)+ SUM(`PLEDGE ELIZABETH`)+ SUM(`PLEDGE ALBINA MBAE`)+ SUM(`ADVANCE`)+ SUM(`PLEDGE MUCEE`)+ SUM(`PLEDGE LUCIANA`))) as 'Net pay'  FROM (select employees.Payno, concat(fname,'  ',sname,'  ',surname) as name,  `monthly pays`.`gross salary`,taxable,`kra tax` AS Paye,`monthly pays`.nhif,`monthly pays`.housing,`monthly pays`.nssf,  SUM(0) AS `MAGITA COOP`, SUM(0) AS `WAUMINI SACCO SOCIETY`, SUM(0) AS `ELECTRICITY`, SUM(0) AS `DISPENSARY`, SUM(0) AS `SALARY ADVANCE`, SUM(0) AS `HELB`, SUM(0) AS `BEEF OSWARD`, SUM(0) AS `PLEDGE PIUS`, SUM(0) AS `ABSENTISM`, SUM(0) AS `PLEDGE MBUBA`, SUM(0) AS `PLEDGE JOY KAWIRA`, SUM(0) AS `CAPITAL SACCO LOANS`, SUM(0) AS `PLEDGE GICHUNGE`, SUM(0) AS `MADISON INS`, SUM(0) AS `PLEDGE TITUS`, SUM(0) AS `PLEDGE MBAE`, SUM(0) AS `PLEDGE JULIUS GITONGA`, SUM(0) AS `PLEDGE DENIS`, SUM(0) AS `MATERI WELFARE FUND`, SUM(0) AS `PLEDGE GRACE WILSON`, SUM(0) AS `SIR-CHARGE`, SUM(0) AS `PLEDGE NDEGWA`, SUM(0) AS `PLEDGE KARUGIA`, SUM(0) AS `PLEDGE MBERIA`, SUM(0) AS `PLEDGE H. MUTHENGI`, SUM(0) AS `PLEDGE KABURU`, SUM(0) AS `PLEDGE RUCHA`, SUM(0) AS `KUDHEHIA`, SUM(0) AS `PLEDGE DOUGLAS`, SUM(0) AS `PLEDGE MUSA`, SUM(0) AS `PLEDGE KIMOTHO`, SUM(0) AS `PLEDGE KIRIMI OSAMA`, SUM(0) AS `SCHOOL CANTEEN`, SUM(0) AS `PLEDGE MARIGU`, SUM(0) AS `PLEDGE JOMO`, SUM(0) AS `PLEDGE ELIZABETH`, SUM(0) AS `PLEDGE ALBINA MBAE`, SUM(0) AS `ADVANCE`, SUM(0) AS `PLEDGE MUCEE`, SUM(0) AS `PLEDGE LUCIANA`  from employees  inner join `monthly pays` on `monthly pays`.payno=employees.id  where payroll=124 and employees.status='Active' group by employees.id  union all  select e.Payno,0,0,0,0,0,0,0 ,SUM(IF(AMOUNT> 0 AND deduction=1, (amount), 0)) AS `MAGITA COOP`, SUM(IF(AMOUNT> 0 AND deduction=2, (amount), 0)) AS `WAUMINI SACCO SOCIETY`, SUM(IF(AMOUNT> 0 AND deduction=3, (amount), 0)) AS `ELECTRICITY`, SUM(IF(AMOUNT> 0 AND deduction=4, (amount), 0)) AS `DISPENSARY`, SUM(IF(AMOUNT> 0 AND deduction=6, (amount), 0)) AS `SALARY ADVANCE`, SUM(IF(AMOUNT> 0 AND deduction=7, (amount), 0)) AS `HELB`, SUM(IF(AMOUNT> 0 AND deduction=8, (amount), 0)) AS `BEEF OSWARD`, SUM(IF(AMOUNT> 0 AND deduction=9, (amount), 0)) AS `PLEDGE PIUS`, SUM(IF(AMOUNT> 0 AND deduction=10, (amount), 0)) AS `ABSENTISM`, SUM(IF(AMOUNT> 0 AND deduction=11, (amount), 0)) AS `PLEDGE MBUBA`, SUM(IF(AMOUNT> 0 AND deduction=14, (amount), 0)) AS `PLEDGE JOY KAWIRA`, SUM(IF(AMOUNT> 0 AND deduction=16, (amount), 0)) AS `CAPITAL SACCO LOANS`, SUM(IF(AMOUNT> 0 AND deduction=17, (amount), 0)) AS `PLEDGE GICHUNGE`, SUM(IF(AMOUNT> 0 AND deduction=18, (amount), 0)) AS `MADISON INS`, SUM(IF(AMOUNT> 0 AND deduction=19, (amount), 0)) AS `PLEDGE TITUS`, SUM(IF(AMOUNT> 0 AND deduction=20, (amount), 0)) AS `PLEDGE MBAE`, SUM(IF(AMOUNT> 0 AND deduction=21, (amount), 0)) AS `PLEDGE JULIUS GITONGA`, SUM(IF(AMOUNT> 0 AND deduction=22, (amount), 0)) AS `PLEDGE DENIS`, SUM(IF(AMOUNT> 0 AND deduction=23, (amount), 0)) AS `MATERI WELFARE FUND`, SUM(IF(AMOUNT> 0 AND deduction=24, (amount), 0)) AS `PLEDGE GRACE WILSON`, SUM(IF(AMOUNT> 0 AND deduction=25, (amount), 0)) AS `SIR-CHARGE`, SUM(IF(AMOUNT> 0 AND deduction=26, (amount), 0)) AS `PLEDGE NDEGWA`, SUM(IF(AMOUNT> 0 AND deduction=27, (amount), 0)) AS `PLEDGE KARUGIA`, SUM(IF(AMOUNT> 0 AND deduction=28, (amount), 0)) AS `PLEDGE MBERIA`, SUM(IF(AMOUNT> 0 AND deduction=30, (amount), 0)) AS `PLEDGE H. MUTHENGI`, SUM(IF(AMOUNT> 0 AND deduction=31, (amount), 0)) AS `PLEDGE KABURU`, SUM(IF(AMOUNT> 0 AND deduction=32, (amount), 0)) AS `PLEDGE RUCHA`, SUM(IF(AMOUNT> 0 AND deduction=33, (amount), 0)) AS `KUDHEHIA`, SUM(IF(AMOUNT> 0 AND deduction=34, (amount), 0)) AS `PLEDGE DOUGLAS`, SUM(IF(AMOUNT> 0 AND deduction=35, (amount), 0)) AS `PLEDGE MUSA`, SUM(IF(AMOUNT> 0 AND deduction=36, (amount), 0)) AS `PLEDGE KIMOTHO`, SUM(IF(AMOUNT> 0 AND deduction=37, (amount), 0)) AS `PLEDGE KIRIMI OSAMA`, SUM(IF(AMOUNT> 0 AND deduction=38, (amount), 0)) AS `SCHOOL CANTEEN`, SUM(IF(AMOUNT> 0 AND deduction=40, (amount), 0)) AS `PLEDGE MARIGU`, SUM(IF(AMOUNT> 0 AND deduction=41, (amount), 0)) AS `PLEDGE JOMO`, SUM(IF(AMOUNT> 0 AND deduction=43, (amount), 0)) AS `PLEDGE ELIZABETH`, SUM(IF(AMOUNT> 0 AND deduction=44, (amount), 0)) AS `PLEDGE ALBINA MBAE`, SUM(IF(AMOUNT> 0 AND deduction=45, (amount), 0)) AS `ADVANCE`, SUM(IF(AMOUNT> 0 AND deduction=46, (amount), 0)) AS `PLEDGE MUCEE`, SUM(IF(AMOUNT> 0 AND deduction=47, (amount), 0)) AS `PLEDGE LUCIANA` from `other deductions` a  inner join employees e on e.id=a.`payno`  where payroll='124' and e.status='Active'  group by a.`payno`)h  group by payno)a left join ( SELECT Payno,pn,Name,`NSSF NUMBER`,`NHIF NUMBER`,`KRA PIN`,`MONTH`,YEAR,SUM(`MEDICAL`) as `MEDICAL`, SUM(`OTHER`) as `OTHER`, SUM(`SALARY ARREARS`) as `SALARY ARREARS`, SUM(`Basic income`) as `Basic income`,`GROSS SALARY` AS `Gross`  FROM (select employees.Payno,employees.id as pn,`NSSF NUMBER`,`NHIF NUMBER`,`KRA PIN`,  MONTHNAME(STR_TO_DATE(`month`, '%m')) AS `MONTH`,YEAR,  employees.id,  concat(fname,'  ',sname,'  ',surname) as name,  `monthly pays`.`gross salary`, SUM(0) AS `MEDICAL`, SUM(0) AS `OTHER`, SUM(0) AS `SALARY ARREARS`, SUM(0) AS `Basic income`, sum(0) as aamount  from employees  inner join `monthly pays` on `monthly pays`.payno=employees.id  where payroll=124 and employees.status='Active' group by employees.id  union all  select Payno,`pay no`,0,0,0,0,0,0,0,0 ,SUM(IF(AMOUNT> 0 AND allowance=1, (amount), 0)) AS `MEDICAL`, SUM(IF(AMOUNT> 0 AND allowance=2, (amount), 0)) AS `OTHER`, SUM(IF(AMOUNT> 0 AND allowance=4, (amount), 0)) AS `SALARY ARREARS`, SUM(IF(AMOUNT> 0 AND allowance=14, (amount), 0)) AS `Basic income`,sum(amount) from allowances a  inner join employees e on e.id=`pay no`  where payroll='124' and e.status='Active'  group by `pay no`)h  group by payno)b on a.payno=b.payno  inner join schooldetails s on s.id=14]]>
+	</queryString>
+	<field name="Schoolname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Schoolname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="schooldetails"/>
+	</field>
+	<field name="address" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="address"/>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="phone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="schooldetails"/>
+	</field>
+	<field name="TaxRelief" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="TaxRelief"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="schooldetails"/>
+	</field>
+	<field name="payroll" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="payroll"/>
+	</field>
+	<field name="Payno" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Payno"/>
+	</field>
+	<field name="pn" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="pn"/>
+	</field>
+	<field name="NSSF NUMBER" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NSSF NUMBER"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NHIF NUMBER" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NHIF NUMBER"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="KRA PIN" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="KRA PIN"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="MONTH" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="MONTH"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="YEAR" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="YEAR"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Name"/>
+	</field>
+	<field name="Basic income" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Basic income"/>
+	</field>
+	<field name="Gross" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Gross"/>
+	</field>
+	<field name="Taxable" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Taxable"/>
+	</field>
+	<field name="Paye" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Paye"/>
+	</field>
+	<field name="Nhif" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Nhif"/>
+	</field>
+	<field name="Nssf" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Nssf"/>
+	</field>
+	<field name="Housing" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Housing"/>
+	</field>
+	<field name="Total deductions" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Total deductions"/>
+	</field>
+	<field name="Net pay" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Net pay"/>
+	</field>
+	<group name="Group1" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{Payno}]]></groupExpression>
+		<groupHeader>
+			<band height="91" splitType="Immediate">
+				<textField>
+					<reportElement x="2" y="8" width="567" height="17" uuid="0f1b260e-283c-4b6f-a9f8-775d91530bb5">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["PAYSLIP FOR THE MONTH OF " + $F{MONTH} +" "+$F{YEAR}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="2" y="31" width="369" height="12" uuid="ce07a1c1-19ef-4f35-8edc-7b99cb7e7492"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["PAY NO : " +$F{Payno}+"   NAME: "+$F{Name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="2" y="56" width="202" height="12" uuid="21b1897d-9634-4782-9f8d-5d2bacfbb10f"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["KRA PIN : "+$F{KRA PIN}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="403" y="56" width="148" height="12" uuid="4c4f7a00-c438-477f-831c-52aea717a03c"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["NSSF NO : "+$F{NSSF NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="213" y="56" width="175" height="12" uuid="49b410f8-8595-409b-a6b0-9284c3cd48fc"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["NHIF NO : "+$F{NHIF NUMBER}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="569" y="30" width="1" height="60" uuid="87d379b9-2be1-428d-a66f-79506a378b0b"/>
+				</line>
+				<line>
+					<reportElement x="0" y="30" width="569" height="1" uuid="f8f12237-ac16-4516-bd42-7d912b56ee85"/>
+				</line>
+				<line>
+					<reportElement x="0" y="30" width="1" height="60" uuid="2a493f81-d082-4db2-abb0-333a68f559e3"/>
+				</line>
+				<line>
+					<reportElement x="274" y="73" width="1" height="17" uuid="48aa04ba-a343-4046-8957-d7a11ad49d1e"/>
+				</line>
+				<line>
+					<reportElement x="0" y="72" width="569" height="1" uuid="de9f86f6-b3be-4793-b5cc-411ecf05cf62"/>
+				</line>
+				<staticText>
+					<reportElement x="2" y="78" width="156" height="12" forecolor="#0A782D" uuid="3005edec-f9e8-47ee-acd1-da8c93622778"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[EARNINGS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="280" y="78" width="135" height="12" forecolor="#0A782D" uuid="fe42cf94-bd13-4087-83f7-3c19c5019ac3"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[DEDUCTIONS]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="90" width="569" height="1" uuid="0d80ca75-b843-45f4-a9ad-3aee4b1567ca"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="117">
+				<staticText>
+					<reportElement x="3" y="3" width="134" height="12" forecolor="#111211" uuid="15b524a7-f9ce-43a5-9127-810041ca1ca2"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Gross pay]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="77" width="569" height="1" uuid="010573c9-4b3e-4ef7-b69b-1ee81585518e"/>
+				</line>
+				<line>
+					<reportElement x="0" y="0" width="1" height="115" uuid="510196c9-0ba5-4af2-80c3-a0f9f8b2551a"/>
+				</line>
+				<line>
+					<reportElement x="0" y="81" width="1" height="35" uuid="bfc63e92-c634-4ef6-9557-ee73093f1248"/>
+				</line>
+				<line>
+					<reportElement x="0" y="116" width="569" height="1" uuid="9f0f83af-f2d8-4ddd-8a11-350fe8362c77"/>
+				</line>
+				<line>
+					<reportElement x="0" y="0" width="569" height="1" uuid="e77f75a6-54e4-415b-a377-69706b6b14e3"/>
+				</line>
+				<line>
+					<reportElement x="569" y="0" width="1" height="115" uuid="34a11302-96a7-4491-a56b-8179a16d86db"/>
+				</line>
+				<staticText>
+					<reportElement x="4" y="27" width="100" height="12" forecolor="#0A782D" uuid="8071b3e5-421e-4229-8cf6-d2e17aaa4dd4"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[STATUTORY]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="5" y="41" width="45" height="12" uuid="60264e17-548a-4b0c-ac1e-65483cdad485"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[NHIF]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="4" y="83" width="59" height="12" uuid="7432e48d-3b8f-4906-9870-79835270a57b"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[GROSS PAY]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="137" y="83" width="67" height="12" uuid="f94344fa-af9e-4328-9cd2-ec989a7f754e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[TAXABLE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="328" y="83" width="61" height="12" uuid="22de640f-8503-43fe-b0b2-4ef3424974b1"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[DEDUCTIONS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="515" y="83" width="50" height="12" uuid="45e02fcb-4438-4f5c-8a40-dc27612cd8dd"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[NET PAY]]></text>
+				</staticText>
+				<textField pattern="#,##0.###">
+					<reportElement x="515" y="98" width="50" height="12" uuid="051b5b7a-161a-49d2-abe0-c25f26514a68"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Net pay}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###.00">
+					<reportElement mode="Opaque" x="57" y="41" width="38" height="12" uuid="d230b9ac-8b60-4342-8509-45a47bef5946"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Nhif}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="4" y="98" width="59" height="12" uuid="69823a76-9e5c-4bda-b340-027aa88c5b05"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Gross}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="137" y="98" width="67" height="12" uuid="09af51ba-1264-40de-a892-2220a5dce6be"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Taxable}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="328" y="98" width="61" height="12" uuid="839b772f-bbb2-46bd-affd-c7f7dedc8ed8"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Total deductions}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="211" y="3" width="58" height="12" uuid="a3ba0f00-a485-4e51-9f11-ccc37df138fd"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Gross}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="5" y="56" width="45" height="12" uuid="285cfe65-2fe3-467d-9eff-67ff2928cc9c"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[NSSF]]></text>
+				</staticText>
+				<textField pattern="#,###.00">
+					<reportElement mode="Opaque" x="57" y="56" width="38" height="12" uuid="d74d9245-0380-4e3a-bc93-4d963955db6c"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Nhif}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="164" y="41" width="48" height="12" uuid="d272356d-089e-491a-ae07-537891210bff"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[PAYE]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement mode="Opaque" x="219" y="41" width="49" height="12" uuid="6201fdd5-95f9-45cd-8d0d-a14aa83716a6"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Paye}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="164" y="56" width="48" height="12" uuid="9d47ddbe-110a-432e-8172-af9cd85eb89e"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[HOUSING]]></text>
+				</staticText>
+				<textField pattern="#,###.0#">
+					<reportElement mode="Opaque" x="219" y="56" width="49" height="12" uuid="0eb44654-2f90-4d1e-aee6-711f7e9511e7"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Housing}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="17" width="569" height="1" uuid="da3939d5-9156-4d51-83a1-042faac44357"/>
+				</line>
+				<line>
+					<reportElement stretchType="RelativeToBandHeight" x="130" y="38" width="1" height="39" uuid="49fa1fe4-8be0-445a-b226-6a2b20c0cd4b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</line>
+				<line>
+					<reportElement x="0" y="38" width="274" height="1" uuid="43557360-ec50-4b48-a212-0f63ef588e34"/>
+				</line>
+				<line>
+					<reportElement stretchType="RelativeToBandHeight" x="274" y="-2" width="1" height="79" uuid="c284ced9-2dfd-4fd1-a281-21b3870be223">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<subreport>
+				<reportElement x="1" y="0" width="39" height="27" uuid="e3268caf-0978-4c94-85f9-9e2fa3d89060"/>
+				<subreportParameter name="schid">
+					<subreportParameterExpression><![CDATA[$P{schid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "reports/SCHOOLLOGO.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="569" y="0" width="1" height="30" uuid="d1807971-cb0b-4c71-a53e-3bab24591d70"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="1" height="30" uuid="4af4b699-11b5-4aab-ae7e-29bc88f12aac"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="274" y="0" width="1" height="30" uuid="61217eed-20e1-4ff7-b910-f16e6b3a3536">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<subreport>
+				<reportElement x="2" y="0" width="266" height="30" uuid="08863db8-e1c6-472d-ab25-ea447aad2a11"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="payno">
+					<subreportParameterExpression><![CDATA[$F{pn}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="payroll">
+					<subreportParameterExpression><![CDATA[$F{payroll}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "reports/report3.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="280" y="0" width="289" height="28" uuid="0f86313f-d86a-4683-b15b-54cf6d5e3922"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="payno">
+					<subreportParameterExpression><![CDATA[$F{pn}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="payroll">
+					<subreportParameterExpression><![CDATA[$F{payroll}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "reports/report2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

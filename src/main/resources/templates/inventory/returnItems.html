@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>
+    Return Items
+  </title>
+  <div th:replace="~{fragments/inventory/head}"></div>
+</head>
+
+<body class="g-sidenav-show bg-gray-200 text-xs">
+  <div th:replace="~{fragments/inventory/sidenav}"></div>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragments/inventory/navbar}"></div>
+    <!-- End Navbar -->
+    <div class="content" id="output">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-9">
+            <div class="table-responsive card py-5 px-1">
+              <table id="returnItemsTable" class="table dt-responsive nowrap text-center align-items-center"
+                     style="width:100%">
+                <thead>
+                <tr>
+                  <th class="text-center">Name</th>
+                  <th class="text-center">Quantity</th>
+                  <th class="text-center">Value</th>
+                  <th class="text-center">Issued On</th>
+                  <th class="text-center">Return Date</th>
+                  <th class="text-center">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class=" card col-md-3">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="input-group input-group-dynamic mb-3">
+                  <label class="form-label">Amount Returned</label>
+                  <input name="amount" class="multisteps-form__input form-control" type="number"/>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-group input-group-outline mt-3 col-md-12">
+                            <textarea id="comment" name="comment" class="form-control" rows="3"
+                                      placeholder="Comment"></textarea>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 mt-3">
+                  <button type="button" onclick="returnTheItem()" class="btn btn-primary">Return</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+  <div th:replace="~{fragments/inventory/uisettings}"></div>
+  <!-- Modals -->
+
+  <div th:replace="~{fragments/inventory/modals}"></div>
+
+  <!--   Core JS Files   -->
+  <script>
+    $(document).ready(function () {
+      $('#pageName').text("Return Items");
+      $('#pageNameH6').text("Return Items");
+      $.ajax({
+        url: '/api/inv/getIssuedItems',
+        method: 'GET'
+      }).done(function (result) {
+        console.log(result);
+        for (let i = 0; i < result.length; i++) {
+          let arr = result[i];
+          let obj1 = arr[0];
+          let obj2 = arr[1];
+          result[i] = Object.assign({}, obj1, obj2);
+        }
+        $('#returnItemsTable').DataTable({
+          "data": result,
+          "columns": [
+            {"data": "itemName"},
+            {"data": "quantity"},
+            {"data": "itemPrice"},
+            {"data": "issuedOn"},
+            {"data": "returnDate"},
+            {"data": "status"},
+            {"data": "individualId", "visible": false},
+          ],
+          "rowCallback": function(row, data) {
+            $(row).on("click", function() {
+              $('tr').css({
+                "background-color": "",
+                "color": ""
+              });
+              // Set background and text color of clicked row
+              $(row).css({
+                "background-color": "red",
+                "color": "white"
+              });
+              selectedIssuedItem = data;
+            });
+          }
+        })
+      }).fail(function (error) {
+        console.log(error);
+      })
+    })
+  </script>
+  <script type="application/javascript" src="../inventory_assets/js/core/popper.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/core/bootstrap.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/plugins/chartjs.min.js"></script>
+  <script type="application/javascript" src="../inventory_assets/js/material-dashboard.min.js?v=3.0.6"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- GitHub buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+</body>
+
+</html>

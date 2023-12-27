@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="inventoryoverdue" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f6c13c7e-aceb-4378-9efd-daf744ea02b4">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT item_name,individual,individual_category,DATE(issued_on)AS issued_on,quantity, DATEDIFF(DATE(NOW()),return_date) as overdue_days FROM ( SELECT issued_items.*,item_name FROM issued_items INNER JOIN items ON items.id = item_id) h INNER JOIN ( SELECT `tsc nu`, CONCAT(`first name`,' ',`second name`) AS individual FROM teacherregistration UNION ALL SELECT `adm no`, CONCAT(`first name`,' ',`second name`) FROM registration) g ON h.individual_id = g. `tsc nu` WHERE `status` = 'Not returned' AND DATE(NOW())>return_date ORDER BY return_date;
+]]>
+	</queryString>
+	<field name="item_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="item_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="item_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="items"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="individual" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="individual"/>
+		<property name="com.jaspersoft.studio.field.label" value="individual"/>
+	</field>
+	<field name="individual_category" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="individual_category"/>
+		<property name="com.jaspersoft.studio.field.label" value="individual_category"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="issued_items"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="issued_on" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="issued_on"/>
+		<property name="com.jaspersoft.studio.field.label" value="issued_on"/>
+	</field>
+	<field name="quantity" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="quantity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="issued_items"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="overdue_days" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="overdue_days"/>
+		<property name="com.jaspersoft.studio.field.label" value="overdue_days"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="40" splitType="Stretch">
+			<subreport>
+				<reportElement x="46" y="0" width="150" height="28" uuid="9915bc66-c9b3-4810-9a2c-98fb984567cc"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "reports/SCHOOLLOGO.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="29" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="7" width="555" height="19" forecolor="#000000" uuid="108a0390-a2d8-4cf3-82bb-3fe7755bebf1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="15"/>
+				</textElement>
+				<text><![CDATA[INVENTORY OVERDUE]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="436" y="9" width="119" height="20" uuid="ea2ff914-8124-47ad-9fa7-bfa36981f8f9"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="2" width="555" height="20" forecolor="#333333" backcolor="#333333" uuid="634fa80f-a25a-4351-b5d2-e9b64197f554"/>
+				<staticText>
+					<reportElement mode="Transparent" x="4" y="3" width="106" height="14" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="21603ed6-ea72-4a4f-aa53-5bc976628233">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[Item]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="123" y="3" width="108" height="14" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="48e755df-d4a7-417c-bca8-8bc1fecbedcb">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="484" y="3" width="67" height="14" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="29785e74-483a-4c93-adcd-aa7b619be837">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[Overdue Days]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="235" y="3" width="75" height="14" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="e637a205-4a1b-4793-be30-3d17ccbcfc2e">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[Category]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="410" y="3" width="55" height="14" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="d8d090b9-854a-4875-9d55-5fbd5f81cb91">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="321" y="3" width="76" height="14" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="8f48fd98-6bf6-497b-8ccb-a3aed1254699">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[Issued On]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="4" y="0" width="115" height="15" uuid="1cc8da4d-8d6a-4d23-ac91-fe1b8e34565f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="123" y="0" width="108" height="15" uuid="90d155b7-f52f-4cf3-a217-037a3a82beb9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{individual}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="241" y="0" width="72" height="15" uuid="2c82e1e0-5d49-42c3-8397-2f8bbd5bc1bc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{individual_category}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="321" y="0" width="76" height="15" uuid="f7d3202f-bd37-47b9-9870-4876a3e7e72e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{issued_on}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="408" y="0" width="63" height="15" uuid="82897e11-a5b9-42b7-bbd7-c0dcdb793b68"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="16" width="555" height="1" uuid="2b901436-d9f3-44dc-86c4-5faca766b62c"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="1" height="17" isPrintWhenDetailOverflows="true" uuid="69d73952-f3f8-4264-af5f-925bff588a9e"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="119" y="0" width="1" height="17" isPrintWhenDetailOverflows="true" uuid="91dfccf1-c74f-42b1-8b48-d3168c9bd08c"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="236" y="0" width="1" height="17" isPrintWhenDetailOverflows="true" uuid="1fbbf08a-0893-4583-8945-b70de1e8d63b"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="316" y="0" width="1" height="17" isPrintWhenDetailOverflows="true" uuid="87ee6575-7910-49ff-89c6-9f2375bcd387"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="402" y="0" width="1" height="17" isPrintWhenDetailOverflows="true" uuid="4017a626-6155-4ff3-be92-e3413e74c454"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="555" y="0" width="1" height="17" isPrintWhenDetailOverflows="true" uuid="2db2e898-bdc8-41d3-9528-ef2d0836e521"/>
+			</line>
+			<line>
+				<reportElement stretchType="RelativeToTallestObject" x="484" y="0" width="1" height="17" isPrintWhenDetailOverflows="true" uuid="b2ec73d6-be24-4bf8-ac1c-350966f2c9b6"/>
+			</line>
+			<textField>
+				<reportElement x="485" y="0" width="71" height="15" uuid="90ab2146-bc2f-416f-8cbf-75c81b62149c"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{overdue_days}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="27" splitType="Stretch">
+			<textField>
+				<reportElement x="435" y="5" width="80" height="20" uuid="419df660-0a59-4461-8747-4f34de003411"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="5" width="40" height="20" uuid="9b09236b-4bf3-4a28-8e26-7d90f793f265"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

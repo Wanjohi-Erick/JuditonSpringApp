@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TaxReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="07631d5b-27d5-401d-aeea-427a76dbb0ff">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="schid" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select fname,sname,surname,employees.id, employees.PAYNO,AMOUNT,d.DEDUCTION,  month(DATE) AS MONTH, year(DATE) AS YEAR  from `other deductions`  inner join employees on `other deductions`.payno = employees.id  inner join deductions d on d.id=`other deductions`.deduction WHERE d.id='6'  and payroll=142  group by `other deductions`.payno HAVING amount>0]]>
+	</queryString>
+	<field name="fname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employees"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employees"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="surname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="surname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employees"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employees"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PAYNO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PAYNO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employees"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="AMOUNT" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="AMOUNT"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="other deductions"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DEDUCTION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DEDUCTION"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="deductions"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="MONTH" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="MONTH"/>
+	</field>
+	<field name="YEAR" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="YEAR"/>
+	</field>
+	<variable name="sno" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[0]]></variableExpression>
+	</variable>
+	<variable name="sumkra" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{AMOUNT}]]></variableExpression>
+		<initialValueExpression><![CDATA["0"]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="32" splitType="Stretch">
+			<subreport>
+				<reportElement x="-10" y="0" width="31" height="27" uuid="51b234e5-64b8-48ba-be8f-36bcb7013acf"/>
+				<subreportParameter name="schid">
+					<subreportParameterExpression><![CDATA[$P{schid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "reports/SCHOOLLOGO.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="56">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="424" y="2" width="131" height="18" uuid="cc4a5bf1-d8c0-4414-bd51-96f4018ffbdf"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="23" width="553" height="20" uuid="831d0d1b-abd2-4fc2-a919-e9062208d23c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEDUCTION}+"  DEDUCTIONS FOR  "+$F{MONTH}+"/"+$F{YEAR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="1" width="555" height="19" forecolor="#D0B48E" backcolor="#333333" uuid="4a605ac7-38f3-4e80-8fa0-0054f6df25a5"/>
+				<staticText>
+					<reportElement mode="Transparent" x="3" y="0" width="41" height="19" forecolor="#FFFFFF" backcolor="#333333" uuid="15803805-0906-47bd-addd-d4904ee1b638"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[S.NO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="139" y="0" width="77" height="19" forecolor="#FFFFFF" uuid="76a1c32f-15c7-43c5-880c-e57fd286302e"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[EMPLOYEE NAME]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="477" y="0" width="76" height="19" forecolor="#FFFFFF" uuid="a459ccfe-61ab-4b40-a52a-ffb24fd3a43d"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[AMOUNT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="385" y="0" width="79" height="19" forecolor="#FFFFFF" uuid="542730de-c617-4370-becb-a67017058171"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ID NO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="47" y="0" width="72" height="19" forecolor="#FFFFFF" backcolor="#333333" uuid="b76dc0f5-003b-4436-8beb-789e35d0eb80"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[PAYROLL.NO]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="14" width="555" height="1" forecolor="#666666" uuid="5a1236c1-afb3-4922-9d68-385ddf120078"/>
+			</line>
+			<textField>
+				<reportElement x="137" y="0" width="234" height="14" uuid="5fb4723f-cac1-4f46-b3ca-ac918cda7902"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fname}+" "+$F{sname}+" "+$F{surname}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="44" y="0" width="1" height="15" uuid="1a0f8399-b7a6-4996-9b6e-efb08439c5aa"/>
+			</line>
+			<line>
+				<reportElement x="554" y="0" width="1" height="15" uuid="56159696-e8d9-4c46-b298-26d0c532f4f3"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="1" height="15" uuid="bb7d038f-08fc-494a-9c2f-cc587d61d33e"/>
+			</line>
+			<textField>
+				<reportElement x="3" y="0" width="41" height="14" uuid="1a15f724-459b-4b1a-9f74-daba0ccd4f6b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sno}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="475" y="0" width="1" height="15" uuid="4679b453-d8ed-48a3-9f93-27405375605f"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="477" y="0" width="76" height="15" uuid="84c6adca-fbf5-4b1d-ac17-a933941940d0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AMOUNT}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="379" y="0" width="1" height="15" uuid="629c9d8e-be1a-46d6-854b-345e7bc91fab"/>
+			</line>
+			<textField>
+				<reportElement x="385" y="0" width="79" height="14" uuid="4b0399e0-6ee2-4cdc-a59c-3010a8ca9bdf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="122" y="0" width="1" height="15" uuid="f853f176-bc32-4c18-8fbf-c3b0d0c18af2"/>
+			</line>
+			<textField>
+				<reportElement x="48" y="0" width="71" height="14" uuid="060af149-62e1-4318-94fd-307470767424"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAYNO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="19" width="148" height="20" uuid="8d48aa1a-69e7-4c8d-947d-371777ee2010"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="476" y="19" width="80" height="20" uuid="6069e804-8eaa-480d-9809-585703e457dc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumkra}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

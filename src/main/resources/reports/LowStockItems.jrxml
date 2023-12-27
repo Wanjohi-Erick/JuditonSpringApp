@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BillDetails" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ec5e4916-f611-4552-acdf-0b8e8819435a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="local data con"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM (SELECT items.id,item_price,item_name,items.item_group,reoder_level,image,
+ifnull(SUM(amount),0) AS units,ifnull(company,'')AS company,
+case when reoder_level>=ifnull(SUM(amount),0) then 'Low Stock' ELSE 'Not Low' END AS reoder_status  FROM items 
+LEFT JOIN item_stock ON item_id = items.id 
+LEFT JOIN vendors ON vendors.id = items.preferred_vendor GROUP BY items.id order by id) h WHERE reoder_status = 'Low Stock']]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="items"/>
+	</field>
+	<field name="item_price" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="item_price"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="items"/>
+	</field>
+	<field name="item_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="item_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="items"/>
+	</field>
+	<field name="item_group" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="item_group"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="items"/>
+	</field>
+	<field name="reoder_level" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="reoder_level"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="items"/>
+	</field>
+	<field name="image" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="image"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="items"/>
+	</field>
+	<field name="units" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="units"/>
+	</field>
+	<field name="company" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company"/>
+	</field>
+	<field name="reoder_status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="reoder_status"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="41" splitType="Stretch">
+			<subreport>
+				<reportElement x="52" y="0" width="200" height="25" uuid="6ae53aa5-9fe4-4de0-85df-3879f8f476ba"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "reports/SCHOOLLOGO.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="55" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="555" height="25" forecolor="#666666" backcolor="#000000" uuid="85628ff3-0b06-406a-9645-43d7d83c7588"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="18"/>
+				</textElement>
+				<text><![CDATA[LOW STOCK ITEMS]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="410" y="33" width="145" height="20" uuid="c1de7e69-c6c3-4183-98a7-a53206136326"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="2" width="555" height="28" forecolor="#333333" backcolor="#333333" uuid="11dfb2d3-8f5f-42b3-be96-f82f2b1d46f8"/>
+				<staticText>
+					<reportElement mode="Transparent" x="6" y="6" width="27" height="15" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="751efaea-212e-4657-8e53-c01baef60c09"/>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[ITEM]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="170" y="0" width="48" height="28" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="184beb1c-e471-4b1a-b667-7696951a74a7"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[NO. IN STOCK]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="502" y="0" width="49" height="28" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="14aa9051-5802-4cb3-81f9-4d66fba1feb7"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[AVG COST]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="235" y="0" width="75" height="28" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="977230ff-536d-485d-961d-f5292237bf82"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[PREFFERED VENDOR]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="410" y="6" width="55" height="15" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="09b3b5c0-7efa-4b69-9b30-bfa8c0dcff70"/>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[CATEGORY]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="359" y="0" width="37" height="28" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="78bada85-fc7f-4db8-9564-5e56c708a7b8"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[R.ODR LEVEL]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="4" y="0" width="162" height="15" uuid="cd0d04fe-0c86-422d-9443-90201bc62e71"/>
+				<textElement>
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="0" width="48" height="15" uuid="859743a3-2216-472c-bf7b-0abc931e9141">
+					<printWhenExpression><![CDATA[$F{units}>0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{units}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="234" y="0" width="116" height="15" uuid="b4ae54ff-9140-4271-b7c4-ad2cf7b2ef9e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{company}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="357" y="0" width="46" height="15" uuid="29517a1e-c8b2-4e4e-a465-2211ada4e621"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reoder_level}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="0" width="88" height="15" uuid="76c69fb5-d93c-4f06-8293-69f95bbe9f6a"/>
+				<textElement>
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item_group}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="503" y="0" width="50" height="15" uuid="facdb4aa-ad27-4753-b933-c57061c22557"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item_price}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="14" width="554" height="1" uuid="5b00827b-c864-4ee4-9f54-bb4433a73338"/>
+			</line>
+			<line>
+				<reportElement x="406" y="0" width="1" height="15" uuid="c7146417-547f-4f19-83a9-7a0d41a19144"/>
+			</line>
+			<line>
+				<reportElement x="554" y="0" width="1" height="15" uuid="5b0378a4-d263-4ed8-8f6f-749877d9d606"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="1" height="15" uuid="cf5ab650-514a-4104-9e41-e49f128289a7"/>
+			</line>
+			<line>
+				<reportElement x="500" y="0" width="1" height="15" uuid="5ba4f2e1-a238-4aa6-9448-d8e3cce66480"/>
+			</line>
+			<line>
+				<reportElement x="167" y="0" width="1" height="15" uuid="a7fba650-1ce1-4fb8-ab76-4fb2aa4b0fbb"/>
+			</line>
+			<line>
+				<reportElement x="227" y="0" width="1" height="15" uuid="1ba81728-c236-4059-bd12-ae9240454393"/>
+			</line>
+			<line>
+				<reportElement x="355" y="0" width="1" height="15" uuid="adc24913-529e-499f-8ea6-058a8fb7fde8"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="35" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="12" width="40" height="20" uuid="16515c76-c241-426d-bb8c-f2f86b58e1b6"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="12" width="80" height="20" uuid="5ada3156-7da3-4662-b97a-782d482ae29d"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="0" width="553" height="1" forecolor="#CCCCCC" uuid="85f6e266-f234-462e-9bb8-d70fd83e5a8a"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="43" splitType="Stretch"/>
+	</summary>
+</jasperReport>

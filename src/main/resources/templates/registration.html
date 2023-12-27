@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>
+        Members
+    </title>
+    <div th:replace="~{fragments/head}"></div>
+</head>
+
+<body class="g-sidenav-show text-xxs bg-gray-200">
+
+<div th:replace="~{fragments/sidenav}"></div>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragments/navbar}"></div>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Registration</h5>
+                        <p class="text-sm mb-n2">
+                            List of Members.
+                        </p>
+                    </div>
+
+                    <div id="successMessage" th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+                    <div id="errorMessage" th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                    <div class="card-body px-0 pb-2">
+                        <div class="row">
+                            <div class="col col-3">
+                                <div id="searchMemberDiv" class="ms-3 my-3 text-start">
+                                    <div class="input-group input-group-outline">
+                                        <label class="form-label">Search</label>
+                                        <input id="searchInput" type="text" name="search"
+                                               class="multisteps-form__input form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col col-9">
+                                <div class="me-3 my-3 text-end">
+                                    <button type="button" onclick=" myForm = '#employeesform'; setProgressBar(1,'default','','','',myForm);" class="btn bg-gradient-dark" data-bs-toggle="modal"
+                                            data-bs-target="#newMemberModal">
+                                        <i class="material-icons text-sm">add</i>&nbsp;&nbsp;New Member
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="membersTableDiv" class="p-0 timetable table-responsive">
+                            <!--<table id="sample" class="table dt-responsive" style="width: 100%">
+                                <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Name
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Zone
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        Marital Status
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                                        Group
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                                        Phone
+                                    </th>
+                                    &lt;!&ndash;<th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                                        Parent
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                                        Spouse
+                                    </th>&ndash;&gt;
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                &lt;!&ndash; Iterate through the members list and populate the table rows &ndash;&gt;
+                                <tr th:each="member : ${members}">
+                                    <td>
+                                        <img th:if="${not #strings.isEmpty(member.image)}" th:src="${member.image}" alt="dp" class="avatar avatar-sm me-3">
+                                        <img th:unless="${not #strings.isEmpty(member.image)}" src="/assets/img/member.png" alt="Dp" class="avatar avatar-sm me-3">
+                                    </td>
+
+                                    <td th:text="${member.fName + ' ' + member.mName + ' ' + member.lName}"></td>
+                                    <td th:text="${member.zone}"></td>
+                                    <td th:text="${member.maritalStatus}"></td>
+                                    <td th:text="${member.memberGroup}"></td>
+                                    <td th:text="${member.phone}"></td>
+                                    &lt;!&ndash;<td th:text="${member.email}"></td>
+                                    <td th:text="${member.phone}"></td>&ndash;&gt;
+                                    <td>
+                                        <a class="btn btn-success"
+                                           th:href="@{/api/member/view/{id}(id=${member.id})}">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </a>
+                                        |<a class="btn btn-warning"
+                                           th:onclick="|openEditModal('members', '${member.id}')|"><i
+                                                class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        |<a class="delete-modal btn btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#myModaldelete"
+                                            th:data-link="@{/api/member/delete/{groupId}(groupId=${member.id})}">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="~{fragments/footer}"></div>
+    </div>
+</main>
+<div th:replace="~{fragments/ui_settings}"></div>
+
+
+
+<div aria-hidden="true" data-bs-backdrop="static" class="modal fade" id="newMemberModal" role="dialog"
+     style="z-index:40000" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="col-12 text-center">
+
+                    <div class="card card-plain">
+                        <div class="card-body pb-3">
+                            <div class="modal-header">
+                                <h5 class="modal-title font-weight-normal">Add New Member</h5>
+                                <a onclick="emptyForm('#employeesform');" type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</a>
+                            </div>
+                            <form class="mt-5" id="employeesform">
+
+                                <input type="hidden" id="id" name="id">
+
+
+
+                                <div class="progress"><div class="progress-bar-registrations"></div> </div>
+
+                                <ul class="progressbarregistrations">
+                                    <li class="active step1"><strong>Personal details</strong></li>
+                                    <li class="step2"><strong>Marital Details</strong></li>
+                                    <li class="step3"><strong>Children Details</strong></li>
+                                    <li class="step4"><strong>Finalize</strong></li>
+                                </ul>
+
+
+
+                                <br>
+
+                                <fieldset class="mt-n4">
+
+                                    <div class="row">
+                                        <h6>Main Details</h6>
+                                        <div class="col-12 col-sm-4">
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">First Name *</label>
+                                                <input type="text" name="fName"
+                                                       class="multisteps-form__input form-control" required>
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Middle Name *</label>
+                                                <input type="text" name="mName"
+                                                       class="multisteps-form__input form-control" required>
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Last Name *</label>
+                                                <input type="text" name="lName"
+                                                       class="multisteps-form__input form-control" required>
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">DOB *</label>
+                                                <input type="date" name="dob"
+                                                       class="multisteps-form__input form-control" required>
+                                            </div>
+
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="exampleFormControlSelect1" class="ms-0">Gender</label>
+                                                <select class="form-control form-dark-select" name="gender" id="exampleFormControlSelect1" required>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="exampleFormControlSelect1" class="ms-0">Membership duration</label>
+                                                <select class="form-control form-dark-select" name="membershipDuration" required>
+                                                    <option th:each="category : ${durations}"
+                                                            th:value="${category.getId()}"
+                                                            th:text="${category.getDuration()}"></option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                                                <label class="form-check-label" for="flexSwitchCheckDefault">Belongs to a member group?</label>
+                                            </div>
+
+                                            <div id="memberGroupDiv" class="hidden mt-3">
+                                                <div class="input-group input-group-static mb-3">
+                                                    <label for="exampleFormControlSelect1" class="ms-0">Member Group</label>
+                                                    <select class="form-control form-dark-select" name="memberGroup" required>
+                                                        <option th:each="category : ${groups}"
+                                                                th:value="${category.getId()}"
+                                                                th:text="${category.getGroup()}"></option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Place of enrolment *</label>
+                                                    <input type="text" name="enrolmentPlace"
+                                                           class="multisteps-form__input form-control" required>
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Date of enrolment *</label>
+                                                    <input type="date" name="enrolmentDate"
+                                                           class="multisteps-form__input form-control" required>
+                                                </div>
+                                            </div>
+
+
+                                            <script>
+                                                $("#flexSwitchCheckDefault").change(function () {
+                                                    if (this.checked) {
+                                                        isMember = true;
+                                                        console.log(isMember)
+                                                        $('#memberGroupDiv').removeClass('hidden');
+                                                        updateFormAttr('#memberGroupDiv', true);
+                                                    } else {
+                                                        isMember = false;
+                                                        console.log(isMember)
+                                                        $('#memberGroupDiv').addClass('hidden');
+                                                        updateFormAttr('#memberGroupDiv', false);
+                                                    }
+
+                                                });
+                                            </script>
+
+                                        </div>
+
+                                        <div class="col-12 col-sm-4">
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Phone</label>
+                                                <input type="tel" name="phone"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Email</label>
+                                                <input type="email" name="email"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Address</label>
+                                                <input type="text" name="address"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Residence</label>
+                                                <input type="text" name="residence"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="exampleFormControlSelect1" class="ms-0">Zone</label>
+                                                <select class="form-control form-dark-select" name="zone" required>
+                                                    <option th:each="zone : ${zones}" th:value="${zone.id}"
+                                                            th:text="${zone.zone}"></option>
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="exampleFormControlSelect1" class="ms-0">Preferred Service</label>
+                                                <select class="form-control form-dark-select" name="preferredService" required>
+                                                    <option th:each="service : ${services}" th:value="${service.id}"
+                                                            th:text="${service.service}"></option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-12 col-sm-4">
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Profession</label>
+                                                <input type="text" name="profession"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Occupation</label>
+                                                <input type="text" name="occupation"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Employer</label>
+                                                <input type="text" name="employer"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <label for="exampleFormControlSelect1" class="ms-0">Talents</label>
+                                            <select id="talents" name="talents[]" multiple="multiple">
+                                                <option th:each="talent : ${talents}"
+                                                        th:value="${talent.getId()}"
+                                                        th:text="${talent.getTalent()}"></option>
+                                            </select>
+
+                                            <script>
+                                                var selectStatesInputEl = document.querySelector('#talents');
+                                                if(selectStatesInputEl) {
+                                                    const choices = new Choices(selectStatesInputEl, {
+                                                        removeItems: true,
+                                                        removeItemButton: true,
+                                                    });
+                                                }
+                                            </script>
+
+                                            <div class="avatar avatar-xxl position-relative">
+                                                <img src="../assets/img/member.png" id="image" class="border-radius-md"
+                                                     alt="team-2">
+                                                <a href="javascript:;" id="editButton"
+                                                   class="btn btn-sm btn-icon-only bg-gradient-primary position-absolute bottom-0 end-0 mb-n2 me-n2">
+                                                    <span class="material-icons text-xs top-0 mt-n2" data-bs-toggle="tooltip" data-bs-placement="top" title
+                                                          aria-hidden="true" data-bs-original-title="Edit Image" aria-label="Edit Image">
+                                                        edit
+                                                    </span>
+                                                </a>
+                                            </div>
+
+                                            <input type="hidden" name="imageUrl" id="imageUrl">
+                                            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+
+                                            <script>
+                                                $(document).ready(function () {
+                                                    const editButton = $('#editButton');
+                                                    const imageInput = $('#imageInput');
+                                                    const image = $('#image');
+
+                                                    editButton.click(function () {
+                                                        imageInput.click();
+                                                    });
+
+                                                    imageInput.change(function() {
+                                                        const selectedFile = imageInput[0].files[0];
+                                                        image.attr('src', selectedFile);
+
+                                                        if (selectedFile) {
+                                                            const formData = new FormData();
+                                                            formData.append('pictureFile', selectedFile);
+                                                            formData.append('morepath', "MemberImages");
+
+                                                            $.ajax({
+                                                                url: '/upload',
+                                                                method: 'POST',
+                                                                data: formData,
+                                                                contentType: false,
+                                                                processData: false,
+                                                                success: function(response) {
+                                                                    console.log(response)
+                                                                    if (response.querystatus === "Image uploaded successfully") {
+                                                                        image.attr('src', response.path);
+                                                                        $('#imageUrl').val(response.path);
+                                                                    } else {
+                                                                        alert('Upload failed: ' + response.error);
+                                                                    }
+                                                                },
+                                                                error: function() {
+                                                                    alert('An error occurred while uploading the image.');
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                });
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5">
+                                        <h6>Baptism Details</h6>
+                                        <div class="col-12 col-sm-12">
+                                            <div class="form-check form-check-info text-start my-3">
+                                                <input class="form-check-input" type="checkbox" id="baptised"
+                                                       name="baptised">
+                                                <label class="form-check-label">
+                                                    Baptized
+                                                </label>
+                                            </div>
+
+                                            <div id="baptismDiv" class="hidden mt-3">
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Date of baptism *</label>
+                                                    <input type="date" name="baptismDate"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Place of baptism *</label>
+                                                    <input type="text" name="baptismPlace"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Baptised By *</label>
+                                                    <input type="text" name="baptisedBy"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+                                            </div>
+
+                                            <script>
+                                                $("#baptised").change(function () {
+                                                    if (this.checked) {
+                                                        $('#baptismDiv').removeClass('hidden');
+                                                        baptised = true;
+
+                                                        updateFormAttr('#baptismDiv', true);
+                                                    } else {
+                                                        $('#baptismDiv').addClass('hidden');
+                                                        baptised = false;
+                                                        updateFormAttr('#baptismDiv', false);
+                                                    }
+
+                                                });
+                                            </script>
+
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5">
+                                        <h6>Confirmation Details</h6>
+                                        <div class="col-12 col-sm-12">
+                                            <div class="form-check form-check-info text-start my-3">
+                                                <input class="form-check-input" type="checkbox" id="confirmed"
+                                                       name="confirmed">
+                                                <label class="form-check-label">
+                                                    Confirmed
+                                                </label>
+                                            </div>
+
+                                            <div id="confirmationDiv" class="hidden mt-3">
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Date of confirmation *</label>
+                                                    <input type="date" name="confirmationDate"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Place of confirmation *</label>
+                                                    <input type="text" name="confirmationPlace"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Confirmed By *</label>
+                                                    <input type="text" name="confirmedBy"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+                                            </div>
+
+                                            <script>
+                                                $("#confirmed").change(function () {
+                                                    if (this.checked) {
+                                                        $('#confirmationDiv').removeClass('hidden');
+                                                        confirmed = true;
+                                                        updateFormAttr('#confirmationDiv', true);
+                                                    } else {
+                                                        $('#confirmationDiv').addClass('hidden');
+                                                        confirmed = false;
+                                                        updateFormAttr('#confirmationDiv', false);
+                                                    }
+                                                });
+                                            </script>
+
+                                        </div>
+                                    </div>
+                                    <input type="button" name="next-step" class="next-step" value="Next"/>
+                                </fieldset>
+
+                                <fieldset class="mt-n4">
+
+                                    <div class="input-group input-group-static mb-3">
+                                        <label for="exampleFormControlSelect1" class="ms-0">Marital Status</label>
+                                        <select class="form-control form-dark-select" name="maritalStatus" id="maritalStatus" required>
+                                            <option value="Single">Single</option>
+                                            <option value="Married">Married</option>
+                                            <option value="Widow">Widow</option>
+                                            <option value="Widower">Widower</option>
+                                            <option value="Divorced">Divorced</option>
+                                            <option value="Seperated">Seperated</option>
+                                        </select>
+                                    </div>
+
+                                    <div id="deceasedSpouseDetails" class="hidden mt-3">
+                                        <div class="row mt-5">
+                                            <div class="col-md-4">
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse First Name *</label>
+                                                    <input type="text" name="spouseFName"
+                                                           class="multisteps-form__input form-control" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Middle Name *</label>
+                                                    <input type="text" name="spouseMName"
+                                                           class="multisteps-form__input form-control" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Last Name *</label>
+                                                    <input type="text" name="spouseLName"
+                                                           class="multisteps-form__input form-control" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="spouseDetails" class="hidden mt-3">
+                                        <div class="row mt-5">
+                                            <div class="col-md-4">
+                                                <div class="input-group input-group-static mb-3">
+                                                    <label for="exampleFormControlSelect1" class="ms-0">Marriage Type</label>
+                                                    <select class="form-control form-dark-select" name="marriageType">
+                                                        <option value="Religious">Religious Marriage</option>
+                                                        <option value="Civil">Civil Marriage</option>
+                                                        <option value="Customary">Customary Marriage</option>
+                                                        <option value="Come We Stay">Come We Stay</option>
+                                                        <option value="Divorced">Divorced</option>
+                                                        <option value="Seperated">Seperated</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Date of wedding *</label>
+                                                    <input type="date" name="weddingDate"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Place of wedding *</label>
+                                                    <input type="text" name="weddingPlace"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-5">
+                                            <h6>Main Details</h6>
+                                            <div class="col-12 col-sm-4">
+                                                <div class="input-group input-group-dynamic mb-3 spouse">
+                                                    <label class="form-label">Spouse First Name *</label>
+                                                    <input type="hidden" name="spouseId" class="spouseId">
+                                                    <input type="text" name="spouseFName"
+                                                           class="multisteps-form__input spouseName form-control">
+                                                    <div class="searchResults"></div>
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Middle Name *</label>
+                                                    <input type="text" name="spouseMName"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Last Name *</label>
+                                                    <input type="text" name="spouseLName"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse DOB *</label>
+                                                    <input type="date" name="spouseDob"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-static mb-3">
+                                                    <label for="exampleFormControlSelect1" class="ms-0">Gender</label>
+                                                    <select class="form-control form-dark-select" name="spouseGender">
+                                                        <option selected disabled value="">Spouse Gender</option>
+                                                        <option value="Male" selected="">Male</option>
+                                                        <option value="Female">Female</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="input-group input-group-static mb-3">
+                                                    <label for="exampleFormControlSelect1" class="ms-0">Member
+                                                        Group</label>
+                                                    <select class="form-control form-dark-select"
+                                                            name="spouseMemberGroup">
+                                                        <option th:each="category : ${groups}"
+                                                                th:value="${category.getId()}"
+                                                                th:text="${category.getGroup()}"></option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-12 col-sm-4">
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Phone</label>
+                                                    <input type="tel" name="spousePhone"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Email</label>
+                                                    <input type="email" name="spouseEmail"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Address</label>
+                                                    <input type="text" name="spouseAddress"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Residence</label>
+                                                    <input type="text" name="spouseResidence"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-static mb-3">
+                                                    <label for="exampleFormControlSelect1" class="ms-0">Zone</label>
+                                                    <select class="form-control form-dark-select" name="spouseZone">
+                                                        <option th:each="zone : ${zones}" th:value="${zone.id}"
+                                                                th:text="${zone.zone}"></option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="input-group input-group-static mb-3">
+                                                    <label for="exampleFormControlSelect1" class="ms-0">Preferred Service</label>
+                                                    <select class="form-control form-dark-select" name="spousePreferredService">
+                                                        <option th:each="service : ${services}" th:value="${service.id}"
+                                                                th:text="${service.service}"></option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-12 col-sm-4">
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Profession</label>
+                                                    <input type="text" name="spouseProfession"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Occupation</label>
+                                                    <input type="text" name="spouseOccupation"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Spouse Employer</label>
+                                                    <input type="text" name="spouseEmployer"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="avatar avatar-xxl position-relative">
+                                                    <img src="../assets/img/member.png" id="spouseImage" class="border-radius-md"
+                                                         alt="team-2">
+                                                    <a href="javascript:;" id="editSpouseImageButton"
+                                                       class="btn btn-sm btn-icon-only bg-gradient-primary position-absolute bottom-0 end-0 mb-n2 me-n2">
+                                                    <span class="material-icons text-xs top-0 mt-n2" data-bs-toggle="tooltip" data-bs-placement="top" title
+                                                          aria-hidden="true" data-bs-original-title="Edit Image" aria-label="Edit Image">
+                                                        edit
+                                                    </span>
+                                                    </a>
+                                                </div>
+                                                <input type="hidden" name="imageUrl" id="spouseImageUrl">
+                                                <input type="file" id="spouseImageInput" accept="image/*" style="display: none;">
+
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        const editButton = $('#editSpouseImageButton');
+                                                        const imageInput = $('#spouseImageInput');
+                                                        const image = $('#spouseImage');
+
+                                                        editButton.click(function () {
+                                                            imageInput.click();
+                                                        });
+
+                                                        imageInput.change(function() {
+                                                            const selectedFile = imageInput[0].files[0];
+
+                                                            if (selectedFile) {
+                                                                const formData = new FormData();
+                                                                formData.append('pictureFile', selectedFile);
+                                                                formData.append('morepath', "MemberImages");
+
+                                                                $.ajax({
+                                                                    url: '/upload',
+                                                                    method: 'POST',
+                                                                    data: formData,
+                                                                    contentType: false,
+                                                                    processData: false,
+                                                                    success: function(response) {
+                                                                        console.log(response)
+                                                                        if (response.querystatus === "Image uploaded successfully") {
+                                                                            image.attr('src', response.path);
+                                                                            $('#spouseImageUrl').val(response.path);
+                                                                        } else {
+                                                                            alert('Upload failed: ' + response.error);
+                                                                        }
+                                                                    },
+                                                                    error: function() {
+                                                                        alert('An error occurred while uploading the image.');
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-5">
+                                            <h6>Spouse Baptism Details</h6>
+                                            <div class="col-12 col-sm-12">
+                                                <div class="form-check form-check-info text-start my-3">
+                                                    <input class="form-check-input" type="checkbox" id="spouseBaptised"
+                                                           name="spouseBaptised">
+                                                    <label class="form-check-label">
+                                                        Baptized
+                                                    </label>
+                                                </div>
+
+                                                <div id="spouseBaptismDiv" class="hidden mt-3">
+                                                    <div class="input-group input-group-dynamic mb-3">
+                                                        <label class="form-label">Date of baptism *</label>
+                                                        <input type="date" name="spouseBaptismDate"
+                                                               class="multisteps-form__input form-control">
+                                                    </div>
+
+                                                    <div class="input-group input-group-dynamic mb-3">
+                                                        <label class="form-label">Place of baptism *</label>
+                                                        <input type="text" name="spouseBaptismPlace"
+                                                               class="multisteps-form__input form-control">
+                                                    </div>
+
+                                                    <div class="input-group input-group-dynamic mb-3">
+                                                        <label class="form-label">Baptised By *</label>
+                                                        <input type="text" name="spouseBaptisedBy"
+                                                               class="multisteps-form__input form-control">
+                                                    </div>
+                                                </div>
+
+                                                <script>
+                                                    $("#spouseBaptised").change(function () {
+                                                        if (this.checked) {
+                                                            $('#spouseBaptismDiv').removeClass('hidden');
+                                                            spouseBaptised = true;
+                                                            updateFormAttr('#spouseBaptismDiv', true);
+                                                        } else {
+                                                            $('#spouseBaptismDiv').addClass('hidden');
+                                                            spouseBaptised = false;
+                                                            updateFormAttr('#spouseBaptismDiv', true);
+                                                        }
+                                                    });
+                                                </script>
+
+                                            </div>
+                                        </div>
+                                        <div class="row mt-5">
+                                            <h6>Spouse Confirmation Details</h6>
+                                            <div class="col-12 col-sm-12">
+                                                <div class="form-check form-check-info text-start my-3">
+                                                    <input class="form-check-input" type="checkbox" id="spouseConfirmed"
+                                                           name="spouseConfirmed">
+                                                    <label class="form-check-label">
+                                                        Confirmed
+                                                    </label>
+                                                </div>
+
+                                                <div id="spouseConfirmationDiv" class="hidden mt-3">
+                                                    <div class="input-group input-group-dynamic mb-3">
+                                                        <label class="form-label">Date of confirmation *</label>
+                                                        <input type="date" name="spouseConfirmationDate"
+                                                               class="multisteps-form__input form-control">
+                                                    </div>
+
+                                                    <div class="input-group input-group-dynamic mb-3">
+                                                        <label class="form-label">Place of confirmation *</label>
+                                                        <input type="text" name="spouseConfirmationPlace"
+                                                               class="multisteps-form__input form-control">
+                                                    </div>
+
+                                                    <div class="input-group input-group-dynamic mb-3">
+                                                        <label class="form-label">Confirmed By *</label>
+                                                        <input type="text" name="spouseConfirmedBy"
+                                                               class="multisteps-form__input form-control">
+                                                    </div>
+                                                </div>
+
+                                                <script>
+                                                    $("#spouseConfirmed").change(function () {
+                                                        if (this.checked) {
+                                                            $('#spouseConfirmationDiv').removeClass('hidden');
+                                                            spouseConfirmed = true;
+                                                            updateFormAttr('#spouseConfirmationDiv', true);
+                                                        } else {
+                                                            $('#spouseConfirmationDiv').addClass('hidden');
+                                                            spouseConfirmed = false;
+                                                            updateFormAttr('#spouseConfirmationDiv', false);
+                                                        }
+                                                    });
+                                                </script>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <script>
+                                        $("#maritalStatus").change(function () {
+                                            var selectedValue = $(this).val();
+
+                                            if (selectedValue === "Married") {
+                                                $('#deceasedSpouseDetails').addClass('hidden');
+                                                $('#spouseDetails').removeClass('hidden');
+                                                updateFormAttr('#spouseDetails', true);
+                                                updateFormAttr('#deceasedSpouseDetails', false);
+                                            } else if (selectedValue === "Widow" || selectedValue === "Widower") {
+                                                $('#deceasedSpouseDetails').removeClass('hidden');
+                                                $('#spouseDetails').addClass('hidden');
+                                                updateFormAttr('#spouseDetails', false);
+                                                updateFormAttr('#deceasedSpouseDetails', true);
+                                            } else {
+                                                $('#spouseDetails').addClass('hidden');
+                                                $('#deceasedSpouseDetails').addClass('hidden');
+                                                updateFormAttr('#spouseDetails', false);
+                                                updateFormAttr('#deceasedSpouseDetails', false);
+                                            }
+                                        });
+                                    </script>
+
+                                    <input type="button" name="next-step" class="next-step" value="Next"/>
+                                    <input type="button" name="previous-step" class="previous-step" value="Previous"/>
+
+                                </fieldset>
+
+                                <fieldset class="mt-n4">
+
+                                    <div class="input-group input-group-dynamic mb-3">
+                                        <label class="form-label">Number of children *</label>
+                                        <input type="number" value="0" id="numberOfChildren" name="numberOfChildren"
+                                               class="multisteps-form__input form-control" required>
+                                    </div>
+
+                                    <div id="childDetails" class="hidden mt-5">
+
+                                    </div>
+
+                                    <button type="submit" onclick="registerMember(event)" class="next-step">Submit
+                                    </button>
+                                    <input type="button" name="previous-step" class="previous-step"
+                                           value="Previous"/>
+
+                                  <!--  <input type="button" name="next-step" class="next-step" value="Next"/>
+                                    <input type="button" name="previous-step" class="previous-step" value="Previous"/>
+-->
+                                </fieldset>
+
+                                <fieldset class="mt-n5">
+                                    <div class="finish">
+                                        <h2 class="text text-center">
+                                            <strong id="registrationmessagelebel"></strong>
+                                        </h2>
+                                    </div>
+                                </fieldset>
+
+                               <!-- <fieldset class="mt-n4">
+                                    <div id="summary-fieldset">
+                                        <h6>Summary</h6>
+
+                                        <button type="submit" onclick="registerMember(event)" class="next-step">Submit
+                                        </button>
+                                        <input type="button" name="previous-step" class="previous-step"
+                                               value="Previous"/>
+                                    </div>
+                                </fieldset>-->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="editModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalSignTitle" style="z-index:40000"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card card-plain">
+                    <div class="card-body pb-3">
+                        <div class="modal-header">
+                            <h5 class="modal-title font-weight-normal">Update Member</h5>
+                            <a onclick="emptyForm('#employeesformedit');" type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</a>
+                        </div>
+                        <form class="mt-5" id="employeesformedit">
+
+                            <input type="hidden" name="id">
+
+                            <div class="progress"><div class="progress-bar-registrations"></div> </div>
+
+                            <ul class="progressbarregistrations">
+                                <li class="active step1"><strong>Personal details</strong></li>
+                                <li class="step2"><strong>Marital Details</strong></li>
+                                <li class="step3"><strong>Children Details</strong></li>
+                                <li class="step4"><strong>Finalize</strong></li>
+                            </ul>
+
+                            <br>
+
+                            <fieldset class="mt-n4">
+
+                                <div class="row">
+                                    <h6>Main Details</h6>
+                                    <div class="col-12 col-sm-4">
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">First Name *</label>
+                                            <input type="text" name="fName"
+                                                   class="multisteps-form__input form-control" required>
+                                        </div>
+
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">Middle Name *</label>
+                                            <input type="text" name="mName"
+                                                   class="multisteps-form__input form-control" required>
+                                        </div>
+
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">Last Name *</label>
+                                            <input type="text" name="lName"
+                                                   class="multisteps-form__input form-control" required>
+                                        </div>
+
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">DOB *</label>
+                                            <input type="date" name="dob"
+                                                   class="multisteps-form__input form-control" required>
+                                        </div>
+
+                                        <div class="input-group input-group-static mb-3">
+                                            <label for="exampleFormControlSelect1" class="ms-0">Gender</label>
+                                            <select class="form-control form-dark-select" name="gender" required>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="input-group input-group-static mb-3">
+                                            <label for="exampleFormControlSelect1" class="ms-0">Membership duration</label>
+                                            <select class="form-control form-dark-select" name="membershipDuration" required>
+                                                <option th:each="category : ${durations}"
+                                                        th:value="${category.getId()}"
+                                                        th:text="${category.getDuration()}"></option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefaultEdit">
+                                            <label class="form-check-label" for="flexSwitchCheckDefaultEdit">Belongs to a member group?</label>
+                                        </div>
+
+                                        <div id="memberGroupDivEdit" class="hidden mt-3">
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="exampleFormControlSelect1" class="ms-0">Member Group</label>
+                                                <select class="form-control form-dark-select" name="memberGroup" required>
+                                                    <option th:each="category : ${groups}"
+                                                            th:value="${category.getId()}"
+                                                            th:text="${category.getGroup()}"></option>
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Place of enrolment *</label>
+                                                <input type="text" name="enrolmentPlace"
+                                                       class="multisteps-form__input form-control" required>
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Date of enrolment *</label>
+                                                <input type="date" name="enrolmentDate"
+                                                       class="multisteps-form__input form-control" required>
+                                            </div>
+                                        </div>
+
+
+                                        <script>
+                                            $("#flexSwitchCheckDefaultEdit").change(function () {
+                                                if (this.checked) {
+                                                    isMember = true;
+                                                    $('#memberGroupDivEdit').removeClass('hidden');
+                                                    updateFormAttr('#memberGroupDivEdit', true);
+                                                } else {
+                                                    isMember = false;
+                                                    $('#memberGroupDivEdit').addClass('hidden');
+                                                    updateFormAttr('#memberGroupDivEdit', false);
+                                                }
+
+                                            });
+                                        </script>
+
+                                    </div>
+
+                                    <div class="col-12 col-sm-4">
+
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">Phone</label>
+                                            <input type="tel" name="phone"
+                                                   class="multisteps-form__input form-control">
+                                        </div>
+
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" name="email"
+                                                   class="multisteps-form__input form-control">
+                                        </div>
+
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">Address *</label>
+                                            <input type="text" name="address"
+                                                   class="multisteps-form__input form-control">
+                                        </div>
+
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">Residence *</label>
+                                            <input type="text" name="residence"
+                                                   class="multisteps-form__input form-control">
+                                        </div>
+
+                                        <div class="input-group input-group-static mb-3">
+                                            <label for="exampleFormControlSelect1" class="ms-0">Zone</label>
+                                            <select class="form-control form-dark-select" name="zone" required>
+                                                <option th:each="zone : ${zones}" th:value="${zone.id}"
+                                                        th:text="${zone.zone}"></option>
+                                            </select>
+                                        </div>
+
+                                        <div class="input-group input-group-static mb-3">
+                                            <label for="exampleFormControlSelect1" class="ms-0">Preferred Service</label>
+                                            <select class="form-control form-dark-select" name="preferredService" required>
+                                                <option th:each="service : ${services}" th:value="${service.id}"
+                                                        th:text="${service.service}"></option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-12 col-sm-4">
+
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">Profession</label>
+                                            <input type="text" name="profession"
+                                                   class="multisteps-form__input form-control">
+                                        </div>
+
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">Occupation</label>
+                                            <input type="text" name="occupation"
+                                                   class="multisteps-form__input form-control">
+                                        </div>
+
+                                        <div class="input-group input-group-dynamic mb-3">
+                                            <label class="form-label">Employer</label>
+                                            <input type="text" name="employer"
+                                                   class="multisteps-form__input form-control">
+                                        </div>
+
+                                        <!--<label for="exampleFormControlSelect1" class="ms-0">Talents</label>
+                                        <select id="talentsEdit" name="talents[]" multiple="multiple">
+                                            <option th:each="talent : ${talents}"
+                                                    th:value="${talent.getId()}"
+                                                    th:text="${talent.getTalent()}"></option>
+                                        </select>
+
+                                        <script>
+                                            var selectStatesInputEl = document.querySelector('#talentsEdit');
+                                            if(selectStatesInputEl) {
+                                                const choices = new Choices(selectStatesInputEl, {
+                                                    removeItems: true,
+                                                    removeItemButton: true,
+                                                });
+                                            }
+                                        </script>-->
+
+                                        <div class="avatar avatar-xxl position-relative">
+                                            <img src="../assets/img/member.png" id="imageedit" class="border-radius-md"
+                                                 alt="team-2">
+                                            <a href="javascript:;" id="editButtonedit"
+                                               class="btn btn-sm btn-icon-only bg-gradient-primary position-absolute bottom-0 end-0 mb-n2 me-n2">
+                                                    <span class="material-icons text-xs top-0 mt-n2" data-bs-toggle="tooltip" data-bs-placement="top" title
+                                                          aria-hidden="true" data-bs-original-title="Edit Image" aria-label="Edit Image">
+                                                        edit
+                                                    </span>
+                                            </a>
+                                        </div>
+
+                                        <input type="hidden" name="imageUrl" id="imageUrledit">
+                                        <input type="file" id="imageInputedit" accept="image/*" style="display: none;">
+
+                                        <script>
+                                            $(document).ready(function () {
+                                                const editButton = $('#editButtonedit');
+                                                const imageInput = $('#imageInputedit');
+                                                const image = $('#imageedit');
+
+                                                editButton.click(function () {
+                                                    imageInput.click();
+                                                });
+
+                                                imageInput.change(function() {
+                                                    const selectedFile = imageInput[0].files[0];
+
+                                                    if (selectedFile) {
+                                                        const formData = new FormData();
+                                                        formData.append('pictureFile', selectedFile);
+                                                        formData.append('morepath', "MemberImages");
+
+                                                        $.ajax({
+                                                            url: '/upload',
+                                                            method: 'POST',
+                                                            data: formData,
+                                                            contentType: false,
+                                                            processData: false,
+                                                            success: function(response) {
+                                                                console.log(response)
+                                                                if (response.querystatus === "Image uploaded successfully") {
+                                                                    image.attr('src', response.path);
+                                                                    $('#imageUrledit').val(response.path);
+                                                                } else {
+                                                                    alert('Upload failed: ' + response.error);
+                                                                }
+                                                            },
+                                                            error: function() {
+                                                                alert('An error occurred while uploading the image.');
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                                <div class="row mt-5">
+                                    <h6>Baptism Details</h6>
+                                    <div class="col-12 col-sm-12">
+                                        <div class="form-check form-check-info text-start my-3">
+                                            <input class="form-check-input" type="checkbox" id="baptisededit"
+                                                   name="baptised">
+                                            <label class="form-check-label">
+                                                Baptized
+                                            </label>
+                                        </div>
+
+                                        <div id="baptismDivedit" class="hidden mt-3">
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Date of baptism *</label>
+                                                <input type="date" name="baptismDate"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Place of baptism *</label>
+                                                <input type="text" name="baptismPlace"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Baptised By *</label>
+                                                <input type="text" name="baptisedBy"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+                                        </div>
+
+                                        <script>
+                                            $("#baptisededit").change(function () {
+                                                if (this.checked) {
+                                                    $('#baptismDivedit').removeClass('hidden');
+                                                    baptised = true;
+                                                    updateFormAttr('#baptismDivedit', true);
+                                                } else {
+                                                    $('#baptismDivedit').addClass('hidden');
+                                                    baptised = false;
+                                                    updateFormAttr('#baptismDivedit', false);
+                                                }
+                                            });
+                                        </script>
+
+                                    </div>
+                                </div>
+                                <div class="row mt-5">
+                                    <h6>Confirmation Details</h6>
+                                    <div class="col-12 col-sm-12">
+                                        <div class="form-check form-check-info text-start my-3">
+                                            <input class="form-check-input" type="checkbox" id="confirmededit"
+                                                   name="confirmed">
+                                            <label class="form-check-label">
+                                                Confirmed
+                                            </label>
+                                        </div>
+
+                                        <div id="confirmationDivedit" class="hidden mt-3">
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Date of confirmation *</label>
+                                                <input type="date" name="confirmationDate"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Place of confirmation *</label>
+                                                <input type="text" name="confirmationPlace"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Confirmed By *</label>
+                                                <input type="text" name="confirmedBy"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+                                        </div>
+
+                                        <script>
+                                            $("#confirmededit").change(function () {
+                                                if (this.checked) {
+                                                    $('#confirmationDivedit').removeClass('hidden');
+                                                    confirmed = true;
+                                                    updateFormAttr('#confirmationDivedit', true);
+                                                } else {
+                                                    $('#confirmationDivedit').addClass('hidden');
+                                                    confirmed = false;
+                                                    updateFormAttr('#confirmationDivedit', false);
+                                                }
+                                            });
+                                        </script>
+
+                                    </div>
+                                </div>
+                                <input type="button" name="next-step" class="next-step" value="Next"/>
+                            </fieldset>
+
+                            <fieldset class="mt-n4">
+
+                                <div class="input-group input-group-static mb-3">
+                                    <label for="exampleFormControlSelect1" class="ms-0">Marital Status</label>
+                                    <select class="form-control form-dark-select" name="maritalStatus" id="maritalStatusedit" required>
+                                        <option value="Single">Single</option>
+                                        <option value="Married">Married</option>
+                                        <option value="Widow">Widow</option>
+                                        <option value="Widower">Widower</option>
+                                        <option value="Divorced">Divorced</option>
+                                        <option value="Seperated">Seperated</option>
+                                    </select>
+                                </div>
+
+                                <div id="deceasedSpouseDetailsEdit" class="hidden mt-3">
+                                    <div class="row mt-5">
+                                        <div class="col-md-4">
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse First Name *</label>
+                                                <input type="text" name="spouseFName"
+                                                       class="multisteps-form__input form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Middle Name *</label>
+                                                <input type="text" name="spouseMName"
+                                                       class="multisteps-form__input form-control" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Last Name *</label>
+                                                <input type="text" name="spouseLName"
+                                                       class="multisteps-form__input form-control" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="spouseDetailsedit" class="hidden mt-3">
+                                    <div class="row mt-5">
+                                        <div class="col-md-4">
+                                            <input type="hidden" id="spouseId" name="spouseId">
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="exampleFormControlSelect1" class="ms-0">Marriage Type</label>
+                                                <select class="form-control form-dark-select" name="marriageType">
+                                                    <option value="Religious">Religious Marriage</option>
+                                                    <option value="Civil">Civil Marriage</option>
+                                                    <option value="Customary">Customary Marriage</option>
+                                                    <option value="Come We Stay">Come We Stay</option>
+                                                    <option value="Divorced">Divorced</option>
+                                                    <option value="Seperated">Seperated</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Date of wedding *</label>
+                                                <input type="date" name="weddingDate"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Place of wedding *</label>
+                                                <input type="text" name="weddingPlace"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5">
+                                        <h6>Main Details</h6>
+                                        <div class="col-12 col-sm-4">
+                                            <div class="input-group input-group-dynamic mb-3 spouse">
+                                                <label class="form-label">Spouse First Name *</label>
+                                                <input type="hidden" name="spouseId" class="spouseId">
+                                                <input type="text" name="spouseFName"
+                                                       class="multisteps-form__input spouseName form-control">
+                                                <div class="searchResults"></div>
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Middle Name *</label>
+                                                <input type="text" name="spouseMName"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Last Name *</label>
+                                                <input type="text" name="spouseLName"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse DOB *</label>
+                                                <input type="date" name="spouseDob"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="exampleFormControlSelect1" class="ms-0">Gender</label>
+                                                <select class="form-control form-dark-select" name="spouseGender">
+                                                    <option value="Male" selected="">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="exampleFormControlSelect1" class="ms-0">Member Group</label>
+                                                <select class="form-control form-dark-select" name="spouseMemberGroup">
+                                                    <option th:each="category : ${groups}"
+                                                            th:value="${category.getId()}"
+                                                            th:text="${category.getGroup()}"></option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-12 col-sm-4">
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Phone *</label>
+                                                <input type="tel" name="spousePhone"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Email *</label>
+                                                <input type="email" name="spouseEmail"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Address *</label>
+                                                <input type="text" name="spouseAddress"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Residence *</label>
+                                                <input type="text" name="spouseResidence"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="exampleFormControlSelect1" class="ms-0">Zone</label>
+                                                <select class="form-control form-dark-select" name="spouseZone">
+                                                    <option th:each="zone : ${zones}" th:value="${zone.id}"
+                                                            th:text="${zone.zone}"></option>
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="exampleFormControlSelect1" class="ms-0">Preferred Service</label>
+                                                <select class="form-control form-dark-select" name="spousePreferredService">
+                                                    <option th:each="service : ${services}" th:value="${service.id}"
+                                                            th:text="${service.service}"></option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-12 col-sm-4">
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Profession *</label>
+                                                <input type="text" name="spouseProfession"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Occupation *</label>
+                                                <input type="text" name="spouseOccupation"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="input-group input-group-dynamic mb-3">
+                                                <label class="form-label">Spouse Employer *</label>
+                                                <input type="text" name="spouseEmployer"
+                                                       class="multisteps-form__input form-control">
+                                            </div>
+
+                                            <div class="avatar avatar-xxl position-relative">
+                                                <img src="../assets/img/member.png" id="spouseImageedit" class="border-radius-md"
+                                                     alt="team-2">
+                                                <a href="javascript:;" id="editSpouseImageButtonedit"
+                                                   class="btn btn-sm btn-icon-only bg-gradient-primary position-absolute bottom-0 end-0 mb-n2 me-n2">
+                                                    <span class="material-icons text-xs top-0 mt-n2" data-bs-toggle="tooltip" data-bs-placement="top" title
+                                                          aria-hidden="true" data-bs-original-title="Edit Image" aria-label="Edit Image">
+                                                        edit
+                                                    </span>
+                                                </a>
+                                            </div>
+                                            <input type="hidden" name="imageUrl" id="spouseImageUrledit">
+                                            <input type="file" id="spouseImageInputedit" accept="image/*" style="display: none;">
+
+                                            <script>
+                                                $(document).ready(function () {
+                                                    const editButton = $('#editSpouseImageButtonedit');
+                                                    const imageInput = $('#spouseImageInputedit');
+                                                    const image = $('#spouseImageedit');
+
+                                                    editButton.click(function () {
+                                                        imageInput.click();
+                                                    });
+
+                                                    imageInput.change(function() {
+                                                        const selectedFile = imageInput[0].files[0];
+
+                                                        if (selectedFile) {
+                                                            const formData = new FormData();
+                                                            formData.append('pictureFile', selectedFile);
+                                                            formData.append('morepath', "MemberImages");
+
+                                                            $.ajax({
+                                                                url: '/upload',
+                                                                method: 'POST',
+                                                                data: formData,
+                                                                contentType: false,
+                                                                processData: false,
+                                                                success: function(response) {
+                                                                    console.log(response)
+                                                                    if (response.querystatus === "Image uploaded successfully") {
+
+                                                                        image.attr('src', response.path);
+                                                                        $('#spouseImageUrledit').val(response.path);
+                                                                    } else {
+                                                                        alert('Upload failed: ' + response.error);
+                                                                    }
+                                                                },
+                                                                error: function() {
+                                                                    alert('An error occurred while uploading the image.');
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                });
+                                            </script>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5">
+                                        <h6>Spouse Baptism Details</h6>
+                                        <div class="col-12 col-sm-12">
+                                            <div class="form-check form-check-info text-start my-3">
+                                                <input class="form-check-input" type="checkbox" id="spouseBaptisededit"
+                                                       name="spouseBaptised">
+                                                <label class="form-check-label">
+                                                    Baptized
+                                                </label>
+                                            </div>
+
+                                            <div id="spouseBaptismDivedit" class="hidden mt-3">
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Date of baptism *</label>
+                                                    <input type="date" name="spouseBaptismDate"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Place of baptism *</label>
+                                                    <input type="text" name="spouseBaptismPlace"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Baptised By *</label>
+                                                    <input type="text" name="spouseBaptisedBy"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+                                            </div>
+
+                                            <script>
+                                                $("#spouseBaptisededit").change(function () {
+                                                    if (this.checked) {
+                                                        $('#spouseBaptismDivedit').removeClass('hidden');
+                                                        spouseBaptised = true;
+                                                        updateFormAttr('#spouseBaptismDivedit', true);
+                                                    } else {
+                                                        $('#spouseBaptismDivedit').addClass('hidden');
+                                                        spouseBaptised = false;
+                                                        updateFormAttr('#spouseBaptismDivedit', false);
+
+                                                    }
+                                                });
+                                            </script>
+
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5">
+                                        <h6>Spouse Confirmation Details</h6>
+                                        <div class="col-12 col-sm-12">
+                                            <div class="form-check form-check-info text-start my-3">
+                                                <input class="form-check-input" type="checkbox" id="spouseConfirmededit"
+                                                       name="spouseConfirmed">
+                                                <label class="form-check-label">
+                                                    Confirmed
+                                                </label>
+                                            </div>
+
+                                            <div id="spouseConfirmationDivedit" class="hidden mt-3">
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Date of confirmation *</label>
+                                                    <input type="date" name="spouseConfirmationDate"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Place of confirmation *</label>
+                                                    <input type="text" name="spouseConfirmationPlace"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+
+                                                <div class="input-group input-group-dynamic mb-3">
+                                                    <label class="form-label">Confirmed By *</label>
+                                                    <input type="text" name="spouseConfirmedBy"
+                                                           class="multisteps-form__input form-control">
+                                                </div>
+                                            </div>
+
+                                            <script>
+                                                $("#spouseConfirmededit").change(function () {
+                                                    if (this.checked) {
+                                                        $('#spouseConfirmationDivedit').removeClass('hidden');
+                                                        spouseConfirmed = true;
+                                                        updateFormAttr('#spouseConfirmationDivedit', true);
+                                                    } else {
+                                                        $('#spouseConfirmationDivedit').addClass('hidden');
+                                                        spouseConfirmed = false;
+                                                        updateFormAttr('#spouseConfirmationDivedit', false);
+
+                                                    }
+                                                });
+                                            </script>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <script>
+                                    $("#maritalStatusedit").change(function () {
+                                        var selectedValue = $(this).val();
+
+                                        if (selectedValue === "Married") {
+                                            $('#spouseDetailsedit').removeClass('hidden');
+                                            $('#deceasedSpouseDetailsEdit').addClass('hidden');
+                                            updateFormAttr('#spouseDetailsedit', true);
+                                            updateFormAttr('#deceasedSpouseDetailsEdit', false);
+                                        } else if (selectedValue === "Widow" || selectedValue === "Widower") {
+                                            $('#spouseDetailsedit').addClass('hidden');
+                                            $('#deceasedSpouseDetailsEdit').removeClass('hidden');
+                                            updateFormAttr('#spouseDetailsedit', false);
+                                            updateFormAttr('#deceasedSpouseDetailsEdit', true);
+                                        } else {
+                                            $('#spouseDetailseditdit').addClass('hidden');
+                                            $('#deceasedSpouseDetailsEdit').addClass('hidden');
+                                            updateFormAttr('#spouseDetailsedit', false);
+                                            updateFormAttr('#deceasedSpouseDetailsEdit', false);
+                                        }
+                                    });
+                                </script>
+
+                                <input type="button" name="next-step" class="next-step" value="Next"/>
+                                <input type="button" name="previous-step" class="previous-step" value="Previous"/>
+
+                            </fieldset>
+
+                            <fieldset class="mt-n4">
+
+                                <div class="input-group input-group-dynamic mb-3">
+                                    <label class="form-label">Number of children *</label>
+                                    <input type="number" value="0" id="numberOfChildrenedit" name="numberOfChildren"
+                                           class="multisteps-form__input form-control" required>
+                                </div>
+
+                                <div id="childDetailsedit" class="hidden mt-5">
+
+                                </div>
+
+                                <button type="submit" onclick="updateMember(event)" class="next-step">Submit
+                                </button>
+                                <input type="button" name="previous-step" class="previous-step"
+                                       value="Previous"/>
+
+                            </fieldset>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--   Core JS Files   -->
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+
+        populateMembers();
+
+
+        function populateMembers() {
+            console.log("popuulating")
+            let indexed_array = {};
+            $.ajax({
+                method: 'POST',
+                url: '/api/member/api/reg/getMembers',
+                data: JSON.stringify(indexed_array),
+                contentType: 'application/json'
+            }).done(function(object) {
+
+                dynamictable(JSON.parse(object),'#membersTableDiv','members','#sample','#sample','#popupviwsent','');
+
+
+            }).fail(function (data) {
+                console.log(data);
+            })
+        }
+
+        var currentGfgStep,nextGfgStep,previousGfgStep;
+        var current = 1;
+        $(".next-step").click(function () {
+            currentGfgStep = $(this).parent();
+            nextGfgStep = $(this).parent().next();
+            setProgressBar(++current,'next',currentGfgStep,nextGfgStep,'',myForm);
+        });
+
+        $(".previous-step").click(function () {
+            currentGfgStep = $(this).parent();
+            previousGfgStep = $(this).parent().prev();
+            setProgressBar(--current,'previous',currentGfgStep,'',previousGfgStep,myForm);
+        });
+    })
+</script>
+
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="../assets/js/material-dashboard.min.js?v=3.0.6"></script>
+<script>
+
+    function toggleSpouseFieldset() {
+        var maritalStatusSelect = document.querySelector('[name="maritalStatus"]');
+        var spouseFieldset = document.getElementById('marriage-details-fieldset');
+
+        // Check if the selected option is "Single"
+        if (maritalStatusSelect.value === 'Single') {
+            // Disable the marriage fieldset
+            spouseFieldset.disabled = true;
+        } else {
+            // Enable the marriage fieldset
+            spouseFieldset.disabled = false;
+        }
+    }
+
+    function populateRestOfFields(modal, id) {
+        getMemberDetails(id).then(function (response) {
+            console.log(response)
+            $(''+modal+' input[name="spouseFName"]').val(response.member.fName).parent().addClass('is-filled');
+            $(''+modal+' input[name="spouseMName"]').val(response.member.mName).parent().addClass('is-filled');
+            $(''+modal+' input[name="spouseLName"]').val(response.member.lName).parent().addClass('is-filled');
+            $(''+modal+' input[name="spouseEmail"]').val(response.member.email).parent().addClass('is-filled');
+            $(''+modal+' input[name="spouseDob"]').val(response.member.dob).parent().addClass('is-filled');
+            $(''+modal+' input[name="spouseAddress"]').val(response.member.address).parent().addClass('is-filled');
+            $(''+modal+' input[name="spouseResidence"]').val(response.member.residence).parent().addClass('is-filled');
+            $(''+modal+' input[name="spouseProfession"]').val(response.member.profession).parent().addClass('is-filled');
+            $(''+modal+' input[name="spouseOccupation"]').val(response.member.occupation).parent().addClass('is-filled');
+            $(''+modal+' input[name="spouseEmployer"]').val(response.member.employer).parent().addClass('is-filled');
+            $(''+modal+' select[name="spouseZone"]').val(response.member.zone.id);
+            $(''+modal+' select[name="spouseMemberGroup"]').val(response.member.memberGroup.id);
+            $(''+modal+' select[name="spouseMaritalStatus"]').val(response.member.maritalStatus);
+            $(''+modal+' select[name="spouseGender"]').val(response.member.gender);
+            $(''+modal+' select[name="spousePreferredService"]').val(response.member.preferredService.id);
+            $(''+modal+' input[name="spousePhone"]').val(response.member.phone).parent().addClass('is-filled');
+            if (response.member.image !== "") {
+                $(''+modal+' #spouseImageedit').attr('src', response.member.image);
+                $(''+modal+' #spouseImageUrledit').val(response.member.image);
+            }
+
+            if (response.member.baptismStatus === 'true') {
+                $('#spouseBaptisededit').prop('checked', true);
+                $('#spouseBaptismDivedit').removeClass('hidden');
+                $(''+modal+' input[name="spouseBaptismDate"]').val(response.member.baptismDetails.baptismDate).parent().addClass('is-filled');
+                $(''+modal+' input[name="spouseBaptismPlace"]').val(response.member.baptismDetails.baptismPlace).parent().addClass('is-filled');
+                $(''+modal+' input[name="spouseBaptisedBy"]').val(response.member.baptismDetails.baptisedBy).parent().addClass('is-filled');
+            }
+
+            if (response.member.confirmationStatus === 'true') {
+                $('#spouseConfirmededit').prop('checked', true);
+                $('#spouseConfirmationDivedit').removeClass('hidden');
+                $(''+modal+' input[name="spouseConfirmationDate"]').val(response.member.confirmationDetails.confirmationDate).parent().addClass('is-filled');
+                $(''+modal+' input[name="spouseConfirmationPlace"]').val(response.member.confirmationDetails.confirmationPlace).parent().addClass('is-filled');
+                $(''+modal+' input[name="spouseConfirmedBy"]').val(response.member.confirmationDetails.confirmedBy).parent().addClass('is-filled');
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#newMemberModal .spouse input[name='spouseFName']").on("keyup", function () {
+            searchSpouse();
+        });
+
+        $("#editModal .spouse input[name='spouseFName']").on("keyup", function () {
+            searchSpouseEdit();
+        });
+    });
+
+    function searchSpouse() {
+        var query = $('#newMemberModal .spouse input[name="spouseFName"]').val();
+        console.log(query);
+        recTypeUrl = '/api/member/search';
+        $.post(recTypeUrl, {query: query}, function (results) {
+            console.log(results);
+            var dropdown = $("#newMemberModal .spouse .searchResults");
+            if (query === "") {
+                dropdown.empty();
+                return;
+            }
+            dropdown.empty();
+            for (var i = 0; i < results.length; i++) {
+                var student = results[i].member;
+                var option = $("<option>")
+                    .attr("value", results[i].id)
+                    .text(student)
+                    .click(function () {
+                        $('#newMemberModal .spouseId').val($(this).val());
+
+                        populateRestOfFields("#newMemberModal", $(this).val());
+                        console.log($(this).val())
+
+                        dropdown.empty()
+                    })
+                    .hover(function () {
+                        $(this).addClass('highlighted');
+                    }, function () {
+                        $(this).removeClass('highlighted');
+                    });
+                dropdown.append(option);
+            }
+        });
+    }
+    function searchSpouseEdit() {
+        var query = $('#editModal .spouse input[name="spouseFName"]').val();
+        console.log(query);
+        recTypeUrl = '/api/member/search';
+        $.post(recTypeUrl, {query: query}, function (results) {
+            console.log(results);
+            var dropdown = $("#editModal .spouse .searchResults");
+            if (query === "") {
+                dropdown.empty();
+                return;
+            }
+            dropdown.empty();
+            for (var i = 0; i < results.length; i++) {
+                var student = results[i].member;
+                var option = $("<option>")
+                    .attr("value", results[i].id)
+                    .text(student)
+                    .click(function () {
+                        $('#editModal .spouseId').val($(this).val());
+
+                        populateRestOfFields("#editModal", $(this).val());
+
+                        dropdown.empty()
+                    })
+                    .hover(function () {
+                        $(this).addClass('highlighted');
+                    }, function () {
+                        $(this).removeClass('highlighted');
+                    });
+                dropdown.append(option);
+            }
+        });
+    }
+/*
+    $(document).ready(function () {
+        $("#editModal .searchPersonEdit").on("keyup", function () {
+            searchPersonEdit();
+        });
+        $("#newMemberModal .motherName").on("keyup", function () {
+            searchPerson("mother");
+        });
+
+        $("#newMemberModal .fatherName").on("keyup", function () {
+            searchPerson("father");
+        });
+
+        $("#newMemberModal .spouseName").on("keyup", function () {
+            searchSpouse();
+        });
+
+        $("#editModal .searchSpouseEdit").on("keyup", function () {
+            searchSpouseEdit();
+        });
+    });
+
+
+    function searchPersonEdit() {
+        var query = $('.searchPersonEdit').val();
+        console.log(query);
+        recTypeUrl = '/api/member/search';
+        $.post(recTypeUrl, {query: query}, function (results) {
+            console.log(results);
+            var dropdown = $(".personEdit .searchResultsEdit");
+            if (query === "") {
+                dropdown.empty();
+                return;
+            }
+            dropdown.empty();
+            for (var i = 0; i < results.length; i++) {
+                var student = results[i].student;
+                var teacher = results[i].teacher;
+                var option = $("<option>")
+                    .attr("value", results[i].admNo)
+                    .text(student)
+                    .click(function () {
+                        $('.searchPersonEdit').val($(this).text());
+                        $('.personIdEdit').val($(this).val());
+                        dropdown.empty()
+                    })
+                    .hover(function () {
+                        $(this).addClass('highlighted');
+                    }, function () {
+                        $(this).removeClass('highlighted');
+                    });
+                dropdown.append(option);
+                var teacherOption = $("<option>")
+                    .attr("value", results[i].tscNo)
+                    .text(teacher)
+                    .click(function () {
+                        $('.searchPersonEdit').val($(this).text());
+                        dropdown.empty()
+                    })
+                    .hover(function () {
+                        $(this).addClass('highlighted-teacher');
+                    }, function () {
+                        $(this).removeClass('highlighted-teacher');
+                    });
+                dropdown.append(teacherOption);
+            }
+        });
+    }
+
+    function searchSpouse() {
+        var query = $('.spouseName').val();
+        console.log(query);
+        recTypeUrl = '/api/member/search';
+        $.post(recTypeUrl, {query: query}, function (results) {
+            console.log(results);
+            var dropdown = $(".marriage .searchResults");
+            if (query === "") {
+                dropdown.empty();
+                return;
+            }
+            dropdown.empty();
+            for (var i = 0; i < results.length; i++) {
+                var student = results[i].student;
+                var teacher = results[i].teacher;
+                var option = $("<option>")
+                    .attr("value", results[i].admNo)
+                    .text(student)
+                    .click(function () {
+                        $('.spouseName').val($(this).text());
+                        $('.spouseId').val($(this).val());
+
+                        populateRestOfFields("marriage", $(this).val());
+
+                        dropdown.empty()
+                    })
+                    .hover(function () {
+                        $(this).addClass('highlighted');
+                    }, function () {
+                        $(this).removeClass('highlighted');
+                    });
+                dropdown.append(option);
+            }
+        });
+    }
+
+    function searchPerson(relation) {
+        let query = null;
+        if (relation === "mother") {
+            query = $('.motherName').val();
+        }
+        if (relation === "father") {
+            query = $('.fatherName').val();
+        }
+        console.log(query);
+        recTypeUrl = '/api/member/search';
+        $.post(recTypeUrl, {query: query}, function (results) {
+            console.log(results);
+            let dropdown = null;
+            if (relation === "mother") {
+                dropdown = $(".mother .searchResults");
+            } else if (relation === "father") {
+                dropdown = $(".father .searchResults");
+            }
+            if (query === "") {
+                dropdown.empty();
+                return;
+            }
+            dropdown.empty();
+            for (var i = 0; i < results.length; i++) {
+                var student = results[i].student;
+                var teacher = results[i].teacher;
+                var option = $("<option>")
+                    .attr("value", results[i].admNo)
+                    .text(student)
+                    .click(function () {
+                        if (relation === "mother") {
+                            $('.motherName').val($(this).text());
+                            $('.motherId').val($(this).val());
+                            populateRestOfFields("mother", $(this).val());
+                        } else if (relation === "father") {
+                            $('.fatherName').val($(this).text());
+                            $('.fatherId').val($(this).val());
+                            populateRestOfFields("father", $(this).val());
+                        }
+                        dropdown.empty()
+                    })
+                    .hover(function () {
+                        $(this).addClass('highlighted');
+                    }, function () {
+                        $(this).removeClass('highlighted');
+                    });
+                dropdown.append(option);
+            }
+        });
+    }
+
+    function searchSpouseEdit() {
+        var query = $('.searchSpouseEdit').val();
+        console.log(query);
+        recTypeUrl = '/api/member/search';
+        $.post(recTypeUrl, {query: query}, function (results) {
+            console.log(results);
+            var dropdown = $(".spouseEdit .searchResultsEdit");
+            if (query === "") {
+                dropdown.empty();
+                return;
+            }
+            dropdown.empty();
+            for (var i = 0; i < results.length; i++) {
+                var student = results[i].student;
+                var teacher = results[i].teacher;
+                var option = $("<option>")
+                    .attr("value", results[i].admNo)
+                    .text(student)
+                    .click(function () {
+                        $('.searchSpouseEdit').val($(this).text());
+                        $('.spouseIdEdit').val($(this).val());
+                        dropdown.empty()
+                    })
+                    .hover(function () {
+                        $(this).addClass('highlighted');
+                    }, function () {
+                        $(this).removeClass('highlighted');
+                    });
+                dropdown.append(option);
+                var teacherOption = $("<option>")
+                    .attr("value", results[i].tscNo)
+                    .text(teacher)
+                    .click(function () {
+                        $('.searchSpouseEdit').val($(this).text());
+                        dropdown.empty()
+                    })
+                    .hover(function () {
+                        $(this).addClass('highlighted-teacher');
+                    }, function () {
+                        $(this).removeClass('highlighted-teacher');
+                    });
+                dropdown.append(teacherOption);
+            }
+        });
+    }*/
+</script>
+</body>
+
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <title>
+        List of Payment Vouchers
+    </title>
+    <div th:replace="~{fragments/head}"></div>
+</head>
+
+<body class="g-sidenav-show text-xxs bg-gray-200">
+
+<div th:replace="~{fragments/sidenav}"></div>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragments/navbar}"></div>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">List of Payment Vouchers</h6>
+                        </div>
+                    </div>
+
+                    <div id="successMessage" th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+                    <div id="errorMessage" th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                    <div class="card-body px-0 pb-2">
+                        <div class=" me-3 my-3 text-end">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newVoucherModal">
+                                <i class="material-icons text-sm">add</i>&nbsp;&nbsp;New Payment Voucher
+                            </button>
+                        </div>
+                        <div class="table-responsive timetable p-0">
+                            <div></div>
+                            <table id="accountsTable" class="table align-items-center justify-content-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Voucher # </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payee Name</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Account</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Details</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Amount</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Iterate through the members list and populate the table rows -->
+                                <tr th:each="voucher : ${paymentVouchers}">
+                                    <td th:text="${voucher.voucherNumber}"></td>
+                                    <td th:text="${voucher.date}"></td>
+                                    <td th:text="${voucher.payeeName}"></td>
+                                    <td th:text="${voucher.account}"></td>
+                                    <td data-bs-toggle="tooltip" data-bs-placement="bottom" th:title="${voucher.details}" data-container="body" data-animation="true"
+                                        th:text="${voucher.details.length <= 20 ? voucher.details : voucher.details.substring(0, 20) + '...'}">
+                                    </td>
+                                    <td th:text="${#numbers.formatDecimal(voucher.amount, 0, 'COMMA', 2, 'POINT' )}"></td>
+
+                                    <td th:if="${voucher.status.equalsIgnoreCase('Pending')}" class="text-warning" th:text="${voucher.status}"></td>
+                                    <td th:if="${voucher.status.equalsIgnoreCase('Approved')}" class="text-success" th:text="${voucher.status}"></td>
+                                    <td th:if="${voucher.status.equalsIgnoreCase('Declined')}" class="text-danger" th:text="${voucher.status}"></td>
+                                    <td th:unless="${voucher.status.equalsIgnoreCase('Pending') or voucher.status.equalsIgnoreCase('Approved') or voucher.status.equalsIgnoreCase('Declined')}">
+                                        <!-- Default case (for other status values) -->
+                                        <span th:text="${voucher.status}"></span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-link text-secondary mb-0" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-ellipsis-v text-xs"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" aria-labelledby="navbarDropdownMenuLink">
+                                            <a th:onclick="|openEditModal('voucher','${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Edit</a>
+                                            <a th:onclick="|print('/reports/printVoucher?id=${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Print</a>
+                                            <a th:if="${voucher.status.equalsIgnoreCase('Pending')}" th:onclick="|approve('/finance/voucher/approve/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Approve</a>
+                                            <a th:if="${voucher.status.equalsIgnoreCase('Pending')}" th:onclick="|approve('/finance/voucher/reject/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Reject</a>
+                                            <a th:if="${voucher.status.equalsIgnoreCase('Rejected')}" th:onclick="|approve('/finance/voucher/approve/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Approve</a>
+                                            <a th:if="${voucher.status.equalsIgnoreCase('Pending')}" th:onclick="|approve('/finance/voucher/delete/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Delete</a>
+                                            <a th:if="${voucher.status.equalsIgnoreCase('Rejected')}" th:onclick="|approve('/finance/voucher/delete/${voucher.pvId}')|" class="dropdown-item" href="javascript:;">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="~{fragments/footer}"></div>
+    </div>
+</main>
+<div th:replace="~{fragments/ui_settings}"></div>
+<div data-bs-backdrop="static" class="modal fade z-index-10000" id="newVoucherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card card-plain">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-normal">Add Voucher</h5>
+                        <button onclick="clearInputFields('newVoucherModal')" type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="card-body pb-3">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <form id="addVoucherForm">
+                                    <div class="input-group input-group-outline my-3 is-filled">
+                                        <label class="form-label">Date</label>
+                                        <input type="date" id="date" name="date" class="form-control" required>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <select name="activity" id="activity" class="form-select" required>
+                                            <option selected disabled>Select Activity</option>
+                                            <option th:each="activity : ${activities}" th:value="${activity.id}" th:text="${activity.account}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Payee Name</label>
+                                        <input type="text" id="payee" name="payee" class="form-control" required>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Payment Details</label>
+                                        <input type="text" id="details" name="details" class="form-control" required>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <select name="bank" id="bank" class="form-select" required>
+                                            <option selected disabled>Paid Through</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Transaction #/Check #</label>
+                                        <input type="text" id="transRef" name="transRef" class="form-control">
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" onclick="addVoucher(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <div class=" me-3 my-3 text-end">
+                                    <button type="button" class="btn btn-primary" onclick="addRow('newVoucherModal')">
+                                        <i class="material-icons text-sm">add</i>
+                                    </button>
+                                </div>
+                                <table id="vouchersTable" class="table align-items-center justify-content-center mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Particulars</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rate</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Amount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="particulars" class="form-control" required>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-outline">
+                                                <input required type="number" value="1" name="quantity" class="form-control quantity-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-outline">
+                                                <input required type="number" value="0" name="rate" class="form-control rate-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-outline">
+                                                <input required type="number" value="0.00" name="amount" class="form-control amount-input" readonly>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-danger" onclick="deleteThisRow(this)"> <i class="fa fa-trash" aria-hidden="true"></i> </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="col-md-3">
+                                <form role="form" method="post">
+                                    <h6 class="text-warning" id="beforeTax">Before Tax: 0.00</h6>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Withholding tax</label>
+                                        <input type="number" value="0" id="withholding" name="withholding" class="form-control">
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">VAT</label>
+                                        <input type="number" value="0" id="vat" name="vat" class="form-control">
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Professional Fees</label>
+                                        <input type="number" value="0" id="profFees" name="profFees" class="form-control">
+                                    </div>
+
+                                    <h6 class="text-warning" id="totalPayable">Total Payable: 0.00</h6>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div data-bs-backdrop="static" class="modal fade z-index-10000" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card card-plain">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Update Voucher</h5>
+                        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="card-body pb-3">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <form id="editVoucherForm">
+                                    <input type="hidden" name="id">
+                                    <div class="input-group input-group-outline my-3 is-filled">
+                                        <label class="form-label">Date</label>
+                                        <input type="date" id="editDate" name="date" class="form-control">
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <select name="activity" id="editActivity" class="form-select">
+                                            <option selected disabled>Select Activity</option>
+                                            <option th:each="activity : ${activities}" th:value="${activity.id}" th:text="${activity.account}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Payee Name</label>
+                                        <input type="text" id="editPayee" name="payee" class="form-control">
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Payment Details</label>
+                                        <input type="text" id="editDetails" name="details" class="form-control">
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <select name="bank" id="editBank" class="form-select">
+                                            <option selected disabled>Paid Through</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Transaction #/Check #</label>
+                                        <input type="text" id="editTransRef" name="transRef" class="form-control">
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" onclick="updateVoucher(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <div class=" me-3 my-3 text-end">
+                                    <button type="button" class="btn btn-primary" onclick="addRow('editModal')">
+                                        <i class="material-icons text-sm">add</i>
+                                    </button>
+                                </div>
+                                <table id="editVouchersTable" class="table align-items-center justify-content-center mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Particulars</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rate</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Amount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="col-md-3">
+                                <form role="form">
+                                    <h6 class="text-warning" id="editBeforeTax">Before Tax: 0.00</h6>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Withholding tax</label>
+                                        <input type="number" value="0" id="editWithholding" name="withholding" class="form-control">
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">VAT</label>
+                                        <input type="number" value="0" id="editVat" name="vat" class="form-control">
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Professional Fees</label>
+                                        <input type="number" value="0" id="editProfFees" name="profFees" class="form-control">
+                                    </div>
+
+                                    <h6 class="text-warning" id="editTotalPayable">Total Payable: 0.00</h6>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--   Core JS Files   -->
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="../assets/js/material-dashboard.min.js?v=3.0.5"></script>
+<script !src="">
+
+   $(document).ready(function() {
+       $('#accountsTable').DataTable({
+
+       });
+
+       $('input[name="withholding"], input[name="vat"], input[name="profFees"]').on("input", function () {
+           let withholding;
+           let vat;
+           let profFees;
+
+           withholding = parseFloat($('input[name="withholding"]').val());
+           vat = parseFloat($('input[name="vat"]').val());
+           profFees = parseFloat($('input[name="profFees"]').val());
+
+           let amountBeforeTax = localStorage.getItem("totalBeforeTax");
+           let payableAmount = amountBeforeTax - (((withholding / 100) * amountBeforeTax) + ((vat / 100) * amountBeforeTax) + ((profFees / 100) * amountBeforeTax));
+           $('#totalPayable').text("Total Payable: " + payableAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+           $('#editTotalPayable').text("Total Payable: " + payableAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+
+           localStorage.setItem("totalPayable", payableAmount);
+       });
+
+       $(".quantity-input, .rate-input").on("input", function() {
+           // Get the current row
+           var row = $(this).closest("tr");
+           updateAmount(row);
+           updateTotalAmount();
+       });
+   });
+
+   function updateAmount(row) {
+       // Get the quantity and rate values from the inputs
+       var quantity = parseFloat(row.find(".quantity-input").val());
+       var rate = parseFloat(row.find(".rate-input").val());
+
+       // Calculate the amount and update the amount input
+       var amount = quantity * rate;
+       row.find(".amount-input").val(amount.toFixed(2));
+
+       // Return the calculated amount for summing up
+       return amount;
+   }
+
+   function updateTotalAmount() {
+       var totalAmount = 0;
+       // Loop through each row and calculate the amount
+       $("#vouchersTable tbody tr").each(function() {
+           totalAmount += updateAmount($(this));
+       });
+
+       // Update the total amount display element
+       localStorage.setItem("totalBeforeTax", totalAmount.toFixed(2));
+       $("#beforeTax").text("Before tax: " + totalAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+
+       let withholding;
+       let vat;
+       let profFees;
+
+       withholding = parseFloat($('input[name="withholding"]').val());
+       vat = parseFloat($('input[name="vat"]').val());
+       profFees = parseFloat($('input[name="profFees"]').val());
+
+       let amountBeforeTax = localStorage.getItem("totalBeforeTax");
+       let payableAmount = amountBeforeTax - (((withholding / 100) * amountBeforeTax) + ((vat / 100) * amountBeforeTax) + ((profFees / 100) * amountBeforeTax));
+       $('#totalPayable').text("Total Payable: " + payableAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+       $('#editTotalPayable').text("Total Payable: " + payableAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+
+       localStorage.setItem("totalPayable", payableAmount);
+   }
+
+   function addRow(modal) {
+        var tableBody = $("#" + modal +" tbody");
+
+        // Create a new row and append it to the table body
+        var newRow = $("<tr>");
+        newRow.append("<td>\n" +
+            "                                            <div class=\"input-group input-group-outline\">\n" +
+            "                                                <input required type=\"text\" name=\"particulars\" class=\"form-control\">\n" +
+            "                                            </div>\n" +
+            "                                        </td>");
+        newRow.append("<td>\n" +
+            "                                            <div class=\"input-group input-group-outline\">\n" +
+            "                                                <input required type=\"number\" value='1' name=\"quantity\" class=\"form-control quantity-input\">\n" +
+            "                                            </div>\n" +
+            "                                        </td>");
+        newRow.append("<td>\n" +
+            "                                            <div class=\"input-group input-group-outline\">\n" +
+            "                                                <input required type=\"number\" value='0' name=\"rate\" class=\"form-control rate-input\">\n" +
+            "                                            </div>\n" +
+            "                                        </td>");
+        newRow.append("<td>\n" +
+            "                                            <div class=\"input-group input-group-outline\">\n" +
+            "                                                <input required type=\"number\" value='0.00' name=\"amount\" class=\"form-control amount-input\" readonly>\n" +
+            "                                            </div>\n" +
+            "                                        </td>");
+
+        newRow.append('    <td>\n' +
+            '        <a class="btn btn-danger" onclick="deleteThisRow(this)"> <i class="fa fa-trash" aria-hidden="true"></i> </a>\n' +
+            '    </td>')
+
+        tableBody.append(newRow);
+
+       newRow.find(".quantity-input, .rate-input").on("input", function() {
+           var row = $(this).closest("tr");
+           updateAmount(row);
+           updateTotalAmount();
+       });
+    }
+
+   function deleteThisRow(button) {
+       var row = button.closest("tr");
+
+       row.remove();
+   }
+
+</script>
+</body>
+
+</html>

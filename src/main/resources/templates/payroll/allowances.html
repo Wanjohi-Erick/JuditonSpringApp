@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicon.png">
+    <link rel="icon" type="image/png" href="/assets/img/favicon.ico">
+    <title>
+        Shule one: Earnings
+    </title>
+
+
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/nucleo-icons.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/nucleo-svg.css}"/>
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/assetsbio/css/material-dashboard.min.css?v=3.0.6}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assetsbio/jsmuoltistepcss/MultiStep.css}"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css"/>
+
+
+    <style>
+        .async-hide {
+            opacity: 0 !important
+        }
+    </style>
+
+
+</head>
+<body class="g-sidenav-show  bg-gray-200">
+
+<div th:replace="fragments/payroll/sidenav"></div>
+
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+
+    <div th:replace="fragments/payroll/header"></div>
+
+    <div class="container-fluid py-n1">
+        <div class="col-lg-12  mb-2">
+            <button type="button" data-bs-target="#allowancemodal" data-bs-toggle="modal"
+                    class="btn bg-gradient-primary mb-0 mt-0 mt-md-n9 mt-lg-0">
+                <i class="material-icons text-white position-relative text-md pe-2">add</i>Add New
+            </button>
+        </div>
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Allowances</h5>
+                        <p class="text-sm mb-n2">
+                            List of allowances.
+                        </p>
+                    </div>
+
+
+                    <div class="table-responsive">
+                        <table class="table table-flush" id="allowancestable">
+
+                            <thead class="thead-light">
+                            <tr>
+
+                                <th style="display:none;"></th>
+                                <th>Allowance</th>
+                                <th>Visibility</th>
+                                <th>Action</th>
+
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            <tr th:block th:each="student: ${earnings}">
+
+                                <td style="display:none;">
+                                    <span class="text-secondary"
+                                          th:text="${student.activeProperty('id').getValue()}"></span>
+                                </td>
+
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <p class="text-xs font-weight-normal ms-2 mb-0"
+                                           th:text="${student.activeProperty('Earning').getValue()}"></p>
+                                    </div>
+                                </td>
+
+                                <td class="text-xs font-weight-normal">
+                                    <div class="d-flex align-items-center"
+                                         th:if="${student.activeProperty('Visible').getValue()} == Visible">
+                                        <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-2 btn-sm d-flex align-items-center justify-content-center">
+                                            <i class="material-icons text-sm" aria-hidden="true">done</i></button>
+                                        <span>Visible</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center"
+                                         th:if="${student.activeProperty('Visible').getValue()} == Invisible">
+                                        <button class="btn btn-icon-only btn-rounded btn-outline-danger mb-0 me-2 btn-sm d-flex align-items-center justify-content-center">
+                                            <i class="material-icons text-sm" aria-hidden="true">clear</i></button>
+                                        <span>Invisible</span>
+                                    </div>
+
+                                </td>
+
+                                <td class="align-middle">
+
+                                    <button class="btn btn-link text-secondary mb-0" id="navbarDropdownMenuLink"
+                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-ellipsis-v text-xs"></i>
+                                    </button>
+
+                                    <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3"
+                                         aria-labelledby="navbarDropdownMenuLink"
+                                         th:if="${student.activeProperty('type').getValue()} == 0">
+                                        <a th:onclick="getallowance([[${student.activeProperty('id').getValue()}]]);"
+                                           data-bs-target="#allowancemodal" data-bs-toggle="modal" class="dropdown-item"
+                                           href="javascript:;">Edit</a>
+                                        <a th:href="@{/api/hr/deleteallowanceordeduction/{id}/{type}(id=${student.activeProperty('id').getValue()},type='allowance')}"
+                                           th:reasonTitle="${student.activeProperty('Earning').getValue()}"
+                                           id="btnDelete" class="dropdown-item btn-delete"
+                                           data-bs-target="#confirmModal" data-bs-toggle="modal" href="javascript:;">Delete</a>
+                                        <a th:href="@{/api/hr/setallowanceordeductionstatus/{id}/{type}/{status}(id=${student.activeProperty('id').getValue()},type='Allowance',status='Visible')}"
+                                           class="dropdown-item" href="javascript:;">Set as visible</a>
+                                        <a th:href="@{/api/hr/setallowanceordeductionstatus/{id}/{type}/{status}(id=${student.activeProperty('id').getValue()},type='Allowance',status='Invisible')}"
+                                           class="dropdown-item" href="javascript:;">Set as Invisible</a>
+                                    </div>
+
+                                    <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3"
+                                         aria-labelledby="navbarDropdownMenuLink"
+                                         th:if="${student.activeProperty('type').getValue()} == 1">
+                                        <a th:onclick="getebulkreadings([[${student.activeProperty('id').getValue()}]],[[${student.activeProperty('Earning').getValue()}]]);"
+                                           data-bs-target="#bulkearningmodal" data-bs-toggle="modal"
+                                           class="dropdown-item" href="javascript:;">Add monthly readings</a>
+                                        <a th:onclick="getallowance([[${student.activeProperty('id').getValue()}]]);"
+                                           data-bs-target="#allowancemodal" data-bs-toggle="modal" class="dropdown-item"
+                                           href="javascript:;">Edit</a>
+                                        <a th:href="@{/api/hr/deleteallowanceordeduction/{id}/{type}(id=${student.activeProperty('id').getValue()},type='allowance')}"
+                                           th:reasonTitle="${student.activeProperty('Earning').getValue()}"
+                                           id="btnDelete" class="dropdown-item btn-delete"
+                                           data-bs-target="#confirmModal" data-bs-toggle="modal" href="javascript:;">Delete</a>
+                                        <a th:href="@{/api/hr/setallowanceordeductionstatus/{id}/{type}/{status}(id=${student.activeProperty('id').getValue()},type='Allowance',status='Visible')}"
+                                           class="dropdown-item" href="javascript:;">Set as visible</a>
+                                        <a th:href="@{/api/hr/setallowanceordeductionstatus/{id}/{type}/{status}(id=${student.activeProperty('id').getValue()},type='Allowance',status='Invisible')}"
+                                           class="dropdown-item" href="javascript:;">Set as Invisible</a>
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div th:replace="fragments/biometrics/footer"></div>
+
+</main>
+
+
+<div class="modal fade text-center" id="confirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold">Delete Confirmation</h5>
+                <button aria-label="Close" class="btn-close text-dark" data-bs-dismiss="modal" type="button">
+                    <span class="material-icons text-primary fs-3 mt-n2" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <span id="confirmText"></span>
+            </div>
+
+            <div class="modal-footer">
+                <a type="button" id="yesBtn" class="btn btn-danger">Yes</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div aria-hidden="true" data-bs-backdrop="static" class="modal fade" id="allowancemodal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-normal">New Allowance</h5>
+                <button aria-label="Close" class="btn-close text-dark" data-bs-dismiss="modal" type="button">
+                    <span class="material-icons text-primary fs-3 mt-n2" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/api/hr/addallowance}" method="post" id="allowancesform"
+                      class="multisteps-form__form">
+
+                    <div class="row mt-3">
+                        <div class="input-group input-group-dynamic">
+                            <label class="form-label">Name</label>
+                            <input id="earning" name="earning" class="multisteps-form__input form-control" type="text"
+                                   required/>
+                        </div>
+                    </div>
+
+                    <div class="form-check form-check-info text-start ps-0">
+                        <label class="form-control ms-0">Type</label>
+                        <select class="form-control" name="type" id="allowancetype" required>
+                            <option value="0">Value based</option>
+                            <option value="1">Reading based</option>
+                        </select>
+                    </div>
+
+                    <div class="row mt-3" id="divcostperunit" style="display:none">
+                        <div class="input-group input-group-dynamic">
+                            <label class="form-label">Cost per unit</label>
+                            <input id="costperunit" name="costperunit" step=".01" value="0"
+                                   class="multisteps-form__input form-control" type="number"/>
+                        </div>
+                    </div>
+
+                    <div class="form-check form-check-info text-start ps-0">
+                        <label class="form-control ms-0">Visibility</label>
+                        <select class="form-control" name="visible" id="visiblealowance" required>
+                            <option value="Visible">Visible</option>
+                            <option value="Invisible">Invisible</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" id="id" name="id">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" form="allowancesform" type="submit">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div aria-hidden="true" data-bs-backdrop="static" class="modal fade" id="bulkearningmodal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="modalbulkearningtitle" class="modal-title font-weight-normal"></h5>
+                <button aria-label="Close" class="btn-close text-dark" data-bs-dismiss="modal" type="button">
+                    <span class="material-icons text-primary fs-3 mt-n2" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="bulkinsertearninform" class="multisteps-form__form">
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="input-group input-group-dynamic mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">Month</label>
+                                <input class="multisteps-form__input form-control" id="bulkinsertdate" type="date"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" onclick="getebulkreadingsrefresh()" class="btn btn-labeled btn-info">
+                                <span class="btn-label"><i class="material-icons text-sm" aria-hidden="true">refresh</i></span>Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="bulkinsertearnings" class="table-responsive d-flex justify-content-center">
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" form="bulkinsertearninform" onclick="postbulkearnings()" type="button">
+                    Save
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="myModal" class="modal fade" style="z-index: 10000000000000 !important;">
+    <div class="modal-dialog modal-confirm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="icon-box">
+                    <i class="material-icons">&#xE876;</i>
+                </div>
+                <h4 class="modal-title w-100" id="messageid"></h4>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success btn-block" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="fragments/biometrics/uisettings"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/core/popper.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/jquery.autocomplete.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/core/bootstrap.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/perfect-scrollbar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/smooth-scrollbar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/chartjs.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/material-dashboard.min.js?v=3.0.6}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/fullcalendar.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/dropzone.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/quill.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/choices.min.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/dynamicjs/dynamicjshr.js}"></script>
+<script type="application/javascript" th:src="@{/assetsbio/js/plugins/datatables.js}"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script type="application/javascript" th:src="@{/assetsbio/jsmuoltistepjs/MultiStep.js}"></script>
+
+
+<script>
+
+    document.getElementById('bulkinsertdate').valueAsDate = new Date();
+
+
+    var element = document.getElementById('visiblealowance');
+    const visiblealowance = new Choices(element, {
+        searchEnabled: false
+    });
+
+    var element = document.getElementById('allowancetype');
+    const allowancetype = new Choices(element, {
+        searchEnabled: false
+    });
+
+
+    const dataTableSearch = new simpleDatatables.DataTable("#allowancestable", {
+        searchable: true,
+        fixedHeight: false
+    });
+
+
+    $("#allowancestable").DataTable({
+        "responsive": true, "bLengthChange": false, "bFilter": false, "bInfo": false, "bPaginate": false, pageLength: 7,
+        'columnDefs': [{'visible': false, 'targets': [0]}, {
+            'render': function (data, type, row) {
+                return '';
+            }
+        }]
+    });
+
+
+    $(".btn-delete").on("click", function (e) {
+        e.preventDefault();
+        link = $(this);
+        reasonTitle = link.attr("reasonTitle");
+        $("#yesBtn").attr("href", link.attr("href"));
+        $("#confirmText").html("Do you want to delete allowance \<strong\>" + reasonTitle + "\<\/strong\>?");
+    });
+
+    document.querySelectorAll(".export").forEach(function (el) {
+        el.addEventListener("click", function (e) {
+            var type = el.dataset.type;
+
+            var data = {
+                type: type,
+                filename: "material-" + type,
+            };
+
+            if (type === "csv") {
+                data.columnDelimiter = "|";
+            }
+
+            dataTableSearch.export(data);
+        });
+    });
+
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+
+</body>
+</html>

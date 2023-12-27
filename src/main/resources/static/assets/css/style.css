@@ -1,0 +1,70 @@
+td {
+    vertical-align: middle;
+}
+
+.hidden {
+    display: none;
+}
+
+form .form-select {
+    padding-left: 0.5rem !important;
+}
+
+.timetable {
+    overflow-x: hidden;
+}
+
+.dark-version .form-select:focus {
+    background-color: #1a2035;
+}
+
+.dark-version .form-dark-select:focus {
+    background-color: #1a2035;
+}
+
+#membersTable {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#membersTable td {
+    text-overflow: ellipsis !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+}
+
+.searchResults {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    z-index: 1;
+    left: 0;
+    background-color: #344767;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.searchResultsEdit {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    z-index: 1;
+    left: 0;
+    background-color: #344767;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.highlighted {
+    background-color: #0a6ebd;
+    color: white;
+    cursor: pointer;
+}
+
+td .btn {
+    border-radius: .2rem;
+    padding: 0.3rem 0.6rem;
+    margin-bottom: 0;
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap.min.css"/>
+
+    <title>DataTables</title>
+</head>
+<body>
+    <div class="container">
+        <input type="hidden" name="zoneId" id="zoneId" th:value="${zoneId}">
+        <div id="zoneMembersTableDiv" class="p-0 timetable table-responsive">
+            <!--<table id="sample" class="table dt-responsive" style="width: 100%">
+                <thead>
+                <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Name
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Zone
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Marital Status
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                        Group
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                        Phone
+                    </th>
+                    &lt;!&ndash;<th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                        Parent
+                    </th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7">
+                        Spouse
+                    </th>&ndash;&gt;
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                &lt;!&ndash; Iterate through the members list and populate the table rows &ndash;&gt;
+                <tr th:each="member : ${members}">
+                    <td>
+                        <img th:if="${not #strings.isEmpty(member.image)}" th:src="${member.image}" alt="dp" class="avatar avatar-sm me-3">
+                        <img th:unless="${not #strings.isEmpty(member.image)}" src="/assets/img/member.png" alt="Dp" class="avatar avatar-sm me-3">
+                    </td>
+
+                    <td th:text="${member.fName + ' ' + member.mName + ' ' + member.lName}"></td>
+                    <td th:text="${member.zone}"></td>
+                    <td th:text="${member.maritalStatus}"></td>
+                    <td th:text="${member.memberGroup}"></td>
+                    <td th:text="${member.phone}"></td>
+                    &lt;!&ndash;<td th:text="${member.email}"></td>
+                    <td th:text="${member.phone}"></td>&ndash;&gt;
+                    <td>
+                        <a class="btn btn-success"
+                           th:href="@{/api/member/view/{id}(id=${member.id})}">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                        |<a class="btn btn-warning"
+                           th:onclick="|openEditModal('members', '${member.id}')|"><i
+                                class="fa fa-pencil" aria-hidden="true"></i></a>
+                        |<a class="delete-modal btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#myModaldelete"
+                            th:data-link="@{/api/member/delete/{groupId}(groupId=${member.id})}">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>-->
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="/assets/js/jquery.spring-friendly.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            let zoneId = $('#zoneId').val();
+            let indexed_array = {zoneId};
+            $.ajax({
+                method: 'POST',
+                url: '/api/member/zones/members/get',
+                data: JSON.stringify(indexed_array),
+                contentType: 'application/json'
+            }).done(function(object) {
+                console.log(object);
+
+                dynamictable(JSON.parse(object),'#zoneMembersTableDiv','members','#sample','#sample','#popupviwsent','');
+
+
+            }).fail(function (data) {
+                console.log(data);
+            })
+        })
+
+        /*$('table#sample').DataTable({
+            ajax: {
+                contentType: 'application/json',
+                url: '/api/member/zones/members/get/' + $('#zoneId').val(),
+                type: 'POST',
+                data: function (d) {
+                    console.log(d)
+                    return JSON.stringify(d);
+                }
+            },
+            serverSide: true,
+            columns: [
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        if (data.image) {
+                            return '<img src="' + data.image + '" alt="dp" class="avatar avatar-sm me-3">';
+                        } else {
+                            return '<img src="/assets/img/member.png" alt="Dp" class="avatar avatar-sm me-3">';
+                        }
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return data.fName + ' ' + data.mName + ' ' + data.lName;
+                    }
+                },
+                { data: 'zone.zone' },
+                { data: 'maritalStatus' },
+                { data: 'memberGroup.group' },
+                { data: 'phone' },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        var actionsHtml = '<a class="btn btn-success" href="/api/member/view/' + data.id + '"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                        actionsHtml += '|<a class="btn btn-warning" onclick="openEditModal(\'members\', \'' + data.id + '\')"><i class="fa fa-pencil" aria-hidden="true"></i></a>';
+                        actionsHtml += '|<a class="delete-modal btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModaldelete" data-link="/api/member/delete/' + data.id + '"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                        return actionsHtml;
+                    }
+                }
+            ]
+        });*/
+    </script>
+
+</body>
+</html>
