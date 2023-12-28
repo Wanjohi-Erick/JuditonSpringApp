@@ -289,6 +289,7 @@ function openEditModal(model, id) {
                 $('#editModal input[name="date"]').val(rowData.date).parent().addClass('is-filled');
                 $('#editModal input[name="payee"]').val(rowData.payeeName).parent().addClass('is-filled');
                 $('#editModal input[name="details"]').val(rowData.details).parent().addClass('is-filled');
+                $('#editModal input[name="transRef"]').val(rowData.transRef).parent().addClass('is-filled');
                 $('#editModal input[name="withholding"]').val(rowData.withholdingTax).parent().addClass('is-filled');
                 $('#editModal input[name="vat"]').val(rowData.vatTax).parent().addClass('is-filled');
                 $('#editModal input[name="profFees"]').val(rowData.professionalFees).parent().addClass('is-filled');

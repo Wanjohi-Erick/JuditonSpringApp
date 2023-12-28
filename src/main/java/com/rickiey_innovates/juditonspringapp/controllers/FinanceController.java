@@ -634,7 +634,7 @@ public class FinanceController {
     @GetMapping("/api/getAllVouchers")
     @ResponseBody
     public List<PaymentVoucherResult> paymentvouchers() {
-        //approveVouchers();
+        approveVouchers();
         List<PaymentVoucherResult> paymentVoucherResults = new ArrayList<>();
         try {
             Connection connection = DbConnector.getConnection();
@@ -1595,7 +1595,8 @@ public class FinanceController {
                     "       Rate,\n" +
                     "       total,\n" +
                     "       Account,\n" +
-                    "       details,\n" +
+                    "       details," +
+                    "       `cheque #` as transRef,\n" +
                     "       activ,\n" +
                     "       ifnull(MAX(`Withholding Tax`), ''),\n" +
                     "       ifnull(MAX(`Vat Tax`), ''),\n" +
@@ -1611,7 +1612,8 @@ public class FinanceController {
                     "           , Rate\n" +
                     "           , (Qty * Rate)                                               AS total\n" +
                     "           , `Account id`                                               AS Account\n" +
-                    "           , details\n" +
+                    "           , details" +
+                    "           , `cheque #`\n" +
                     "           , `Acc id`                                                   AS activ\n" +
                     "           , case when t.`type` = 'Withholding Tax' then t.amount END   AS 'Withholding Tax'\n" +
                     "           , case when t.`type` = 'Vat Tax' then t.amount END           AS 'Vat Tax'\n" +
@@ -1638,7 +1640,8 @@ public class FinanceController {
                     "       Rate,\n" +
                     "       total,\n" +
                     "       Account,\n" +
-                    "       details,\n" +
+                    "       details," +
+                    "       `cheque #`,\n" +
                     "       activ,\n" +
                     "       ifnull(MAX(`Withholding Tax`), ''),\n" +
                     "       ifnull(MAX(`Vat Tax`), ''),\n" +
@@ -1654,7 +1657,8 @@ public class FinanceController {
                     "           , Rate\n" +
                     "           , (Qty * Rate)                                               AS total\n" +
                     "           , `Account id`                                               AS Account\n" +
-                    "           , details\n" +
+                    "           , details" +
+                    "           , `cheque #`\n" +
                     "           , `Acc id`                                                   AS activ\n" +
                     "           , case when t.`type` = 'Withholding Tax' then t.amount END   AS 'Withholding Tax'\n" +
                     "           , case when t.`type` = 'Vat Tax' then t.amount END           AS 'Vat Tax'\n" +
@@ -1686,6 +1690,7 @@ public class FinanceController {
                 paymentVoucher.setTotal(resultSet.getDouble("total"));
                 paymentVoucher.setAccount(resultSet.getString("Account"));
                 paymentVoucher.setDetails(resultSet.getString("details"));
+                paymentVoucher.setTransRef(resultSet.getString("transRef"));
                 paymentVoucher.setActivity(resultSet.getString("activ"));
                 paymentVoucher.setWithholdingTax(resultSet.getDouble("ifnull(MAX(`Withholding Tax`), '')"));
                 paymentVoucher.setVatTax(resultSet.getDouble("ifnull(MAX(`Vat Tax`), '')"));

@@ -51,11 +51,6 @@ public class IndexController implements ErrorController {
         this.roleRepository = roleRepository;
     }
 
-    /*@GetMapping("/all")
-    public String allAccess() {
-        return "Public Content.";
-    }*/
-
     public static final String PATH = "/error";
 
     private final RoleRepository roleRepository;
@@ -376,21 +371,4 @@ public class IndexController implements ErrorController {
         return "inventory/dashboard";
     }
 
-    /*@GetMapping("/user")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-    public String userAccess() {
-        return "User Content.";
-    }
-
-    @GetMapping("/mod")
-    @PreAuthorize("hasRole('MODERATOR')")
-    public String moderatorAccess() {
-        return "Moderator Board.";
-    }
-
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String adminAccess() {
-        return "Admin Board.";
-    }*/
 }

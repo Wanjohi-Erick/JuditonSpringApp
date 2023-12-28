@@ -14,27 +14,12 @@ public class PaymentVoucherMapper {
     private double total;
     private String account;
     private String details;
+    private String transRef;
     private String activity;
     private double withholdingTax;
     private double vatTax;
     private double professionalFees;
 
-    public PaymentVoucherMapper(String pvId, String voucherNumber, Date date, String payeeName, String detailId, String particulars, int quantity, double rate, String account, String details, String activity, double withholdingTax, double vatTax, double professionalFees) {
-        this.pvId = pvId;
-        this.voucherNumber = voucherNumber;
-        this.date = date;
-        this.payeeName = payeeName;
-        this.detailId = detailId;
-        this.particulars = particulars;
-        this.quantity = quantity;
-        this.rate = rate;
-        this.account = account;
-        this.details = details;
-        this.activity = activity;
-        this.withholdingTax = withholdingTax;
-        this.vatTax = vatTax;
-        this.professionalFees = professionalFees;
-    }
 
     public PaymentVoucherMapper() {
 
@@ -78,6 +63,14 @@ public class PaymentVoucherMapper {
 
     public void setDetailId(String detailId) {
         this.detailId = detailId;
+    }
+
+    public String getTransRef() {
+        return transRef;
+    }
+
+    public void setTransRef(String transRef) {
+        this.transRef = transRef;
     }
 
     public String getParticulars() {
