@@ -225,17 +225,17 @@ public class IndexController implements ErrorController {
             String sql = "SELECT 3          AS memberTotal,\n" +
                     "       (SELECT ifnull(FORMAT(SUM(credit), 0), 0)\n" +
                     "        FROM accounttransactions\n" +
-                    "        where farm = "+farm().getId()+" and YEAR(Date) = YEAR(CURDATE()) and MONTH(Date) = MONTH(CURDATE()))                                        AS income,\n" +
+                    "        where farm = "+farm().getId()+")                                        AS income,\n" +
                     "       (SELECT ifnull(FORMAT(SUM(debit), 0), 0)\n" +
                     "        FROM accounttransactions\n" +
-                    "        where farm = "+farm().getId()+" and YEAR(Date) = YEAR(CURDATE()) and MONTH(Date) = MONTH(CURDATE()))                                        AS expenses,\n" +
+                    "        where farm = "+farm().getId()+")                                        AS expenses,\n" +
                     "       (SELECT ifnull(FORMAT((SUM(credit) - SUM(debit)), 0), 0)\n" +
                     "        FROM accounttransactions\n" +
-                    "        where farm = "+farm().getId()+" and YEAR(Date) = YEAR(CURDATE()) and MONTH(Date) = MONTH(CURDATE()))                                        AS balance,\n" +
+                    "        where farm = "+farm().getId()+")                                        AS balance,\n" +
                     "       (SELECT ifnull(FORMAT(SUM(debit), 0), 0)\n" +
                     "        FROM accounttransactions\n" +
                     "        WHERE farm = "+farm().getId()+"\n" +
-                    "          and YEAR(Date) = YEAR(CURDATE()) and MONTH(Date) = MONTH(CURDATE()))                    AS currentMonthExpenses,\n" +
+                    "         )                    AS currentMonthExpenses,\n" +
                     "       (SELECT ifnull(FORMAT(SUM(debit), 0), 0)\n" +
                     "        FROM accounttransactions\n" +
                     "        WHERE farm = "+farm().getId()+"\n" +
