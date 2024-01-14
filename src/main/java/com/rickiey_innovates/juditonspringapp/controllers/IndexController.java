@@ -63,7 +63,7 @@ public class IndexController implements ErrorController {
 
     private boolean isAuthorised() {
         Set<Role> roles = userRepository.findById(userId()).get().getRoles();
-        Role role = roleRepository.findByName(ERole.ROLE_ACCOUNTANT).orElse(null);
+        Role role = roleRepository.findByName(ERole.SHAREHOLDER).orElse(null);
         boolean authorised;
         if (roles.contains(role)) {
             authorised = true;

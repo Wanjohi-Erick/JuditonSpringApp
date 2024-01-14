@@ -999,7 +999,7 @@ public class ReportsController {
                     "        DATE,\n" +
                     "        TYPE,\n" +
                     "\n" +
-                    "        sum(if(Account = 'TITHE', Amount, 0))       AS TITHE,\n" +
+                    "        sum(if(Account = 'SALES', Amount, 0))       AS SALES,\n" +
                     "        sum(if(Account = 'OFFERING', Amount, 0))    AS OFFERING,\n" +
                     "        sum(if(Account = 'THANKGIVING', Amount, 0)) AS THANKGIVING,\n" +
                     "        sum(if(Account = 'FIRST FRUIT', Amount, 0)) AS 'FIRST FRUIT',\n" +
@@ -1053,7 +1053,7 @@ public class ReportsController {
                     "        DATE,\n" +
                     "        TYPE,\n" +
                     "\n" +
-                    "        sum(if(Account = 'TITHE', 0, 0))       AS TITHE,\n" +
+                    "        sum(if(Account = 'SALES', 0, 0))       AS SALES,\n" +
                     "        sum(if(Account = 'OFFERING', 0, 0))    AS OFFERING,\n" +
                     "        sum(if(Account = 'THANKGIVING', 0, 0)) AS THANKGIVING,\n" +
                     "        sum(if(Account = 'FIRST FRUIT', 0, 0)) AS 'FIRST FRUIT',\n" +
@@ -1088,7 +1088,7 @@ public class ReportsController {
 
                 while (resultSet.next()) {
                     String type = resultSet.getString("TYPE");
-                    double tithe = resultSet.getDouble("TITHE");
+                    double SALES = resultSet.getDouble("SALES");
                     double offering = resultSet.getDouble("OFFERING");
                     double thanksgiving = resultSet.getDouble("THANKGIVING");
                     double firstFruit = resultSet.getDouble("FIRST FRUIT");
@@ -1158,7 +1158,7 @@ public class ReportsController {
                     "        DATE,\n" +
                     "        TYPE,\n" +
                     "\n" +
-                    "        sum(if(Account = 'TITHE', Amount, 0))       AS TITHE,\n" +
+                    "        sum(if(Account = 'SALES', Amount, 0))       AS SALES,\n" +
                     "        sum(if(Account = 'OFFERING', Amount, 0))    AS OFFERING,\n" +
                     "        sum(if(Account = 'THANKGIVING', Amount, 0)) AS THANKGIVING,\n" +
                     "        sum(if(Account = 'FIRST FRUIT', Amount, 0)) AS 'FIRST FRUIT',\n" +
@@ -1209,7 +1209,7 @@ public class ReportsController {
                     "        DATE,\n" +
                     "        TYPE,\n" +
                     "\n" +
-                    "        sum(if(Account = 'TITHE', 0, 0))       AS TITHE,\n" +
+                    "        sum(if(Account = 'SALES', 0, 0))       AS SALES,\n" +
                     "        sum(if(Account = 'OFFERING', 0, 0))    AS OFFERING,\n" +
                     "        sum(if(Account = 'THANKGIVING', 0, 0)) AS THANKGIVING,\n" +
                     "        sum(if(Account = 'FIRST FRUIT', 0, 0)) AS 'FIRST FRUIT',\n" +
@@ -1237,7 +1237,7 @@ public class ReportsController {
                     "        DATE,\n" +
                     "        TYPE,\n" +
                     "\n" +
-                    "        sum(if(Account = 'TITHE', Amount, 0))       AS TITHE,\n" +
+                    "        sum(if(Account = 'SALES', Amount, 0))       AS SALES,\n" +
                     "        sum(if(Account = 'OFFERING', Amount, 0))    AS OFFERING,\n" +
                     "        sum(if(Account = 'THANKGIVING', Amount, 0)) AS THANKGIVING,\n" +
                     "        sum(if(Account = 'FIRST FRUIT', Amount, 0)) AS 'FIRST FRUIT',\n" +
@@ -1292,7 +1292,7 @@ public class ReportsController {
                     "        DATE,\n" +
                     "        TYPE,\n" +
                     "\n" +
-                    "        sum(if(Account = 'TITHE', 0, 0))       AS TITHE,\n" +
+                    "        sum(if(Account = 'SALES', 0, 0))       AS SALES,\n" +
                     "        sum(if(Account = 'OFFERING', 0, 0))    AS OFFERING,\n" +
                     "        sum(if(Account = 'THANKGIVING', 0, 0)) AS THANKGIVING,\n" +
                     "        sum(if(Account = 'FIRST FRUIT', 0, 0)) AS 'FIRST FRUIT',\n" +
@@ -1488,7 +1488,7 @@ public class ReportsController {
             while (resultSet.next()) {
                 String date = resultSet.getString("DATE");
                 String type = resultSet.getString("TYPE");
-                double tithe = resultSet.getDouble("TITHE");
+                double SALES = resultSet.getDouble("SALES");
                 double offering = resultSet.getDouble("OFFERING");
                 double thanksgiving = resultSet.getDouble("THANKGIVING");
                 double firstFruit = resultSet.getDouble("FIRST FRUIT");
@@ -1502,7 +1502,7 @@ public class ReportsController {
 
                     // Add data to the income table
                     incomeTable.addCell(date);
-                    incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(tithe))));
+                    incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(SALES))));
                     incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(offering))));
                     incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(thanksgiving))));
                     incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(firstFruit))));
@@ -1627,7 +1627,7 @@ public class ReportsController {
 
         for (String title: titles) {
             if (    title.equalsIgnoreCase("date") ||
-                    title.equalsIgnoreCase("tithe") ||
+                    title.equalsIgnoreCase("SALES") ||
                     title.equalsIgnoreCase("offering") ||
                     title.equalsIgnoreCase("thankgiving") ||
                     title.equalsIgnoreCase("first fruit") ||
@@ -1676,7 +1676,7 @@ public class ReportsController {
                         " CASE WHEN grp = 'expenditure' THEN Account END                 AS AccountName, " +
                         "       SUM(CASE WHEN Account = '1ST' THEN total ELSE 0 END)           AS `1ST`,\n" +
                         "       SUM(CASE WHEN Account = '2ND' THEN total ELSE 0 END)           AS `2ND`,\n" +
-                        "       SUM(CASE WHEN Account = 'TITHING' THEN total ELSE 0 END)       AS TITHES,\n" +
+                        "       SUM(CASE WHEN Account = 'TITHING' THEN total ELSE 0 END)       AS SALESS,\n" +
                         "       SUM(CASE WHEN Account = 'OFFERING' THEN total ELSE 0 END)      AS OFFERING,\n" +
                         "       SUM(CASE WHEN Account = 'THANKSGIVING' THEN total ELSE 0 END)  AS THANKSGIVING,\n" +
                         "       SUM(CASE WHEN Account = 'FIRST FRUIT' THEN total ELSE 0 END)   AS `FIRST FRUITS`,\n" +
@@ -1719,7 +1719,7 @@ public class ReportsController {
                         " CASE WHEN grp = 'expenditure' THEN Account END                 AS AccountName, " +
                         "       SUM(CASE WHEN Account = '1ST' THEN total ELSE 0 END)           AS `1ST`,\n" +
                         "       SUM(CASE WHEN Account = '2ND' THEN total ELSE 0 END)           AS `2ND`,\n" +
-                        "       SUM(CASE WHEN Account = 'TITHING' THEN total ELSE 0 END)       AS TITHES,\n" +
+                        "       SUM(CASE WHEN Account = 'TITHING' THEN total ELSE 0 END)       AS SALESS,\n" +
                         "       SUM(CASE WHEN Account = 'OFFERING' THEN total ELSE 0 END)      AS OFFERING,\n" +
                         "       SUM(CASE WHEN Account = 'THANKSGIVING' THEN total ELSE 0 END)  AS THANKSGIVING,\n" +
                         "       SUM(CASE WHEN Account = 'FIRST FRUIT' THEN total ELSE 0 END)   AS `FIRST FRUITS`,\n" +
@@ -1764,7 +1764,7 @@ public class ReportsController {
                         " CASE WHEN grp = 'expenditure' THEN Account END                 AS AccountName, " +
                         "       SUM(CASE WHEN Account = '1ST' THEN total ELSE 0 END)           AS `1ST`,\n" +
                         "       SUM(CASE WHEN Account = '2ND' THEN total ELSE 0 END)           AS `2ND`,\n" +
-                        "       SUM(CASE WHEN Account = 'TITHING' THEN total ELSE 0 END)       AS TITHES,\n" +
+                        "       SUM(CASE WHEN Account = 'TITHING' THEN total ELSE 0 END)       AS SALESS,\n" +
                         "       SUM(CASE WHEN Account = 'OFFERING' THEN total ELSE 0 END)      AS OFFERING,\n" +
                         "       SUM(CASE WHEN Account = 'THANKSGIVING' THEN total ELSE 0 END)  AS THANKSGIVING,\n" +
                         "       SUM(CASE WHEN Account = 'FIRST FRUIT' THEN total ELSE 0 END)   AS `FIRST FRUITS`,\n" +
@@ -1807,7 +1807,7 @@ public class ReportsController {
                         " CASE WHEN grp = 'expenditure' THEN Account END                 AS AccountName, " +
                         "       SUM(CASE WHEN Account = '1ST' THEN total ELSE 0 END)           AS `1ST`,\n" +
                         "       SUM(CASE WHEN Account = '2ND' THEN total ELSE 0 END)           AS `2ND`,\n" +
-                        "       SUM(CASE WHEN Account = 'TITHING' THEN total ELSE 0 END)       AS TITHES,\n" +
+                        "       SUM(CASE WHEN Account = 'TITHING' THEN total ELSE 0 END)       AS SALESS,\n" +
                         "       SUM(CASE WHEN Account = 'OFFERING' THEN total ELSE 0 END)      AS OFFERING,\n" +
                         "       SUM(CASE WHEN Account = 'THANKSGIVING' THEN total ELSE 0 END)  AS THANKSGIVING,\n" +
                         "       SUM(CASE WHEN Account = 'FIRST FRUIT' THEN total ELSE 0 END)   AS `FIRST FRUITS`,\n" +
@@ -2118,7 +2118,7 @@ public class ReportsController {
                                                 Object[] objects = new Object[2];
                                                 if (finalDoub.getTitle().equalsIgnoreCase("total")) {
                                                     objects[0] =  fields.get("grandTotal");
-                                                } else if(finalDoub.getTitle().equalsIgnoreCase("tithe")) {
+                                                } else if(finalDoub.getTitle().equalsIgnoreCase("SALES")) {
                                                     objects[0] = "Balance";
                                                 } else {
                                                     objects[0] = null;
@@ -2145,7 +2145,7 @@ public class ReportsController {
 
                                                 if (finalDoub.getTitle().equalsIgnoreCase("total")) {
                                                     return fields.get("grandTotal");
-                                                } else if(finalDoub.getTitle().equalsIgnoreCase("tithe")) {
+                                                } else if(finalDoub.getTitle().equalsIgnoreCase("SALES")) {
                                                     return "C/D";
                                                 } else {
                                                     return null;

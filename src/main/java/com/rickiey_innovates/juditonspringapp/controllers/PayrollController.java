@@ -163,7 +163,7 @@ public class PayrollController {
         Set<Role> roles = userRepository.findById(userId()).get().getRoles();
         boolean authorised = false;
         for (Role role : roles) {
-            if (role.getName().equals(ERole.ROLE_ACCOUNTANT)) {
+            if (role.getName().equals(ERole.SHAREHOLDER)) {
                 authorised = true;
             } else {
                 authorised = false;

@@ -1366,7 +1366,7 @@ public class FinanceController {
         }
     }
 
-    @GetMapping(value = "/voucher/approve/{pvId}", produces = "application/json")
+    /*@GetMapping(value = "/voucher/approve/{pvId}", produces = "application/json")
     @ResponseBody
     private String approveVoucher(@PathVariable Integer pvId) {
         JsonObject jsonObject = new JsonObject();
@@ -1450,9 +1450,9 @@ public class FinanceController {
         }
 
         return jsonObject.toString();
-    }
+    }*/
 
-    @GetMapping(value = "/voucher/reject/{pvId}", produces = "application/json")
+    /*@GetMapping(value = "/voucher/reject/{pvId}", produces = "application/json")
     @ResponseBody
     private String rejectVoucher(@PathVariable Integer pvId) {
         JsonObject jsonObject = new JsonObject();
@@ -1502,7 +1502,7 @@ public class FinanceController {
         }
 
         return jsonObject.toString();
-    }
+    }*/
 
     @GetMapping(value = "/voucher/delete/{pvId}", produces = "application/json")
     @ResponseBody

@@ -154,7 +154,7 @@ public class SettingsController {
             if (accountant != null) {
                 Set<Role> roles = new HashSet<>();
 
-                Role userRole = roleRepository.findByName(ERole.ROLE_ACCOUNTANT)
+                Role userRole = roleRepository.findByName(ERole.SHAREHOLDER)
                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 roles.add(userRole);
 
@@ -165,7 +165,7 @@ public class SettingsController {
             if (senior != null) {
                 Set<Role> roles = new HashSet<>();
 
-                Role userRole = roleRepository.findByName(ERole.ROLE_SENIOR_PASTOR)
+                Role userRole = roleRepository.findByName(ERole.SHAREHOLDER)
                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 roles.add(userRole);
 
@@ -176,7 +176,7 @@ public class SettingsController {
             if (second != null) {
                 Set<Role> roles = new HashSet<>();
 
-                Role userRole = roleRepository.findByName(ERole.ROLE_SECOND_SIGNATORY)
+                Role userRole = roleRepository.findByName(ERole.SHAREHOLDER)
                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 roles.add(userRole);
 
@@ -187,7 +187,7 @@ public class SettingsController {
             if (treasurer != null) {
                 Set<Role> roles = new HashSet<>();
 
-                Role userRole = roleRepository.findByName(ERole.ROLE_TREASURER)
+                Role userRole = roleRepository.findByName(ERole.SHAREHOLDER)
                         .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                 roles.add(userRole);
 
