@@ -148,19 +148,13 @@ public class ReportsController {
         String uploadDir = "static/" + farm().getUploadPath() + "/pdf";
         File file = new File(uploadDir + File.separator + RequestContextHolder.currentRequestAttributes().getSessionId() + ".pdf");
         String jrxmlPath = vouchersPath;
-/*
 
-        String sourceFileName = "/home/rickiey/IdeaProjects/ChurchSpringApp/src/main/resources/reports/companyofficials.jrxml";
-        JasperCompileManager.compileReportToFile(sourceFileName);
-
-*/
-
-        String sql = "SELECT `Account #`,`Account`,`Payee Name`,`Date`,`Details`,`Particulars`,`Qty`,`Voucher #`, \n" +
-                "`Rate`,`Pv id`,MAX(`Withholding Tax`) AS 'Withholding Tax',MAX(`VAT`) AS VAT,MAX(`Professional Fees`) AS 'Professional Fees' FROM (SELECT `Account #`,\n" +
+        String sql = "SELECT `Account`,`Payee Name`,`Date`,`Details`,`Particulars`,`Qty`,`Voucher #`, \n" +
+                "`Rate`,`Pv id`,MAX(`Withholding Tax`) AS 'Withholding Tax',MAX(`VAT`) AS VAT,MAX(`Professional Fees`) AS 'Professional Fees' FROM (SELECT \n" +
                 " `Account`,`Payee Name`,d.`Date`,`Details`,`Particulars`,`Qty`,`Voucher #`, \n" +
                 "`Rate`,`Pv id`,case when `type` = 'Withholding Tax' then `Amount` ELSE 0   end AS `Withholding Tax`, \n" +
                 "case when `type` = 'Vat Tax' then `Amount` ELSE 0  end AS `VAT`,case when `type` = 'Professional Fees'  \n" +
-                "then `Amount` ELSE 0 end AS `Professional Fees`,id FROM (SELECT `Account #`,`Account`, \n" +
+                "then `Amount` ELSE 0 end AS `Professional Fees`,id FROM (SELECT `Account`, \n" +
                 "`Payee Name`,paymentvouchers.`Date`,`Details`,`Particulars`,`Qty`,`Voucher #`, \n" +
                 "`Rate`,`Pv id`  FROM paymentvoucherdetails  \n" +
                 " INNER JOIN paymentvouchers ON paymentvoucherdetails.`pv#`  =paymentvouchers.`Pv id`  \n" +
@@ -200,7 +194,7 @@ public class ReportsController {
         String jrxmlPath = "/reports/Otherreceipt.jrxml";
 
 
-        String sql = "SELECT IFNULL(first_name, `Payee/Payer`)            as name,\n" +
+        String sql = "SELECT IFNULL(username, `Payee/Payer`)            as name,\n" +
                 "       `Ref #`,\n" +
                 "       CONCAT(b.`Account Name`, ' ', b.`Account #`) AS ACCOUNT,\n" +
                 "       a.Description,\n" +
@@ -208,7 +202,7 @@ public class ReportsController {
                 "       number_to_words(SUM(credit))                 as amountInWords,\n" +
                 "       date\n" +
                 "from accounttransactions a\n" +
-                "         LEFT JOIN members r ON `Payee/Payer` = `id`\n" +
+                "         LEFT JOIN users r ON `Payee/Payer` = `id`\n" +
                 "         INNER JOIN bankaccounts b ON b.`Acc id` = a.bank\n" +
                 "where `Transaction id` = '" + transId + "';";
 
@@ -1158,12 +1152,12 @@ public class ReportsController {
                     "        DATE,\n" +
                     "        TYPE,\n" +
                     "\n" +
-                    "        sum(if(Account = 'SALES', Amount, 0))       AS SALES,\n" +
-                    "        sum(if(Account = 'OFFERING', Amount, 0))    AS OFFERING,\n" +
-                    "        sum(if(Account = 'THANKGIVING', Amount, 0)) AS THANKGIVING,\n" +
-                    "        sum(if(Account = 'FIRST FRUIT', Amount, 0)) AS 'FIRST FRUIT',\n" +
-                    "        sum(if(Account = 'OTHERS', Amount, 0))      AS OTHERS,\n" +
-                    "        sum(if(1 = 1, Amount, 0))                   AS TOTAL\n" +
+                    "        sum(if(Account = 'PIG SALES', Amount, 0))       AS `PIG SALES`,\n" +
+                    "       sum(if(Account = 'RICE SALES', Amount, 0))    AS `RICE SALES`,\n" +
+                    "       sum(if(Account = 'MIRAA SALES', Amount, 0)) AS `MIRAA SALES`,\n" +
+                    "       sum(if(Account = 'LOAN', Amount, 0)) AS 'LOAN',\n" +
+                    "       sum(if(Account = 'OTHERS', Amount, 0))      AS OTHERS,\n" +
+                    "       sum(if(1 = 1, Amount, 0))                   AS TOTAL\n" +
                     "\n" +
                     "\n" +
                     " FROM (SELECT b.Account AS Paidthrough,\n" +
@@ -1209,12 +1203,12 @@ public class ReportsController {
                     "        DATE,\n" +
                     "        TYPE,\n" +
                     "\n" +
-                    "        sum(if(Account = 'SALES', 0, 0))       AS SALES,\n" +
-                    "        sum(if(Account = 'OFFERING', 0, 0))    AS OFFERING,\n" +
-                    "        sum(if(Account = 'THANKGIVING', 0, 0)) AS THANKGIVING,\n" +
-                    "        sum(if(Account = 'FIRST FRUIT', 0, 0)) AS 'FIRST FRUIT',\n" +
-                    "        sum(if(Account = 'OTHERS', 0, 0))      AS OTHERS,\n" +
-                    "        sum(if(1 = 1, Amount, 0))              AS TOTAL\n" +
+                    "        sum(if(Account = 'PIG SALES', Amount, 0))       AS `PIG SALES`,\n" +
+                    "       sum(if(Account = 'RICE SALES', Amount, 0))    AS `RICE SALES`,\n" +
+                    "       sum(if(Account = 'MIRAA SALES', Amount, 0)) AS `MIRAA SALES`,\n" +
+                    "       sum(if(Account = 'LOAN', Amount, 0)) AS 'LOAN',\n" +
+                    "       sum(if(Account = 'OTHERS', Amount, 0))      AS OTHERS,\n" +
+                    "       sum(if(1 = 1, Amount, 0))                   AS TOTAL\n" +
                     " FROM (SELECT b.Account  AS Paidthrough,\n" +
                     "              a.Date,\n" +
                     "              'EXPENSES' AS TYPE,\n" +
@@ -1237,12 +1231,12 @@ public class ReportsController {
                     "        DATE,\n" +
                     "        TYPE,\n" +
                     "\n" +
-                    "        sum(if(Account = 'SALES', Amount, 0))       AS SALES,\n" +
-                    "        sum(if(Account = 'OFFERING', Amount, 0))    AS OFFERING,\n" +
-                    "        sum(if(Account = 'THANKGIVING', Amount, 0)) AS THANKGIVING,\n" +
-                    "        sum(if(Account = 'FIRST FRUIT', Amount, 0)) AS 'FIRST FRUIT',\n" +
-                    "        sum(if(Account = 'OTHERS', Amount, 0))      AS OTHERS,\n" +
-                    "        sum(if(1 = 1, Amount, 0))                   AS TOTAL\n" +
+                    "        sum(if(Account = 'PIG SALES', Amount, 0))       AS `PIG SALES`,\n" +
+                    "       sum(if(Account = 'RICE SALES', Amount, 0))    AS `RICE SALES`,\n" +
+                    "       sum(if(Account = 'MIRAA SALES', Amount, 0)) AS `MIRAA SALES`,\n" +
+                    "       sum(if(Account = 'LOAN', Amount, 0)) AS 'LOAN',\n" +
+                    "       sum(if(Account = 'OTHERS', Amount, 0))      AS OTHERS,\n" +
+                    "       sum(if(1 = 1, Amount, 0))                   AS TOTAL\n" +
                     "\n" +
                     "\n" +
                     " FROM (SELECT b.Account   AS Paidthrough,\n" +
@@ -1292,12 +1286,12 @@ public class ReportsController {
                     "        DATE,\n" +
                     "        TYPE,\n" +
                     "\n" +
-                    "        sum(if(Account = 'SALES', 0, 0))       AS SALES,\n" +
-                    "        sum(if(Account = 'OFFERING', 0, 0))    AS OFFERING,\n" +
-                    "        sum(if(Account = 'THANKGIVING', 0, 0)) AS THANKGIVING,\n" +
-                    "        sum(if(Account = 'FIRST FRUIT', 0, 0)) AS 'FIRST FRUIT',\n" +
-                    "        sum(if(Account = 'OTHERS', 0, 0))      AS OTHERS,\n" +
-                    "        sum(if(1 = 1, Amount, 0))              AS TOTAL\n" +
+                    "        sum(if(Account = 'PIG SALES', Amount, 0))       AS `PIG SALES`,\n" +
+                    "       sum(if(Account = 'RICE SALES', Amount, 0))    AS `RICE SALES`,\n" +
+                    "       sum(if(Account = 'MIRAA SALES', Amount, 0)) AS `MIRAA SALES`,\n" +
+                    "       sum(if(Account = 'LOAN', Amount, 0)) AS 'LOAN',\n" +
+                    "       sum(if(Account = 'OTHERS', Amount, 0))      AS OTHERS,\n" +
+                    "       sum(if(1 = 1, Amount, 0))                   AS TOTAL\n" +
                     " FROM (SELECT b.Account  AS Paidthrough,\n" +
                     "              a.Date,\n" +
                     "              a.description,\n" +
@@ -1359,7 +1353,7 @@ public class ReportsController {
     }
 
     private void addLetterheadContent(PdfContentByte contentByte, Document document) {
-        String sql = "SELECT * FROM churches where churchid = "+farm().getId()+"";
+        String sql = "SELECT * FROM farm where id = "+farm().getId()+"";
         try (Connection connection = DbConnector.getConnection()) {
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
             // Load the image from the provided URL
@@ -1488,10 +1482,10 @@ public class ReportsController {
             while (resultSet.next()) {
                 String date = resultSet.getString("DATE");
                 String type = resultSet.getString("TYPE");
-                double SALES = resultSet.getDouble("SALES");
-                double offering = resultSet.getDouble("OFFERING");
-                double thanksgiving = resultSet.getDouble("THANKGIVING");
-                double firstFruit = resultSet.getDouble("FIRST FRUIT");
+                double SALES = resultSet.getDouble("PIG SALES");
+                double offering = resultSet.getDouble("RICE SALES");
+                double thanksgiving = resultSet.getDouble("MIRAA SALES");
+                double loan = resultSet.getDouble("LOAN");
                 double others = resultSet.getDouble("OTHERS");
                 double total = resultSet.getDouble("TOTAL");
 
@@ -1505,7 +1499,7 @@ public class ReportsController {
                     incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(SALES))));
                     incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(offering))));
                     incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(thanksgiving))));
-                    incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(firstFruit))));
+                    incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(loan))));
                     incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(others))));
                     incomeTable.addCell(new PdfPCell(new Phrase(numberFormat.format(total))));
                 } else if ("EXPENSES".equals(type)) {
@@ -1627,10 +1621,10 @@ public class ReportsController {
 
         for (String title: titles) {
             if (    title.equalsIgnoreCase("date") ||
-                    title.equalsIgnoreCase("SALES") ||
-                    title.equalsIgnoreCase("offering") ||
-                    title.equalsIgnoreCase("thankgiving") ||
-                    title.equalsIgnoreCase("first fruit") ||
+                    title.equalsIgnoreCase("PIG SALES") ||
+                    title.equalsIgnoreCase("RICE SALES") ||
+                    title.equalsIgnoreCase("MIRAA SALES") ||
+                    title.equalsIgnoreCase("LOAN") ||
                     title.equalsIgnoreCase("others") ||
                     title.equalsIgnoreCase("total"))  {
                 PdfPCell cell = new PdfPCell(new Phrase(title.toUpperCase(), headerFont));
