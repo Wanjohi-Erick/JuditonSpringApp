@@ -1511,9 +1511,10 @@ public class FinanceController {
 
         try {
             System.out.println(pvId);
-            if (paymentvoucherRepository.findById(pvId).get().getStatus().equalsIgnoreCase("approved")) {
+            Paymentvoucher paymentvoucher = paymentvoucherRepository.findById(pvId).get();
+            if (paymentvoucher.getStatus().equalsIgnoreCase("approved")) {
                 paymentvoucherRepository.deleteById(pvId);
-                accounttransactionRepository.deleteByRefAndFarm("PV" + pvId, farm());
+                accounttransactionRepository.deleteByRefAndFarm(paymentvoucher.getVoucher(), farm());
             } else {
                 paymentvoucherRepository.deleteById(pvId);
             }
