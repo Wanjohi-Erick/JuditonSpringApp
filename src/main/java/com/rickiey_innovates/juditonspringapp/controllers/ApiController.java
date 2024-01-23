@@ -144,7 +144,7 @@ public class ApiController {
 
     @GetMapping("/getMonthlyExpenses")
     public ResponseEntity<?> getMonthlyExpenses() {
-        List<MonthlyTithes> monthlyExpensesList = new ArrayList<>();
+        List<MonthlyTransactions> monthlyExpensesList = new ArrayList<>();
         try {
             Connection connection = DbConnector.getConnection();
             String sql = "SELECT\n" +
@@ -166,7 +166,7 @@ public class ApiController {
 
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
             while(resultSet.next()) {
-                MonthlyTithes monthlyExpenses = new MonthlyTithes(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
+                MonthlyTransactions monthlyExpenses = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
                 monthlyExpensesList.add(monthlyExpenses);
             }
 
@@ -181,7 +181,7 @@ public class ApiController {
 
     @GetMapping("/getMonthlyIncome")
     public ResponseEntity<?> getMonthlyIncome() {
-        List<MonthlyTithes> monthlyIncomeList = new ArrayList<>();
+        List<MonthlyTransactions> monthlyTransactionsList = new ArrayList<>();
         try {
             Connection connection = DbConnector.getConnection();
             String sql = "SELECT\n" +
@@ -202,13 +202,13 @@ public class ApiController {
                     "ORDER BY year, month desc ;\n";
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
             while(resultSet.next()) {
-                MonthlyTithes monthlyExpenses = new MonthlyTithes(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
-                monthlyIncomeList.add(monthlyExpenses);
+                MonthlyTransactions monthlyExpenses = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
+                monthlyTransactionsList.add(monthlyExpenses);
             }
 
             resultSet.close();
             connection.close();
-            return ResponseEntity.ok(monthlyIncomeList);
+            return ResponseEntity.ok(monthlyTransactionsList);
         } catch (SQLException e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(e.getLocalizedMessage());
@@ -218,7 +218,7 @@ public class ApiController {
 
     @GetMapping("/getTithe")
     public ResponseEntity<?> getTithe() {
-        List<TitheAndOff> titheAndOffList = new ArrayList<>();
+        List<IncomeAndExpenditure> titheAndOffList = new ArrayList<>();
         try {
             Connection connection = DbConnector.getConnection();
             String sql = "SELECT\n" +
@@ -232,16 +232,16 @@ public class ApiController {
                     "ORDER BY Account, YEAR(`Date`), MONTH(`Date`);";
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
             while(resultSet.next()) {
-                TitheAndOff titheAndOff = new TitheAndOff();
+                IncomeAndExpenditure incomeAndExpenditure = new IncomeAndExpenditure();
 
                 if (resultSet.getInt("Account") == 1 || resultSet.getInt("Account") == 439) {
-                    MonthlyTithes titheDTO = new MonthlyTithes(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("total"));
-                    titheAndOff.setMonthlyTithes(titheDTO);
+                    MonthlyTransactions incomes = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("total"));
+                    incomeAndExpenditure.setIncome(incomes);
                 } else if (resultSet.getInt("Account") == 2 || resultSet.getInt("Account") == 440) {
-                    MonthlyOffering offeringDTO = new MonthlyOffering(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("total"));;
-                    titheAndOff.setMonthlyOffering(offeringDTO);
+                    MonthlyTransactions expenses = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("total"));;
+                    incomeAndExpenditure.setExpenditure(expenses);
                 }
-                titheAndOffList.add(titheAndOff);
+                titheAndOffList.add(incomeAndExpenditure);
             }
 
             resultSet.close();

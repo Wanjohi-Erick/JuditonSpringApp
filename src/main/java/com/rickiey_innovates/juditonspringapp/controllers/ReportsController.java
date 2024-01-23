@@ -465,7 +465,7 @@ public class ReportsController {
                 "  AND description != 'Cash Deposit'\n" +
                 "  AND description != 'Cash Withdraw'\n" +
                 "  AND description != 'Opening Balance'\n" +
-                "AND g.`Group name` != 'EXPENSES';";
+                "AND credit > 0;";
 
         param.put("from", "RECEIPTS FROM  " + from);
         param.put("to", to);

@@ -40,22 +40,7 @@
         </a>
       </li>
       <hr class="horizontal light mt-0">
-      <li class="nav-item">
-        <a  th:classappend="${requestURI == '/attendance' ? 'active':''}" th:href="@{/attendance}"
-            class="nav-link text-white " aria-controls="basicExamples" role="button" aria-expanded="false">
-          <i class="material-icons-round {% if page.brand == 'RTL' %}ms-2{% else %} me-2{% endif %}">list</i>
-          <span class="nav-link-text ms-2 ps-1">Attendance</span>
-        </a>
-      </li>
-      <hr class="horizontal light mt-0">
-      <li class="nav-item">
-        <a  th:classappend="${requestURI == '/registration' ? 'active':''}" th:href="@{/registration}"
-            class="nav-link text-white " aria-controls="basicExamples" role="button" aria-expanded="false">
-          <i class="material-icons-round {% if page.brand == 'RTL' %}ms-2{% else %} me-2{% endif %}">people</i>
-          <span class="nav-link-text ms-2 ps-1">Registration</span>
-        </a>
-      </li>
-      <hr class="horizontal light mt-0">
+
       <li class="nav-item ">
         <a class="nav-link text-white" data-bs-toggle="collapse" aria-expanded="false" th:href="@{#usersExample}">
           <i class="material-icons opacity-10">money</i>
@@ -99,34 +84,7 @@
         </div>
       </li>
       <hr class="horizontal light mt-0">
-      <li class="nav-item ">
-        <a class="nav-link text-white" data-bs-toggle="collapse" aria-expanded="false" th:href="@{#sms}">
-          <i class="material-icons opacity-10">sms</i>
-          <span class="sidenav-normal  ms-2  ps-1"> Bulk Sms <b class="caret"></b></span>
-        </a>
-        <div class="collapse" id="sms">
-          <ul class="nav nav-sm flex-column">
-            <li class="nav-item return-side">
-              <a th:classappend="${requestURI == '/sms' ? 'active':''}" th:href="@{/sms}" class="nav-link text-white ">
-                <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i class="material-icons opacity-10">chevron_right</i>
-                </div>
-                <span class="nav-link-text ms-1">Compose</span>
-              </a>
-            </li>
-            <li class="nav-item return-side">
-              <a th:classappend="${requestURI == '/sms/history' ? 'active':''}" th:href="@{/sms/history}" class="nav-link text-white ">
-                <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i class="material-icons opacity-10">chevron_right</i>
-                </div>
-                <span class="nav-link-text ms-1">History</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
 
-      <hr class="horizontal light mt-0">
 
       <li class="nav-item">
         <a href="/hr" class="nav-link text-white" aria-controls="dashboardsExamples" role="button" aria-expanded="false">

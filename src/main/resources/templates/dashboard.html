@@ -33,7 +33,7 @@
       <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
         <div class="card">
           <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
+            <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
               <i class="material-icons opacity-10">person</i>
             </div>
             <div class="text-end pt-1">
@@ -47,7 +47,7 @@
       <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
         <div class="card">
           <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
+            <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
               <i class="material-icons opacity-10">person</i>
             </div>
             <div class="text-end pt-1">
@@ -61,7 +61,7 @@
       <div class="col-xl-3 col-sm-6">
         <div class="card">
           <div class="card-header p-3 pt-2">
-            <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
+            <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
               <i class="material-icons opacity-10">weekend</i>
             </div>
             <div class="text-end pt-1">
@@ -74,22 +74,7 @@
       </div>
     </div>
     <div class="row mt-4">
-      <div class="col-lg-4 col-md-6 mt-4 mb-4">
-        <div class="card z-index-2 ">
-          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
-            <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
-              <div class="chart">
-                <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            <hr class="dark horizontal">
-            <h6 class="mb-0 ">Tithe and Offering</h6>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6 mt-4 mb-4">
+      <div class="col-lg-6 col-md-6 mt-4 mb-4">
         <div class="card z-index-2  ">
           <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
             <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
@@ -104,7 +89,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-4 mt-4 mb-3">
+      <div class="col-lg-6 mt-4 mb-3">
         <div class="card z-index-2 ">
           <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
             <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
@@ -122,37 +107,17 @@
     </div>
     <div class="row mb-4">
       <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
-        <div class="card">
-          <div class="card-header pb-0">
-            <h6>Members</h6>
-          </div>
-          <div class="card-body px-0 pb-2">
-            <div class="table-responsive">
-              <table class="table align-items-center mb-0">
-                <thead>
-                <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Group</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Marital Status</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Phone</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr  th:each="member : ${members}">
-                  <td>
-                    <h6 class="mb-0 text-sm" th:text="${member.fName + ' ' + member.mName + ' ' + member.lName}"></h6>
-                  </td>
-                  <td th:text="${member.memberGroup.group}">
-
-                  </td>
-                  <td class="align-middle text-center text-sm"  th:text="${member.maritalStatus}">
-                  </td>
-                  <td class="align-middle" th:text="${member.phone}">
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+        <div class="card z-index-2  ">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+            <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
+              <div class="chart">
+                <canvas id="chart-line" class="chart-canvas" height="170"></canvas>
+              </div>
             </div>
+          </div>
+          <div class="card-body">
+            <hr class="dark horizontal">
+            <h6 class="mb-0 "> Monthly Income </h6>
           </div>
         </div>
       </div>
@@ -200,22 +165,23 @@
 <script>
   $(document).ready(function() {
     $.ajax({
-      url: "/api/getTithe",
+      url: "/api/getIncomeAndExpenses",
       method: "GET",
       dataType: "json",
       success: function(data) {
+        console.log(data)
         const groupedData = {};
 
         // Group data by month and combine tithes and offerings
         data.forEach(entry => {
-          const month = entry.monthlyTithes ? entry.monthlyTithes.month : entry.monthlyOffering.month;
+          const month = entry.monthlyIncome ? entry.monthlyIncome.month : entry.monthlyOffering.month;
 
           if (!groupedData[month]) {
             groupedData[month] = { tithe: 0, offering: 0 };
           }
 
-          if (entry.monthlyTithes) {
-            groupedData[month].tithe = parseFloat(entry.monthlyTithes.credit);
+          if (entry.monthlyIncome) {
+            groupedData[month].tithe = parseFloat(entry.monthlyIncome.credit);
           }
 
           if (entry.monthlyOffering) {

@@ -9,10 +9,9 @@ import com.rickiey_innovates.juditonspringapp.repositories.PaymentvoucherReposit
 import com.rickiey_innovates.juditonspringapp.repositories.RoleRepository;
 import com.rickiey_innovates.juditonspringapp.repositories.UserRepository;
 import com.rickiey_innovates.juditonspringapp.DbConnector;
-import com.rickiey_innovates.juditonspringapp.models.*;
-import com.rickiey_innovates.juditonspringapp.repositories.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -107,8 +106,8 @@ public class IndexController implements ErrorController {
 
     @GetMapping(value = "/api/getMonthlyExpenses", produces = "application/json")
     @ResponseBody
-    public List<MonthlyTithes> MonthlyExpenses () {
-        List<MonthlyTithes> monthlyExpensesList = new ArrayList<>();
+    public List<MonthlyTransactions> MonthlyExpenses () {
+        List<MonthlyTransactions> monthlyExpensesList = new ArrayList<>();
         try {
             Connection connection = DbConnector.getConnection();
             String sql = "SELECT\n" +
@@ -130,7 +129,7 @@ public class IndexController implements ErrorController {
 
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
             while(resultSet.next()) {
-                MonthlyTithes monthlyExpenses = new MonthlyTithes(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
+                MonthlyTransactions monthlyExpenses = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
                 monthlyExpensesList.add(monthlyExpenses);
             }
 
@@ -144,8 +143,8 @@ public class IndexController implements ErrorController {
 
     @GetMapping(value = "/api/getMonthlyIncome", produces = "application/json")
     @ResponseBody
-    public List<MonthlyTithes> MonthlyIncome () {
-        List<MonthlyTithes> monthlyIncomeList = new ArrayList<>();
+    public List<MonthlyTransactions> MonthlyIncome () {
+        List<MonthlyTransactions> monthlyTransactionsList = new ArrayList<>();
         try {
             Connection connection = DbConnector.getConnection();
             String sql = "SELECT\n" +
@@ -166,8 +165,8 @@ public class IndexController implements ErrorController {
                          "ORDER BY year, month desc ;\n";
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
             while(resultSet.next()) {
-                MonthlyTithes monthlyExpenses = new MonthlyTithes(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
-                monthlyIncomeList.add(monthlyExpenses);
+                MonthlyTransactions monthlyExpenses = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
+                monthlyTransactionsList.add(monthlyExpenses);
             }
 
             resultSet.close();
@@ -175,46 +174,25 @@ public class IndexController implements ErrorController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return monthlyIncomeList;
+        return monthlyTransactionsList;
     }
 
-    @GetMapping(value = "/api/getTithe", produces = "application/json")
-    @ResponseBody
-    public List<TitheAndOff> tithesAndOfferings () {
-        List<TitheAndOff> titheAndOffList = new ArrayList<>();
+/*    @GetMapping("/api/getIncomeAndExpenses")
+    public ResponseEntity<?> getIncomAndExpenses() {
+        List<IncomeAndExpenditure> incomeAndExpenditures = new ArrayList<>();
         try {
-            Connection connection = DbConnector.getConnection();
-            String sql = "SELECT\n" +
-                         "    Account,\n" +
-                         "    YEAR(`Date`) AS year,\n" +
-                         "    DATE_FORMAT(`Date`, '%b') AS month,\n" +
-                         "    SUM(credit) AS total\n" +
-                         "FROM accounttransactions\n" +
-                         "WHERE Account IN (1, 2) and farm = "+farm().getId()+"\n" +
-                         "GROUP BY Account, YEAR(`Date`), MONTH(`Date`)\n" +
-                         "ORDER BY Account, YEAR(`Date`), MONTH(`Date`);";
-            ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
-            while(resultSet.next()) {
-                TitheAndOff titheAndOff = new TitheAndOff();
-
-                if (resultSet.getInt("Account") == 1 || resultSet.getInt("Account") == 439) {
-                    MonthlyTithes titheDTO = new MonthlyTithes(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("total"));
-                    titheAndOff.setMonthlyTithes(titheDTO);
-                } else if (resultSet.getInt("Account") == 2 || resultSet.getInt("Account") == 440) {
-                    MonthlyOffering offeringDTO = new MonthlyOffering(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("total"));;
-                    titheAndOff.setMonthlyOffering(offeringDTO);
-                }
-                titheAndOffList.add(titheAndOff);
-            }
-
-            resultSet.close();
-            connection.close();
-
-        } catch (SQLException e) {
+            IncomeAndExpenditure incomeAndExpenditure = new IncomeAndExpenditure();
+            MonthlyTransactions incomes = new MonthlyTransactions( resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("total"));
+            incomeAndExpenditure.setIncome(incomes);
+            MonthlyTransactions expenses = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("total"));;
+            incomeAndExpenditure.setExpenditure(expenses);
+            incomeAndExpenditures.add(incomeAndExpenditure);
+            return ResponseEntity.ok(incomeAndExpenditures);
+        } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.internalServerError().body(e.getLocalizedMessage());
         }
-        return titheAndOffList;
-    }
+    }*/
 
     @GetMapping({"/dashboard"})
     public String index(Model model, HttpServletRequest request) {

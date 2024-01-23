@@ -1,12 +1,12 @@
 package com.rickiey_innovates.juditonspringapp.models;
 
-public class MonthlyTithes {
-    String year, month, credit;
+public class MonthlyTransactions {
+    String year, month, creditOrDebit;
 
-    public MonthlyTithes(String year, String month, String credit) {
+    public MonthlyTransactions(String year, String month, String creditOrDebit) {
         this.year = year;
         this.month = month;
-        this.credit = credit;
+        this.creditOrDebit = creditOrDebit;
     }
 
     public String getYear() {
@@ -26,10 +26,10 @@ public class MonthlyTithes {
     }
 
     public String getCredit() {
-        return credit;
+        return creditOrDebit;
     }
 
     public void setCredit(String credit) {
-        this.credit = credit;
+        this.creditOrDebit = credit;
     }
 }
