@@ -90,18 +90,18 @@
                         <form role="form text-left" method="post" th:action="@{/finance/bank/add}">
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Account Name</label>
-                                <input type="text" name="accountName" class="form-control">
+                                <input  required type="text" name="accountName" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Account #</label>
-                                <input type="number" name="account" class="form-control">
+                                <input required  type="number" name="account" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Bank Name</label>
-                                <input type="text" name="bankName" class="form-control">
+                                <input required  type="text" name="bankName" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
-                                <select name="type" class="form-select">
+                                <select required name="type" class="form-select">
                                     <option selected disabled>Account Type</option>
                                     <option value="Bank">Bank</option>
                                     <option value="Cash">Cash</option>
@@ -113,7 +113,7 @@
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Branch Code</label>
-                                <input type="text" name="bankcode" class="form-control">
+                                <input  type="text" name="bankcode" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Swift Code</label>
@@ -121,7 +121,7 @@
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Opening Balance</label>
-                                <input type="number" name="openingBalance" class="form-control">
+                                <input value="0" type="number" name="openingBalance" class="form-control">
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add</button>
@@ -140,21 +140,21 @@
                 <div class="card card-plain">
                     <div class="card-body pb-3">
                         <form role="form" method="post" th:action="@{/finance/bank/update}">
-                            <input type="hidden" name="id" class="form-control">
+                            <input required  type="hidden" name="id" class="form-control">
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Account Name</label>
-                                <input type="text" name="accountName" class="form-control">
+                                <input required  type="text" name="accountName" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Account #</label>
-                                <input type="text" name="account" class="form-control">
+                                <input required  type="text" name="account" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Bank Name</label>
-                                <input type="text" name="bankName" class="form-control">
+                                <input required  type="text" name="bankName" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
-                                <select name="type" class="form-select">
+                                <select required name="type" class="form-select">
                                     <option selected disabled>Account Type</option>
                                     <option value="Bank">Bank</option>
                                     <option value="Cash">Cash</option>
@@ -162,15 +162,15 @@
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Branch</label>
-                                <input type="text" name="branch" class="form-control">
+                                <input required  type="text" name="branch" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Branch Code</label>
-                                <input type="text" name="bankcode" class="form-control">
+                                <input required  type="text" name="bankcode" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Swift Code</label>
-                                <input type="text" name="swiftcode" class="form-control">
+                                <input required  type="text" name="swiftcode" class="form-control">
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Update</button>
@@ -189,30 +189,30 @@
                 <div class="card card-plain">
                     <div class="card-body pb-3">
                         <form role="form" method="post" th:action="@{/finance/bank/transfer}">
-                            <input type="hidden" name="id" class="form-control">
+                            <input required  type="hidden" name="id" class="form-control">
                             <div class="input-group input-group-outline my-3 is-filled">
                                 <label class="form-label">Date</label>
-                                <input type="date" name="date" class="form-control">
+                                <input required  type="date" name="date" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
-                                <select name="source" class="form-select">
+                                <select required name="source" class="form-select">
                                     <option selected disabled>Account to transfer from</option>
                                     <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.accountName}"></option>
                                 </select>
                             </div>
                             <div class="input-group input-group-outline my-3">
-                                <select name="dest" class="form-select">
+                                <select required name="dest" class="form-select">
                                     <option selected disabled>Account to transfer to</option>
                                     <option th:each="account : ${accounts}" th:value="${account.id}" th:text="${account.accountName}"></option>
                                 </select>
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Transaction # / Check #</label>
-                                <input type="text" name="transRef" class="form-control">
+                                <input required  type="text" name="transRef" class="form-control">
                             </div>
                             <div class="input-group input-group-outline my-3">
                                 <label class="form-label">Amount</label>
-                                <input type="number" name="amount" class="form-control">
+                                <input required  type="number" name="amount" class="form-control">
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Transfer</button>

@@ -200,7 +200,9 @@ public class IndexController implements ErrorController {
         User user = userRepository.findById(userId()).get();
         try {
             Connection connection = DbConnector.getConnection();
-            String sql = "SELECT 3          AS memberTotal,\n" +
+            String sql = "SELECT (SELECT count(id)\n" +
+                    "        FROM users\n" +
+                    "        where farm = "+farm().getId()+")          AS memberTotal,\n" +
                     "       (SELECT ifnull(FORMAT(SUM(credit), 0), 0)\n" +
                     "        FROM accounttransactions\n" +
                     "        where farm = "+farm().getId()+")                                        AS income,\n" +
