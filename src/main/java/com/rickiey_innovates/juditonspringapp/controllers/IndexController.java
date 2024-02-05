@@ -196,7 +196,6 @@ public class IndexController implements ErrorController {
 
     @GetMapping({"/dashboard"})
     public String index(Model model, HttpServletRequest request) {
-        System.out.println(userId());
         User user = userRepository.findById(userId()).get();
         try {
             Connection connection = DbConnector.getConnection();

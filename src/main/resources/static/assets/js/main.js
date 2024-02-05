@@ -153,7 +153,7 @@ function populateZones(rowData) {
     });
 }
 
-function populateChurchServices(rowData) {
+function populateFarmServices(rowData) {
     return new Promise(function (resolve) {
         var optionsHtml = "";
         $.ajax({
@@ -406,6 +406,7 @@ function openEditModal(model, id) {
             url: '/finance/group/get/' + id,
             contentType: 'application/json'
         }).done(function (response) {
+            console.log(response)
             $('#editModal input[name="id"]').val(response.id);
             $('#editModal input[name="activityGroup"]').val(response.group).parent().addClass('is-filled');
         }).fail(function (response) {
@@ -597,7 +598,7 @@ function openEditModal(model, id) {
                     $('#childDetailsedit').removeClass('hidden');
                     var membrGroupsOptions = await populateMemberGroups(child.memberGroup.id);
                     var zonesOptions = await populateZones(child.zone.id);
-                    var servicesOptions = await populateChurchServices(child.preferredService.id);
+                    var servicesOptions = await populateFarmServices(child.preferredService.id);
                     let childOption = "<div id=\"toggleChild" + i + "Details\"\n" +
                         "                                             class=\"card-header p-0 position-relative mt-n4 mx-3 z-index-2 mt-5\">\n" +
                         "                                            <div class=\"bg-gradient-primary shadow-primary border-radius-lg py-1\">\n" +
@@ -904,7 +905,7 @@ function openEditModal(model, id) {
                     $('#childDetailsedit').removeClass('hidden');
                     var membrGroupsOptions = await populateMemberGroups(child.memberGroup.id);
                     var zonesOptions = await populateZones(child.zone.id);
-                    var servicesOptions = await populateChurchServices(child.preferredService.id);
+                    var servicesOptions = await populateFarmServices(child.preferredService.id);
                     let childOption = "<div id=\"toggleChild" + i + "Details\"\n" +
                         "                                             class=\"card-header p-0 position-relative mt-n4 mx-3 z-index-2 mt-5\">\n" +
                         "                                            <div class=\"bg-gradient-primary shadow-primary border-radius-lg py-1\">\n" +
@@ -1294,42 +1295,42 @@ function updateTotalAmountEdit() {
     localStorage.setItem("totalPayable", payableAmount);
 }
 
-function openChurchModal(model) {
+function openFarmModal(model) {
     $.ajax({
         url: '/settings/farm',
         contentType: 'application/json'
     }).done(function (response) {
-        $('#churchDetailsModal input[name="id"]').val(response.id);
-        $('#churchDetailsModal input[name="name"]').val(response.name).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="region"]').val(response.region).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="email"]').val(response.email).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="address"]').val(response.address).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="country"]').val(response.country).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="phone"]').val(response.phone).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="zip"]').val(response.zip).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="id"]').val(response.id);
+        $('#farmDetailsModal input[name="name"]').val(response.name).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="region"]').val(response.region).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="email"]').val(response.email).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="address"]').val(response.address).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="country"]').val(response.country).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="phone"]').val(response.phone).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="zip"]').val(response.zip).parent().addClass('is-filled');
     }).fail(function (response) {
         console.log(response);
     })
-    $('#churchDetailsModal').modal('show');
+    $('#farmDetailsModal').modal('show');
 }
 
-function openEditChurchModal(id) {
+function openEditFarmModal(id) {
     $.ajax({
         url: '/hidden/hidden/stuff/farm/get/' + id,
         contentType: 'application/json'
     }).done(function (response) {
-        $('#churchDetailsModal input[name="id"]').val(response.id);
-        $('#churchDetailsModal input[name="name"]').val(response.name).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="region"]').val(response.region).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="email"]').val(response.email).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="address"]').val(response.address).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="country"]').val(response.country).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="phone"]').val(response.phone).parent().addClass('is-filled');
-        $('#churchDetailsModal input[name="zip"]').val(response.zip).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="id"]').val(response.id);
+        $('#farmDetailsModal input[name="name"]').val(response.name).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="region"]').val(response.region).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="email"]').val(response.email).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="address"]').val(response.address).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="country"]').val(response.country).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="phone"]').val(response.phone).parent().addClass('is-filled');
+        $('#farmDetailsModal input[name="zip"]').val(response.zip).parent().addClass('is-filled');
     }).fail(function (response) {
         console.log(response);
     })
-    $('#churchDetailsModal').modal('show');
+    $('#farmDetailsModal').modal('show');
 }
 
 function openOfficialsModal(model) {
@@ -1338,16 +1339,16 @@ function openOfficialsModal(model) {
         contentType: 'application/json'
     }).done(function (response) {
         console.log(response);
-        $('#churchOfficialsModal input[name="id"]').val(response.id);
-        $('#churchOfficialsModal select[name="accountant"]').val(response.accountant.id).parent().addClass('is-filled');
-        $('#churchOfficialsModal select[name="seniorPastor"]').val(response.seniorPastor.id).parent().addClass('is-filled');
-        $('#churchOfficialsModal select[name="secondSignatory"]').val(response.secondSignatory.id).parent().addClass('is-filled');
-        $('#churchOfficialsModal select[name="treasurer"]').val(response.treasurer.id).parent().addClass('is-filled');
+        $('#farmOfficialsModal input[name="id"]').val(response.id);
+        $('#farmOfficialsModal select[name="accountant"]').val(response.accountant.id).parent().addClass('is-filled');
+        $('#farmOfficialsModal select[name="seniorPastor"]').val(response.seniorPastor.id).parent().addClass('is-filled');
+        $('#farmOfficialsModal select[name="secondSignatory"]').val(response.secondSignatory.id).parent().addClass('is-filled');
+        $('#farmOfficialsModal select[name="treasurer"]').val(response.treasurer.id).parent().addClass('is-filled');
 
     }).fail(function (response) {
         console.log(response);
     })
-    $('#churchOfficialsModal').modal('show');
+    $('#farmOfficialsModal').modal('show');
 }
 
 function submitSignupForm(event) {
@@ -1437,7 +1438,7 @@ $(document).ready(function () {
 
             var membrGroupsOptions = await populateMemberGroups(null);
             var zonesOptions = await populateZones(null);
-            var servicesOptions = await populateChurchServices(null);
+            var servicesOptions = await populateFarmServices(null);
             for (let i = 1; i <= selectedValue; i++) {
                 let childOption = "<div id=\"toggleChild" + i + "Details\"\n" +
                     "                                             class=\"card-header p-0 position-relative mt-n4 mx-3 z-index-2 mt-5\">\n" +
@@ -1716,7 +1717,7 @@ $(document).ready(function () {
             updateFormAttr('#childDetailsedit', true);
             var membrGroupsOptions = await populateMemberGroups(null);
             var zonesOptions = await populateZones(null);
-            var servicesOptions = await populateChurchServices(null);
+            var servicesOptions = await populateFarmServices(null);
             for (let i = 1; i <= selectedValue; i++) {
                 let childOption = "<div id=\"toggleChild" + i + "Details\"\n" +
                     "                                             class=\"card-header p-0 position-relative mt-n4 mx-3 z-index-2 mt-5\">\n" +

@@ -40,6 +40,7 @@
                             <table id="membersTable" class="table align-items-center justify-content-center mb-0">
                                 <thead>
                                 <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Farm Id</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">phone</th>
@@ -49,6 +50,7 @@
                                 <tbody>
                                 <!-- Iterate through the members list and populate the table rows -->
                                 <tr th:each="farm : ${farms}">
+                                    <td th:text="${farm.id}"></td>
                                     <td th:text="${farm.name}"></td>
                                     <td th:text="${farm.email}"></td>
                                     <td th:text="${farm.phone}"></td>

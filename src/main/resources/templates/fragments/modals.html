@@ -151,7 +151,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="churchDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+<div class="modal fade" id="farmDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-" role="document">
     <div class="modal-content">
       <div class="modal-body p-0">
@@ -160,7 +160,7 @@
             <form role="form text-left" method="post" th:action="@{/settings/farm/update}">
               <input type="hidden" name="id">
               <div class="input-group input-group-outline my-3">
-                <label class="form-label">Church Name</label>
+                <label class="form-label">Farm Name</label>
                 <input type="text" name="name" class="form-control">
               </div>
               <div class="input-group input-group-outline my-3">
@@ -198,7 +198,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="churchOfficialsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+<div class="modal fade" id="farmOfficialsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-" role="document">
     <div class="modal-content">
       <div class="modal-body p-0">
@@ -207,36 +207,38 @@
             <form role="form text-left" method="post" th:action="@{/settings/official/update}">
               <input type="hidden" name="id">
 
-              <div class="input-group input-group-outline my-3">
-                <select name="accountant" class="form-select">
-                  <option selected disabled>Accountant</option>
+              <div class="form-check form-check-info text-start ps-0">
+                <label class="form-control ms-0">Accountant</label>
+                <select class="form-control" name="accountant" required>
                 </select>
-
-                <script>
-                  populateUsers(null).then(function (optionsHtml) {
-                    $('#churchOfficialsModal select[name= "accountant"]').append(optionsHtml);
-                    $('#churchOfficialsModal select[name= "treasurer"]').append(optionsHtml);
-                    $('#churchOfficialsModal select[name= "seniorPastor"]').append(optionsHtml);
-                    $('#churchOfficialsModal select[name= "secondSignatory"]').append(optionsHtml);
-                  });
-                </script>
               </div>
 
-              <div class="input-group input-group-outline my-3">
-                <select name="seniorPastor" class="form-select">
-                  <option selected disabled>Senior Pastor</option>
+              <div class="form-check form-check-info text-start ps-0">
+                <label class="form-control ms-0">Director</label>
+                <select class="form-control" name="seniorPastor" required>
                 </select>
               </div>
-              <div class="input-group input-group-outline my-3">
-                <select name="secondSignatory" class="form-select">
-                  <option selected disabled>Second Signatory</option>
+
+              <div class="form-check form-check-info text-start ps-0">
+                <label class="form-control ms-0">Second Signatory</label>
+                <select class="form-control" name="secondSignatory" required>
                 </select>
               </div>
-              <div class="input-group input-group-outline my-3">
-                <select name="treasurer" class="form-select">
-                  <option selected disabled>Treasurer</option>
+
+              <div class="form-check form-check-info text-start ps-0">
+                <label class="form-control ms-0">Farm Manager</label>
+                <select class="form-control" name="treasurer" required>
                 </select>
               </div>
+
+              <script>
+                populateUsers(null).then(function (optionsHtml) {
+                  $('#farmOfficialsModal select[name= "accountant"]').append(optionsHtml);
+                  $('#farmOfficialsModal select[name= "treasurer"]').append(optionsHtml);
+                  $('#farmOfficialsModal select[name= "seniorPastor"]').append(optionsHtml);
+                  $('#farmOfficialsModal select[name= "secondSignatory"]').append(optionsHtml);
+                });
+              </script>
 
               <div class="text-center">
                 <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Update</button>

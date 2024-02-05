@@ -19,7 +19,7 @@ import java.util.List;
 
 @RequestMapping("/hidden/hidden/stuff/farms")
 @Controller
-public class RegisterChurchController {
+public class RegisterFarmController {
 
     @Autowired
     FarmRepository farmRepository;
@@ -102,7 +102,7 @@ public class RegisterChurchController {
 
 
     @GetMapping("/delete/{id}")
-    public String deleteChurch(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+    public String deleteFarm(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             farmRepository.deleteById(id);
 
