@@ -82,7 +82,7 @@ public class LoginController {
                 }
         }
         System.out.println(user);
-        return user;
+        return 1L;
     }
 
     @ResponseBody
