@@ -41,7 +41,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 			} else {
 				redirectStrategy.sendRedirect(arg0, arg1, "/dashboard");
 			}*/
-			redirectStrategy.sendRedirect(arg0, arg1, "/dashboard");
+			redirectStrategy.sendRedirect(arg0, arg1, "/home");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -11,7 +11,6 @@ import com.rickiey_innovates.juditonspringapp.repositories.UserRepository;
 import com.rickiey_innovates.juditonspringapp.DbConnector;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -127,6 +126,8 @@ public class IndexController implements ErrorController {
                          "WHERE row_num <= 6\n" +
                          "ORDER BY year, month desc ;\n";
 
+            System.out.println(sql);
+
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
             while(resultSet.next()) {
                 MonthlyTransactions monthlyExpenses = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
@@ -163,6 +164,9 @@ public class IndexController implements ErrorController {
                          "     ) AS subquery\n" +
                          "WHERE row_num <= 6\n" +
                          "ORDER BY year, month desc ;\n";
+
+            System.out.println(sql);
+
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
             while(resultSet.next()) {
                 MonthlyTransactions monthlyExpenses = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
@@ -194,7 +198,59 @@ public class IndexController implements ErrorController {
         }
     }*/
 
-    @GetMapping({"/dashboard"})
+
+    @GetMapping("/home")
+    public String index(Model model) {
+        Connection conn = null;
+        try {
+            conn = DbConnector.getConnection();
+
+
+            ResultSet rs = conn.prepareStatement("SELECT *,\n" +
+                    "       (case\n" +
+                    "            when convert(NOW(), TIME) >= '05:00:00' and\n" +
+                    "                 convert(NOW(), TIME) < '12:00:00' then 'Good Morning'\n" +
+                    "            when convert(NOW(), TIME) >= '12:00:00' AND convert(NOW(), TIME) < '17:00:00'\n" +
+                    "                then 'Good Afternoon'\n" +
+                    "            else 'Good Evening' END) AS Greetings\n" +
+                    "from (SELECT s.id,\n" +
+                    "             name,\n" +
+                    "             SUBSTRING_INDEX(name, ' ', 2) as shortname,\n" +
+                    "             logo,\n" +
+                    "             s.address,\n" +
+                    "             region,\n" +
+                    "             username,\n" +
+                    "             phone,\n" +
+                    "             image\n" +
+                    "      FROM users u\n" +
+                    "               inner join farm s on u.farm = s.id\n" +
+                    "      where sessionid ='" + RequestContextHolder.currentRequestAttributes().getSessionId() + "')d  ").executeQuery();
+            while (rs.next()) {
+                model.addAttribute("schoolname", rs.getString("schoolname"));
+                model.addAttribute("shortname", rs.getString("shortname"));
+                model.addAttribute("pobox", rs.getString("address"));
+                model.addAttribute("city", rs.getString("city"));
+                model.addAttribute("phone", rs.getString("phone"));
+                model.addAttribute("logo", rs.getString("logo"));
+                model.addAttribute("email", rs.getString("username"));
+                model.addAttribute("image", rs.getString("image"));
+                model.addAttribute("Greetings", rs.getString("Greetings"));
+            }
+
+            System.out.println(model);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null)
+                try {
+                    conn.close();
+                } catch (SQLException sQLException) {}
+        }
+        return "index";
+    }
+
+    @GetMapping({"/finance"})
     public String index(Model model, HttpServletRequest request) {
         User user = userRepository.findById(userId()).get();
         try {
@@ -250,7 +306,7 @@ public class IndexController implements ErrorController {
         model.addAttribute("page", "dashboard");
         model.addAttribute("main", "farm");
         model.addAttribute("requestURI", request.getRequestURI());
-        return "dashboard";
+        return "/finance/dashboard";
     }
 
     @GetMapping("/hr")

@@ -188,9 +188,9 @@ function populateOptions(rowData) {
                 $.each(data, function (index, option) {
                     if (rowData !== null) {
                         var selectedAttribute = (rowData.activity === option.id) ? 'selected' : '';
-                        optionsHtml += '<option value="' + option.id + '" ' + selectedAttribute + '>' + option.account1 + '</option>';
+                        optionsHtml += '<option value="' + option.id + '" ' + selectedAttribute + '>' + option.account + '</option>';
                     } else {
-                        optionsHtml += '<option value="' + option.id + '">' + option.account1 + '</option>';
+                        optionsHtml += '<option value="' + option.id + '">' + option.account + '</option>';
 
                     }
                 });

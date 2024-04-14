@@ -12,6 +12,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -1531,7 +1532,7 @@ public class FinanceController {
 
     @PostMapping("/receipt/add")
     @ResponseBody
-    public String addReceipt(@RequestBody ReceiptRequest request, RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<?> addReceipt(@RequestBody ReceiptRequest request, RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
         JsonObject response = new JsonObject();
         httpServletRequest.getRequestURI();
         try {
@@ -1570,13 +1571,14 @@ public class FinanceController {
 
             redirectAttributes.addFlashAttribute("message", "Data saved successfully.");
             response.addProperty("response", "Data saved successfully.");
+            return ResponseEntity.ok(response.toString());
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", e.getLocalizedMessage());
             response.addProperty("response", e.getLocalizedMessage());
-        }
 
-        return response.toString();
+            return ResponseEntity.internalServerError().body(response.toString());
+        }
     }
 
 
