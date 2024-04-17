@@ -32,14 +32,13 @@
       </li>
       <hr class="horizontal light mt-0 mb-2">
       <li class="nav-item">
-        <a th:classappend="${requestURI == '/dashboard' ? 'active':''}"
-           th:href="@{/dashboard}" class="nav-link text-white" aria-controls="dashboardsExamples"
+        <a th:classappend="${requestURI == '/finance' ? 'active':''}"
+           th:href="@{/finance}" class="nav-link text-white" aria-controls="dashboardsExamples"
            role="button" aria-expanded="false">
           <i class="material-icons-round opacity-10">dashboard</i>
           <span class="nav-link-text ms-2 ps-1">Dashboard</span>
         </a>
       </li>
-      <hr class="horizontal light mt-0">
 
       <li class="nav-item return-side">
         <a th:classappend="${requestURI == '/finance/chart' ? 'active':''}" th:href="@{/finance/chart}" class="nav-link text-white ">

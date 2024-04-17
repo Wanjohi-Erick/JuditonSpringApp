@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.rickiey_innovates.juditonspringapp.models.*;
-import com.rickiey_innovates.juditonspringapp.repositories.AccounttransactionRepository;
-import com.rickiey_innovates.juditonspringapp.repositories.PaymentvoucherRepository;
-import com.rickiey_innovates.juditonspringapp.repositories.RoleRepository;
-import com.rickiey_innovates.juditonspringapp.repositories.UserRepository;
+import com.rickiey_innovates.juditonspringapp.repositories.*;
 import com.rickiey_innovates.juditonspringapp.DbConnector;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -19,9 +16,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.text.NumberFormat;
+import java.util.*;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -41,17 +37,26 @@ public class IndexController implements ErrorController {
     public IndexController(UserRepository userRepository,
                            PaymentvoucherRepository paymentvoucherRepository,
                            AccounttransactionRepository accounttransactionRepository,
-                           RoleRepository roleRepository) {
+                           RoleRepository roleRepository,
+                           PendingTransactionRepository pendingTransactionRepository,
+                           PayrollRepository payrollRepository,
+                           EmployeeRepository employeeRepository) {
 
         this.userRepository = userRepository;
         this.paymentvoucherRepository = paymentvoucherRepository;
         this.accounttransactionRepository = accounttransactionRepository;
         this.roleRepository = roleRepository;
+        this.pendingTransactionRepository = pendingTransactionRepository;
+        this.payrollRepository = payrollRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     public static final String PATH = "/error";
 
     private final RoleRepository roleRepository;
+    private final PendingTransactionRepository pendingTransactionRepository;
+    private final PayrollRepository payrollRepository;
+    private final EmployeeRepository employeeRepository;
 
 
     @RequestMapping(value = PATH)
@@ -226,16 +231,52 @@ public class IndexController implements ErrorController {
                     "               inner join farm s on u.farm = s.id\n" +
                     "      where sessionid ='" + RequestContextHolder.currentRequestAttributes().getSessionId() + "')d  ").executeQuery();
             while (rs.next()) {
-                model.addAttribute("schoolname", rs.getString("schoolname"));
-                model.addAttribute("shortname", rs.getString("shortname"));
+                model.addAttribute("schoolname", rs.getString("name"));
+                model.addAttribute("shortname", rs.getString("name"));
                 model.addAttribute("pobox", rs.getString("address"));
-                model.addAttribute("city", rs.getString("city"));
+                model.addAttribute("city", rs.getString("region"));
                 model.addAttribute("phone", rs.getString("phone"));
                 model.addAttribute("logo", rs.getString("logo"));
                 model.addAttribute("email", rs.getString("username"));
                 model.addAttribute("image", rs.getString("image"));
                 model.addAttribute("Greetings", rs.getString("Greetings"));
             }
+
+            double balance;
+
+            List<Accounttransaction> accounttransactions = accounttransactionRepository.findByFarm(farm());
+            double creditSum = accounttransactions.stream()
+                    .filter(transaction -> transaction.getCredit() != null)
+                    .mapToDouble(Accounttransaction::getCredit)
+                    .sum();
+
+            double debitSum = accounttransactions.stream()
+                    .filter(transaction -> transaction.getDebit() != null)
+                    .mapToDouble(Accounttransaction::getDebit)
+                    .sum();
+
+            if (Double.isNaN(creditSum) && Double.isNaN(debitSum)) {
+                balance = 0.0;
+            }
+
+            // If creditSum is null, consider it as 0
+            creditSum = Double.isNaN(creditSum) ? 0.0 : creditSum;
+
+            // If debitSum is null, consider it as 0
+            debitSum = Double.isNaN(debitSum) ? 0.0 : debitSum;
+
+            balance = creditSum - debitSum;
+
+            int pendingVouchers = pendingTransactionRepository.findAll().size();
+            int pendingPayrolls = payrollRepository.findByStatusAndFarm("Paid", farm()).size();
+            int employees = employeeRepository.findByFarm(farm()).size();
+
+            model.addAttribute("balance", formattedDouble(balance));
+            model.addAttribute("income", formattedDouble(creditSum));
+            model.addAttribute("expenses", formattedDouble(debitSum));
+            model.addAttribute("pendingVouchers", pendingVouchers);
+            model.addAttribute("pendingPayrolls", pendingPayrolls);
+            model.addAttribute("employees", employees);
 
             System.out.println(model);
 
@@ -248,6 +289,19 @@ public class IndexController implements ErrorController {
                 } catch (SQLException sQLException) {}
         }
         return "index";
+    }
+
+    private String formattedDouble(double amount) {
+        Locale kenyaLocale = new Locale("en", "KE");
+
+        // Create a NumberFormat for the Kenyan currency
+        NumberFormat kenyanCurrencyFormat = NumberFormat.getCurrencyInstance(kenyaLocale);
+
+        // Set currency to Kenyan Shillings
+        Currency kenyanCurrency = Currency.getInstance("KES");
+        kenyanCurrencyFormat.setCurrency(kenyanCurrency);
+
+        return kenyanCurrencyFormat.format(amount);
     }
 
     @GetMapping({"/finance"})
@@ -371,6 +425,8 @@ public class IndexController implements ErrorController {
         model.addAttribute("onleavemale", newListofstudents.get(0).activeProperty("onleavemale").getValue());
         model.addAttribute("onleavefemale", newListofstudents.get(0).activeProperty("onleavefemale").getValue());
 
+        User user = userRepository.findById(userId()).get();
+        model.addAttribute("user", user);
 
         return "payroll/dashboard";
 
@@ -402,6 +458,8 @@ public class IndexController implements ErrorController {
         model.addAttribute("image", 	 	 newListdf.get(0).activeProperty("image").getValue());
         model.addAttribute("school", farm().getId());
 
+        User user = userRepository.findById(userId()).get();
+        model.addAttribute("user", user);
 
         return "inventory/dashboard";
     }

@@ -66,11 +66,9 @@ public class LoginController {
             conn = DbConnector.getConnection();
             PreparedStatement pstmt = conn.prepareStatement("SELECT u.id FROM users u  where sessionid=?  ");
             pstmt.setString(1, RequestContextHolder.currentRequestAttributes().getSessionId());
-            System.out.println(RequestContextHolder.currentRequestAttributes().getSessionId());
             ResultSet rs = pstmt.executeQuery();
             while (rs.next())
                 user = rs.getLong("id");
-            System.out.println(user);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -81,7 +79,6 @@ public class LoginController {
                     sQLException.printStackTrace();
                 }
         }
-        System.out.println(user);
         return 1L;
     }
 

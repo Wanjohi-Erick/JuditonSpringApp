@@ -1,10 +1,6 @@
 package com.rickiey_innovates.juditonspringapp.controllers;
 
 import com.google.gson.JsonObject;
-import com.rickiey_innovates.juditonspringapp.DuplicateRoleException;
-import com.rickiey_innovates.juditonspringapp.UnauthorisedAccessException;
-import com.rickiey_innovates.juditonspringapp.models.*;
-import com.rickiey_innovates.juditonspringapp.repositories.*;
 import com.rickiey_innovates.juditonspringapp.DbConnector;
 import com.rickiey_innovates.juditonspringapp.models.*;
 import com.rickiey_innovates.juditonspringapp.repositories.*;
@@ -22,7 +18,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -45,7 +43,8 @@ public class FinanceController {
                              PaymentvoucherRepository paymentvoucherRepository,
                              UserRepository userRepository,
                              PaymentvoucherdetailRepository paymentvoucherdetailRepository,
-                             TaxRepository taxRepository) {
+                             TaxRepository taxRepository,
+                             SmsHistoryRepository smsHistoryRepository) {
         this.activityRepository = activityRepository;
         this.activitygroupRepository = activitygroupRepository;
         this.bankaccountRepository = bankaccountRepository;
@@ -55,6 +54,7 @@ public class FinanceController {
         this.userRepository = userRepository;
         this.paymentvoucherdetailRepository = paymentvoucherdetailRepository;
         this.taxRepository = taxRepository;
+        this.smsHistoryRepository = smsHistoryRepository;
     }
 
     @Value("${vouchers.path}")
@@ -71,6 +71,7 @@ public class FinanceController {
 
     @Autowired
     VoucherSignatoryRepository voucherSignatoryRepository;
+    private final SmsHistoryRepository smsHistoryRepository;
 
     private Long userId() {
         return LoginController.getLoggedInUserId();
@@ -969,6 +970,32 @@ public class FinanceController {
                 pv++;
             }
 
+            List<String> phones = userRepository.findByFarm(farm()).stream().map(User::getPhone).toList();
+            List<String> p = new ArrayList<>();
+
+            for (String phone : phones) {
+                String last9Digits = phone.substring(Math.max(0, phone.length() - 9));
+                // Append "254" at the beginning
+                phone = "254" + last9Digits;
+                p.add(phone);
+            }
+
+
+            String phone = p.toString().replaceAll("\\s+", "");
+
+
+            String textmsg = "Paid: \nTo " + payee + ", \nDetails: " + details + ", " +
+                    "\nBank: " + bankaccountRepository.findById(bank).get().getAccountName() + " " +
+                    "NO: " + bankaccountRepository.findById(bank).get().getAccount() + ", " +
+                    "\nRef: " + transRef + "." +
+                    "\n\nTotal Amount: KES " + totalPayable + "";
+
+
+
+            SmsController smsController = new SmsController(userRepository);
+
+            smsController.sendHostpinacle(phone, textmsg);
+
             redirectAttributes.addFlashAttribute("message", "Data saved successfully.");
             response.addProperty("response", "Data saved successfully.");
         } catch (Exception e) {
@@ -1546,6 +1573,8 @@ public class FinanceController {
             List<ReceiptTableRow> voucherTableData = request.getReceiptTableRowList();
             System.out.println(voucherTableData.toString());
 
+            double totalAmount = 0.00;
+
             int rctRef = referenceRepository.findByChurch(farm()).getRct() + 1;
 
             for (ReceiptTableRow receiptTableRow : voucherTableData) {
@@ -1560,6 +1589,9 @@ public class FinanceController {
                 transactToProvider.setCheque(transRef);
                 transactToProvider.setActivity(0);
                 transactToProvider.setCredit(receiptTableRow.getAmount());
+
+                totalAmount += receiptTableRow.getAmount();
+
                 transactToProvider.setDebit(0.0);
                 transactToProvider.setStatus("Approved");
                 transactToProvider.setFarm(farm());
@@ -1571,6 +1603,34 @@ public class FinanceController {
 
             redirectAttributes.addFlashAttribute("message", "Data saved successfully.");
             response.addProperty("response", "Data saved successfully.");
+
+            List<String> phones = userRepository.findByFarm(farm()).stream().map(User::getPhone).toList();
+            List<String> p = new ArrayList<>();
+
+            for (String phone : phones) {
+                String last9Digits = phone.substring(Math.max(0, phone.length() - 9));
+                // Append "254" at the beginning
+                phone = "254" + last9Digits;
+                p.add(phone);
+            }
+
+
+            String phone = p.toString().replaceAll("\\s+", "");
+
+
+            String textmsg = "Received: \nfrom " + payee + ", \nDetails: " + details + ", " +
+                    "\nBank: " + bankaccountRepository.findById(bank).get().getAccountName() + " " +
+                    "NO: " + bankaccountRepository.findById(bank).get().getAccount() + ", " +
+                    "\nRef: " + transRef + "." +
+                    "\n\nTotal Amount: KES " + totalAmount + "";
+
+
+
+            SmsController smsController = new SmsController(userRepository);
+
+            smsController.sendHostpinacle(phone, textmsg);
+
+
             return ResponseEntity.ok(response.toString());
         } catch (Exception e) {
             e.printStackTrace();

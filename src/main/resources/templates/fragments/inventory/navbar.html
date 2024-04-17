@@ -23,46 +23,6 @@
                         </div>
                     </a>
                 </li>
-                <li class="nav-item dropdown d-flex align-items-center">
-                    <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        <div class="d-flex py-1">
-                            <div class="my-auto">
-                                <img th:src="${image}" class="avatar avatar-sm  me-3 ">
-                            </div>
-                            <div class="d-flex flex-column justify-content-center">
-                                <h6 class="text-sm font-weight-normal mb-1">
-                                    <input type="hidden" id="school" name="school" th:value="${school}">
-                                    <span class="font-weight-bold" th:text="${email}"></span>
-                                </h6>
-
-                            </div>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu  dropdown-menu-end  px-2 py-1 me-sm-n4" aria-labelledby="dropdownMenuButton">
-                        <li>
-                            <a class="dropdown-item border-radius-md" href="#" onclick="showupdatepasswindow()">
-                                <div class="d-flex py-1">
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="text-sm font-weight-normal mb-1">
-                                            Reset Password
-                                        </h6>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item border-radius-md"  th:href="@{/logout}" href="#">
-                                <div class="d-flex py-1">
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="text-sm font-weight-normal mb-1">
-                                            Log out
-                                        </h6>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 <li class="nav-item d-flex align-items-center">
                     <a href="/home" class="nav-link text-body p-0">
                         <i class="material-icons fixed-plugin-button-nav cursor-pointer">

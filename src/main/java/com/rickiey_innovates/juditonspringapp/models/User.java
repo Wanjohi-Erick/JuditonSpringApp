@@ -36,6 +36,11 @@ public class User {
     private String email;
 
     @NotBlank
+    @Size(max = 50)
+    @Column(name = "phone_number")
+    private String phone;
+
+    @NotBlank
     @Size(max = 120)
     private String password;
 

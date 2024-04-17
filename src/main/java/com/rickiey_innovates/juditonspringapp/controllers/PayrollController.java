@@ -1446,6 +1446,7 @@ public class PayrollController {
     @PostMapping("/api/hr/addpayroll")
     public String addpayroll(Payroll payroll, RedirectAttributes redirectAttributes) {
         payroll.setFarm(farm());
+        payroll.setStatus("Pending");
 
         try {
 
@@ -4070,6 +4071,100 @@ public class PayrollController {
 
     @RequestMapping(value = "/api/hr/sendpayrollnotification/{id}", method = RequestMethod.GET)
     public String sendpayrollnotification(@PathVariable("id") Integer id, Model model) {
+
+        System.out.println("Payroll id: " + id);
+
+        String SQL = "";
+
+        int farm = farm().getId();
+
+        Connection conn = null;
+        try {
+            conn = DbConnector.getConnection();
+
+
+            List<String> SUMMAIN = new ArrayList<String>();
+            List<String> SUMSEC = new ArrayList<String>();
+            List<String> nna = new ArrayList<String>();
+
+            ResultSet rs = conn.prepareStatement("SELECT allowance,`earning` FROM `allowances` a  "
+                    + " inner join earnings e on e.id=allowance  "
+                    + " where farm=" + farm + " GROUP BY allowance").executeQuery();
+
+            while (rs.next()) {
+
+                SUMMAIN.add("format(SUM(`" + rs.getString("earning") + "`),0) as `" + rs.getString("earning") + "`");
+
+                nna.add("SUM(IF(AMOUNT> 0 AND allowance=" + rs.getString("allowance") + ","
+                        + " (amount), 0)) AS `" + rs.getString("earning") + "`");
+
+                SUMSEC.add("SUM(0) AS `" + rs.getString("earning") + "`");
+
+            }
+
+
+            String ddsumMAIN = SUMMAIN.toString().replace("[", "").replace("]", "").trim();
+
+            String ddsumsec = SUMSEC.toString().replace("[", "").replace("]", "").trim();
+
+            String dd = nna.toString().replace("[", "").replace("]", "").trim();
+
+
+            SQL = " SELECT id,Payno,Name, phone," + ddsumMAIN + ",format(`GROSS SALARY`,0) AS `Gross`, '' as Action"
+                    + "  FROM (select employees.Payno,  employees.id, concat(fname,'  ',sname,'  ',surname) as name, phone, "
+                    + " `monthly pays`.`gross salary`, " + ddsumsec + ", sum(0) as aamount  from employees "
+                    + " inner join `monthly pays` on `monthly pays`.payno=employees.id "
+                    + " where payroll=" + id + " and employees.status='Active' group by employees.id "
+
+                    + " union all "
+
+                    + " select Payno,`pay no`,0,0, 0 ," + dd + ",sum(amount) from allowances a "
+                    + " inner join employees e on e.id=`pay no` "
+                    + " where payroll='" + id + "' and e.status='Active' "
+                    + " group by `pay no`)h  group by payno";
+
+
+
+            System.out.println("SELECT * FROM (" + SQL + ")b ");
+
+            ResultSet resultSet = conn.prepareStatement("SELECT * FROM (" + SQL + ")b ").executeQuery();
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("Name");
+                String phone = resultSet.getString("phone");
+                String basicIncome = resultSet.getString("Basic income");
+                String gross = resultSet.getString("Gross");
+
+                String message = "Dear " + name + ", \nyour payment has been processed. \n"
+                        + "Basic Income: " + basicIncome + ", "
+                        + "\nGross Income: " + gross + ". "
+                        + "\nPlease confirm receipt. Thank you!";
+
+                SmsController smsController = new SmsController(userRepository);
+
+                String last9Digits = phone.substring(Math.max(0, phone.length() - 9));
+                phone = "254" + last9Digits;
+
+                String response = smsController.sendHostpinacle(phone, message);
+            }
+
+
+
+
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            accountsmodel.response = "an error occured";
+            return accountsmodel.jsondata = "[{\"querystatus\" : \"" + accountsmodel.response + "\"}]";
+        } finally {
+            if (conn != null) try {
+                conn.close();
+            } catch (SQLException ignore) {
+            }
+        }
+
+
+        String jsondata = accountsmodel.jsondata;
+        System.out.println("Jsondata: " + jsondata);
 
         return "redirect:/api/hr/payrolls";
 

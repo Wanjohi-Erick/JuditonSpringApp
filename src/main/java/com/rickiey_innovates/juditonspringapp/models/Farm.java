@@ -1,6 +1,7 @@
 package com.rickiey_innovates.juditonspringapp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "farm")
@@ -49,23 +50,35 @@ public class Farm {
     @Column(name = "nssfoption", length = 500)
     private Integer nssfOption;
 
-    @Column(name = "SMSUSERNAME", length = 500)
-    private String smsusername;
-
-    @Column(name = "SMSKEY", length = 500)
-    private String smskey;
-
-    @Column(name = "SMSID", length = 500)
-    private String smsid;
-
-    @Column(name = "sms_account", length = 500)
-    private String smsAccount;
-
     @Column(name = "Employercode", length = 500)
     private String employerCode;
 
     @Column(name = "TaxRelief", length = 500)
     private String taxRelief;
+
+    @Size(max = 300)
+    @Column(name = "SMSKEY", length = 300)
+    private String smsKey;
+
+    @Size(max = 300)
+    @Column(name = "SMSUSERNAME", length = 300)
+    private String smsUsername;
+
+    @Size(max = 300)
+    @Column(name = "SMSID", length = 300)
+    private String smsId;
+
+    @Size(max = 300)
+    @Column(name = "sms_account", length = 300)
+    private String smsAccount;
+
+    @Size(max = 300)
+    @Column(name = "sms_balance", length = 300)
+    private double smsBalance;
+
+    @Size(max = 300)
+    @Column(name = "cost_per_sms", length = 300)
+    private Double costPerSms;
 
     public Integer getId() {
         return id;
@@ -155,30 +168,6 @@ public class Farm {
         this.useBioForPayroll = useBioForPayroll;
     }
 
-    public String getSmsusername() {
-        return smsusername;
-    }
-
-    public void setSmsusername(String smsusername) {
-        this.smsusername = smsusername;
-    }
-
-    public String getSmskey() {
-        return smskey;
-    }
-
-    public void setSmskey(String smskey) {
-        this.smskey = smskey;
-    }
-
-    public String getSmsid() {
-        return smsid;
-    }
-
-    public void setSmsid(String smsid) {
-        this.smsid = smsid;
-    }
-
     public String getSmsAccount() {
         return smsAccount;
     }
@@ -187,4 +176,84 @@ public class Farm {
         this.smsAccount = smsAccount;
     }
 
+
+    public Integer getPayeeOption() {
+        return payeeOption;
+    }
+
+    public void setPayeeOption(Integer payeeOption) {
+        this.payeeOption = payeeOption;
+    }
+
+    public Integer getNhifOption() {
+        return nhifOption;
+    }
+
+    public void setNhifOption(Integer nhifOption) {
+        this.nhifOption = nhifOption;
+    }
+
+    public Integer getNssfOption() {
+        return nssfOption;
+    }
+
+    public void setNssfOption(Integer nssfOption) {
+        this.nssfOption = nssfOption;
+    }
+
+    public String getEmployerCode() {
+        return employerCode;
+    }
+
+    public void setEmployerCode(String employerCode) {
+        this.employerCode = employerCode;
+    }
+
+    public String getTaxRelief() {
+        return taxRelief;
+    }
+
+    public void setTaxRelief(String taxRelief) {
+        this.taxRelief = taxRelief;
+    }
+
+    public String getSmsKey() {
+        return smsKey;
+    }
+
+    public void setSmsKey(String smsKey) {
+        this.smsKey = smsKey;
+    }
+
+    public String getSmsUsername() {
+        return smsUsername;
+    }
+
+    public void setSmsUsername(String smsUsername) {
+        this.smsUsername = smsUsername;
+    }
+
+    public String getSmsId() {
+        return smsId;
+    }
+
+    public void setSmsId(String smsId) {
+        this.smsId = smsId;
+    }
+
+    public double getSmsBalance() {
+        return smsBalance;
+    }
+
+    public void setSmsBalance(double smsBalance) {
+        this.smsBalance = smsBalance;
+    }
+
+    public Double getCostPerSms() {
+        return costPerSms;
+    }
+
+    public void setCostPerSms(Double costPerSms) {
+        this.costPerSms = costPerSms;
+    }
 }

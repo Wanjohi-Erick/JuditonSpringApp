@@ -20,4 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
+
+    @Query("select u from User u where u.farm = ?1")
+    List<User> findByFarm(Farm farm);
 }

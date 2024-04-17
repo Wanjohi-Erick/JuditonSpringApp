@@ -32,4 +32,7 @@ public interface AccounttransactionRepository extends JpaRepository<Accounttrans
 
     @Query("select p from Accounttransaction p where p.payeePayer not like ?1 and p.farm = ?2 order by p.id DESC LIMIT 7")
     List<Accounttransaction> findByPayeeNameNotLikeAndChurchLikeOrderByIdDesc(String s, Farm farm);
+
+    @Query("select a from Accounttransaction a where a.farm = ?1")
+    List<Accounttransaction> findByFarm(Farm farm);
 }

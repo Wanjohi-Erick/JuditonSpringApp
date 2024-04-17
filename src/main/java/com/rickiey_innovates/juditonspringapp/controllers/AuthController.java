@@ -1,5 +1,6 @@
 package com.rickiey_innovates.juditonspringapp.controllers;
 
+import com.rickiey_innovates.juditonspringapp.models.*;
 import com.rickiey_innovates.juditonspringapp.payload.request.LoginRequest;
 import com.rickiey_innovates.juditonspringapp.payload.request.SignupRequest;
 import com.rickiey_innovates.juditonspringapp.payload.response.JwtResponse;
@@ -8,10 +9,6 @@ import com.rickiey_innovates.juditonspringapp.repositories.RoleRepository;
 import com.rickiey_innovates.juditonspringapp.repositories.UserRepository;
 import com.rickiey_innovates.juditonspringapp.security.jwt.JwtUtils;
 import com.rickiey_innovates.juditonspringapp.security.services.UserDetailsImpl;
-import com.rickiey_innovates.juditonspringapp.models.Farm;
-import com.rickiey_innovates.juditonspringapp.models.ERole;
-import com.rickiey_innovates.juditonspringapp.models.Role;
-import com.rickiey_innovates.juditonspringapp.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -65,6 +62,11 @@ public class AuthController {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
+
+        LoggedInUser loggedInUser = LoggedInUser.getInstance();
+
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElse(null);
+        loggedInUser.setUser(user);
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),

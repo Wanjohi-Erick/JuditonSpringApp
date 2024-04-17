@@ -75,8 +75,8 @@
                             </div>
                             <div class="ms-3">
                                 <div class="numbers">
-                                    <h6 class="mb-1 text-dark text-sm">Students</h6>
-                                    <span class="text-sm" th:text="${students}"></span>
+                                    <h6 class="mb-1 text-dark text-sm">Balance</h6>
+                                    <span class="text-sm" th:text="${balance}"></span>
                                 </div>
                             </div>
                         </div>
@@ -87,8 +87,8 @@
                             </div>
                             <div class="ms-3">
                                 <div class="numbers">
-                                    <h6 class="mb-1 text-dark text-sm">Teachers</h6>
-                                    <span class="text-sm" th:text="${teachers}"></span>
+                                    <h6 class="mb-1 text-dark text-sm">Income Summary</h6>
+                                    <span class="text-sm" th:text="${income}"></span>
                                 </div>
                             </div>
                         </div>
@@ -99,8 +99,8 @@
                             </div>
                             <div class="ms-3">
                                 <div class="numbers">
-                                    <h6 class="mb-1 text-dark text-sm">My lessons</h6>
-                                    <span class="text-sm" th:text="${lessons}"></span>
+                                    <h6 class="mb-1 text-dark text-sm">Expenses Summary</h6>
+                                    <span class="text-sm" th:text="${expenses}"></span>
                                 </div>
                             </div>
                         </div>
@@ -111,8 +111,8 @@
                             </div>
                             <div class="ms-3">
                                 <div class="numbers">
-                                    <h6 class="mb-1 text-dark text-sm">Open exams</h6>
-                                    <span class="text-sm" th:text="${exams}"></span>
+                                    <h6 class="mb-1 text-dark text-sm">Pending Vouchers</h6>
+                                    <span class="text-sm" th:text="${pendingVouchers}"></span>
                                 </div>
                             </div>
                         </div>
@@ -123,8 +123,8 @@
                             </div>
                             <div class="ms-3">
                                 <div class="numbers">
-                                    <h6 class="mb-1 text-dark text-sm">My payslips</h6>
-                                    <span class="text-sm">No available info</span>
+                                    <h6 class="mb-1 text-dark text-sm">Pending payslips</h6>
+                                    <span class="text-sm" th:text="${pendingPayrolls}"></span>
                                 </div>
                             </div>
                         </div>
@@ -135,8 +135,8 @@
                             </div>
                             <div class="ms-3">
                                 <div class="numbers">
-                                    <h6 class="mb-1 text-dark text-sm">Today's attendance</h6>
-                                    <span class="text-sm" th:text="${attendance}"></span>
+                                    <h6 class="mb-1 text-dark text-sm">Total Employees</h6>
+                                    <span class="text-sm" th:text="${employees}"></span>
                                 </div>
                             </div>
                         </div>
@@ -278,69 +278,21 @@
         titleFormat: '\'Hello, World!\'',
         selectable: true,
         editable: true,
-        initialDate: '2023-06-01',
-        events: [{
-            title: 'Opening',
-            start: '2023-06-01',
-            end: '2023-06-02',
-            className: 'bg-gradient-danger'
-        },
+        initialDate: '2024-04-08',
+        events: [
 
             {
-                title: 'AGM',
-                start: '2023-06-07',
-                end: '2023-06-07',
+                title: 'Exams',
+                start: '2024-04-08',
+                end: '2024-04-15',
                 className: 'bg-gradient-warning'
             },
 
             {
-                title: 'Prayers',
-                start: '2023-06-04',
-                end: '2023-06-04',
+                title: 'Presentations',
+                start: '2024-04-18',
+                end: '2024-04-18',
                 className: 'bg-gradient-secondary'
-            },
-
-            {
-                title: 'Meeting',
-                start: '2023-06-15',
-                end: '2023-06-15',
-                className: 'bg-gradient-success'
-            },
-
-            {
-                title: 'mid term Exams',
-                start: '2023-06-22',
-                end: '2023-06-24',
-                className: 'bg-gradient-light'
-            },
-
-            {
-                title: 'Mid term',
-                start: '2023-06-27',
-                end: '2023-06-30',
-                className: 'bg-gradient-warning'
-            },
-
-            {
-                title: 'Marketing event',
-                start: '2023-06-10',
-                end: '2023-06-10',
-                className: 'bg-gradient-primary'
-            },
-
-
-            {
-                title: 'Inter county games',
-                start: '2023-06-18',
-                end: '2023-06-20',
-                className: 'bg-gradient-info'
-            },
-
-            {
-                title: 'Cyber Week',
-                start: '2023-06-11',
-                end: '2023-06-13',
-                className: 'bg-gradient-warning'
             },
 
         ],
