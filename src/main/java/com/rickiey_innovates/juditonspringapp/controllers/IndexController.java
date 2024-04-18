@@ -360,7 +360,7 @@ public class IndexController implements ErrorController {
         model.addAttribute("page", "dashboard");
         model.addAttribute("main", "farm");
         model.addAttribute("requestURI", request.getRequestURI());
-        return "/finance/dashboard";
+        return "finance/dashboard";
     }
 
     @GetMapping("/hr")

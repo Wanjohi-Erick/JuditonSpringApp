@@ -1532,7 +1532,7 @@ public class FinanceController {
         return jsonObject.toString();
     }*/
 
-    @GetMapping(value = "/voucher/delete/{pvId}", produces = "application/json")
+    @DeleteMapping(value = "/voucher/delete/{pvId}", produces = "application/json")
     @ResponseBody
     private String deleteVoucher(@PathVariable Integer pvId) {
         JsonObject jsonObject = new JsonObject();

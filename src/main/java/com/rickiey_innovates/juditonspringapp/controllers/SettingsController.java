@@ -89,11 +89,12 @@ public class SettingsController {
     }
 
     @PostMapping("/user/update")
-    public String updateGroup(User membergroup, RedirectAttributes redirectAttributes) {
+    public String updateGroup(User user, RedirectAttributes redirectAttributes) {
         try {
-            User old = userRepository.findById(membergroup.getId()).get();
-            old.setUsername(membergroup.getUsername());
-            old.setEmail(membergroup.getEmail());
+            User old = userRepository.findById(user.getId()).get();
+            old.setUsername(user.getUsername());
+            old.setEmail(user.getEmail());
+            old.setPhone(user.getPhone());
             userRepository.save(old);
             redirectAttributes.addFlashAttribute("message", "User updated successfully");
         } catch (Exception e) {

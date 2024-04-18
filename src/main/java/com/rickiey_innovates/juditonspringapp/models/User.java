@@ -70,4 +70,22 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                ", sessionid='" + sessionid + '\'' +
+                ", logins=" + logins +
+                ", theme=" + theme +
+                ", image='" + image + '\'' +
+                ", signature='" + signature + '\'' +
+                ", farm=" + farm +
+                ", roles=" + roles +
+                '}';
+    }
 }

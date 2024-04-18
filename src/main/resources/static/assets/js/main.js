@@ -460,6 +460,7 @@ function openEditModal(model, id) {
             $('#editModal input[name="id"]').val(response.id);
             $('#editModal input[name="username"]').val(response.username).parent().addClass('is-filled');
             $('#editModal input[name="email"]').val(response.email).parent().addClass('is-filled');
+            $('#editModal input[name="phone"]').val(response.phone).parent().addClass('is-filled');
         }).fail(function (response) {
             console.log(response);
         })
@@ -1356,11 +1357,13 @@ function submitSignupForm(event) {
 
     let username = $('#signupForm input[name="username"]').val();
     let email = $(' #signupForm input[name="email"]').val();
+    let phone = $(' #signupForm input[name="phone"]').val();
     let password = "password";
 
     let requestBody = {
         username: username,
         email: email,
+        phone: phone,
         password: password
     }
 

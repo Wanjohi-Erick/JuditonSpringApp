@@ -16,6 +16,9 @@ public class SignupRequest {
     @Email(message = "Invalid email format")
     private String email;
 
+    @NotBlank(message = "Phone must not be blank")
+    private String phone;
+
     @NotBlank(message = "Password must not be blank")
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
@@ -38,6 +41,14 @@ public class SignupRequest {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getPassword() {

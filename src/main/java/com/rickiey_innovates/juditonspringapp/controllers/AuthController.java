@@ -93,6 +93,7 @@ public class AuthController {
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
+        user.setPhone(signUpRequest.getPhone());
         user.setLogins(0);
         user.setTheme(1);
         user.setFarm(farm());
