@@ -604,7 +604,7 @@ public class ReportsController {
                         "                                   'Opening Balance',\n" +
                         "                                   'Deposit to Bank'\n" +
                         "             )\n" +
-                        "           AND DATE <= '" + date + "'\n" +
+                        "           AND DATE <= '" + date + "' AND a.farm = "+farm().getId()+"\n" +
                         "     ) AS subquery\n" +
                         "GROUP BY year, yearMonth\n" +
                         "ORDER BY year, m;\n";
@@ -634,7 +634,7 @@ public class ReportsController {
                         "                                'Opening Balance',\n" +
                         "                                'Deposit to Bank'\n" +
                         "          )\n" +
-                        "        AND DATE <= '" + date + "') AS subquery\n" +
+                        "        AND DATE <= '" + date + "'  AND a.farm = "+farm().getId()+") AS subquery\n" +
                         "order by Date;\n" +
                         "\n";
 
@@ -669,7 +669,7 @@ public class ReportsController {
                         "                                                      'Opening Balance',\n" +
                         "                                                      'Deposit to Bank'\n" +
                         "             )\n" +
-                        "           AND DATE <= '" + date + "'\n" +
+                        "           AND DATE <= '" + date + "' AND a.farm = "+farm().getId()+"\n" +
                         "     ) AS subquery\n" +
                         "GROUP BY year, yearMonth\n" +
                         "ORDER BY year, m;";
@@ -701,11 +701,11 @@ public class ReportsController {
                         "                                'Deposit to Bank'\n" +
                         "          )\n" +
                         "\n" +
-                        "        AND DATE <= '" + date + "'\n" +
+                        "        AND DATE <= '" + date + "' AND a.farm = "+farm().getId()+"\n" +
                         "      order by Date) a";
 
                 List<String> sql1 = new ArrayList<>();
-                int farm = 3;
+                int farm = farm().getId();
                 testReport(sql, portrait_report_template, "trial", 1, sql1, title, "", uploadDir + File.separator + RequestContextHolder.
                         currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
             }
@@ -1154,7 +1154,7 @@ public class ReportsController {
                     "\n" +
                     "        sum(if(Account = 'PIG SALES', Amount, 0))       AS `PIG SALES`,\n" +
                     "       sum(if(Account = 'RICE SALES', Amount, 0))    AS `RICE SALES`,\n" +
-                    "       sum(if(Account = 'MIRAA SALES', Amount, 0)) AS `MIRAA SALES`,\n" +
+                    "       sum(if(Account = 'GRANTS', Amount, 0)) AS `GRANTS`,\n" +
                     "       sum(if(Account = 'LOAN', Amount, 0)) AS 'LOAN',\n" +
                     "       sum(if(Account = 'OTHERS', Amount, 0))      AS OTHERS,\n" +
                     "       sum(if(1 = 1, Amount, 0))                   AS TOTAL\n" +
@@ -1205,7 +1205,7 @@ public class ReportsController {
                     "\n" +
                     "        sum(if(Account = 'PIG SALES', Amount, 0))       AS `PIG SALES`,\n" +
                     "       sum(if(Account = 'RICE SALES', Amount, 0))    AS `RICE SALES`,\n" +
-                    "       sum(if(Account = 'MIRAA SALES', Amount, 0)) AS `MIRAA SALES`,\n" +
+                    "       sum(if(Account = 'GRANTS', Amount, 0)) AS `GRANTS`,\n" +
                     "       sum(if(Account = 'LOAN', Amount, 0)) AS 'LOAN',\n" +
                     "       sum(if(Account = 'OTHERS', Amount, 0))      AS OTHERS,\n" +
                     "       sum(if(1 = 1, Amount, 0))                   AS TOTAL\n" +
@@ -1233,7 +1233,7 @@ public class ReportsController {
                     "\n" +
                     "        sum(if(Account = 'PIG SALES', Amount, 0))       AS `PIG SALES`,\n" +
                     "       sum(if(Account = 'RICE SALES', Amount, 0))    AS `RICE SALES`,\n" +
-                    "       sum(if(Account = 'MIRAA SALES', Amount, 0)) AS `MIRAA SALES`,\n" +
+                    "       sum(if(Account = 'GRANTS', Amount, 0)) AS `GRANTS`,\n" +
                     "       sum(if(Account = 'LOAN', Amount, 0)) AS 'LOAN',\n" +
                     "       sum(if(Account = 'OTHERS', Amount, 0))      AS OTHERS,\n" +
                     "       sum(if(1 = 1, Amount, 0))                   AS TOTAL\n" +
@@ -1288,7 +1288,7 @@ public class ReportsController {
                     "\n" +
                     "        sum(if(Account = 'PIG SALES', Amount, 0))       AS `PIG SALES`,\n" +
                     "       sum(if(Account = 'RICE SALES', Amount, 0))    AS `RICE SALES`,\n" +
-                    "       sum(if(Account = 'MIRAA SALES', Amount, 0)) AS `MIRAA SALES`,\n" +
+                    "       sum(if(Account = 'GRANTS', Amount, 0)) AS `GRANTS`,\n" +
                     "       sum(if(Account = 'LOAN', Amount, 0)) AS 'LOAN',\n" +
                     "       sum(if(Account = 'OTHERS', Amount, 0))      AS OTHERS,\n" +
                     "       sum(if(1 = 1, Amount, 0))                   AS TOTAL\n" +
@@ -1323,7 +1323,7 @@ public class ReportsController {
             document.open();
 
             // Add content to the PDF
-            String title = "INCOME AND EXPENDITURE REPORT FOR THE MONTH OF "+ Month.of(Integer.parseInt(month)) +" 2023";
+            String title = "INCOME AND EXPENDITURE REPORT FOR THE MONTH OF "+ Month.of(Integer.parseInt(month)) +" " + year;
             addLetterheadContent(writer.getDirectContent(), document);
             addContent(document, title, sql, dateString);
 
@@ -1484,7 +1484,7 @@ public class ReportsController {
                 String type = resultSet.getString("TYPE");
                 double SALES = resultSet.getDouble("PIG SALES");
                 double offering = resultSet.getDouble("RICE SALES");
-                double thanksgiving = resultSet.getDouble("MIRAA SALES");
+                double thanksgiving = resultSet.getDouble("GRANTS");
                 double loan = resultSet.getDouble("LOAN");
                 double others = resultSet.getDouble("OTHERS");
                 double total = resultSet.getDouble("TOTAL");
@@ -1623,7 +1623,7 @@ public class ReportsController {
             if (    title.equalsIgnoreCase("date") ||
                     title.equalsIgnoreCase("PIG SALES") ||
                     title.equalsIgnoreCase("RICE SALES") ||
-                    title.equalsIgnoreCase("MIRAA SALES") ||
+                    title.equalsIgnoreCase("GRANTS") ||
                     title.equalsIgnoreCase("LOAN") ||
                     title.equalsIgnoreCase("others") ||
                     title.equalsIgnoreCase("total"))  {

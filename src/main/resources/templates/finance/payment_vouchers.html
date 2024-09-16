@@ -328,8 +328,8 @@
 <script !src="">
 
    $(document).ready(function() {
-       $('#accountsTable').DataTable({
-
+       let dt = $('#accountsTable').DataTable({
+           order: "original"
        });
 
        $('input[name="withholding"], input[name="vat"], input[name="profFees"]').on("input", function () {

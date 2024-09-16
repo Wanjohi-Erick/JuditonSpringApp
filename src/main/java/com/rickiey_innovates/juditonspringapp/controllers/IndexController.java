@@ -129,7 +129,7 @@ public class IndexController implements ErrorController {
                          "         ORDER BY YEAR(`Date`) DESC, MONTH(`Date`) DESC\n" +
                          "     ) AS subquery\n" +
                          "WHERE row_num <= 6\n" +
-                         "ORDER BY year, month desc ;\n";
+                         "ORDER BY year, month ;\n";
 
             System.out.println(sql);
 
@@ -168,7 +168,7 @@ public class IndexController implements ErrorController {
                          "         ORDER BY YEAR(`Date`) DESC, MONTH(`Date`) DESC\n" +
                          "     ) AS subquery\n" +
                          "WHERE row_num <= 6\n" +
-                         "ORDER BY year, month desc ;\n";
+                         "ORDER BY year, month ;\n";
 
             System.out.println(sql);
 

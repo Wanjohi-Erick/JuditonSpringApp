@@ -79,7 +79,7 @@ public class LoginController {
                     sQLException.printStackTrace();
                 }
         }
-        return 1L;
+        return user;
     }
 
     @ResponseBody

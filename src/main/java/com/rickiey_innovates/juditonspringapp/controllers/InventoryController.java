@@ -171,71 +171,52 @@ public class InventoryController {
         return "inventory/returnItems";
     }
 
-    private ResultSet getResults(String query) {
-
-        Connection conn = null;
-        try {
-            conn = DbConnector.getConnection();
-            return conn.prepareStatement(query).executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }/* finally {
-            if (conn != null)
-                try {
-                    conn.close();
-                } catch (SQLException sQLException) {
-                    sQLException.printStackTrace();
-                }
-        }*/
-
-    }
 
     @ResponseBody
     @GetMapping(value = "/api/inv/initDashboard", produces = "application/json")
     private String dashboard() {
         JSONObject dashboard = new JSONObject();
-        try {
+        try (Connection connection = DbConnector.getConnection()) {
 
-            ResultSet rs = getResults(
-                    "SELECT COUNT(*) AS items_held FROM issued_items WHERE `status` = 'Not Returned' and farm = " + farmId() + "");
+            ResultSet rs = connection.prepareStatement(
+                    "SELECT COUNT(*) AS items_held FROM issued_items WHERE `status` = 'Not Returned' and farm = " + farmId() + "").executeQuery();
             while (rs.next()) {
                 dashboard.put("items_held", rs.getString("items_held"));
             }
 
-            rs = getResults("SELECT COUNT(*) AS items_held FROM issued_items WHERE `status` = 'Non Refundable' and farm = " + farmId() + "");
+            rs = connection.prepareStatement("SELECT COUNT(*) AS items_held FROM issued_items WHERE `status` = 'Non Refundable' and farm = " + farmId() + "").executeQuery();
             while (rs.next()) {
                 dashboard.put("non_refundable", rs.getString("items_held"));
             }
-            rs = getResults("SELECT SUM(amount) AS total_amount FROM item_stock where farm = " + farmId() + "");
+            rs = connection.prepareStatement("SELECT SUM(amount) AS total_amount FROM item_stock where farm = " + farmId() + "").executeQuery();
             while (rs.next()) {
                 dashboard.put("total_amount", rs.getString("total_amount"));
             }
-            rs = getResults(
-                    "SELECT  ((SELECT SUM(item_quantity) FROM purchase_order_items where farm = " + farmId() + ") - (SELECT SUM(quantity_received) from purchase_order_receives where farm = " + farmId() + ")) h");
+            rs = connection.prepareStatement(
+                    "SELECT  ((SELECT SUM(item_quantity) FROM purchase_order_items where farm = " + farmId() + ") - (SELECT SUM(quantity_received) from purchase_order_receives where farm = " + farmId() + ")) h").executeQuery();
             while (rs.next()) {
                 dashboard.put("to_be_received", rs.getString("h"));
                 dashboard.put("to_be_delivered", rs.getString("h"));
             }
-            rs = getResults("SELECT COUNT(*) as item_groups FROM item_group where farm = " + farmId() + "");
+            rs = connection.prepareStatement("SELECT COUNT(*) as item_groups FROM item_group where farm = " + farmId() + "").executeQuery();
             while (rs.next()) {
                 dashboard.put("all_item_groups", rs.getString("item_groups"));
             }
-            rs = getResults("SELECT COUNT(*) AS counts FROM purchase_order_receives WHERE `status` = 'Not Paid' and farm = " + farmId() + "");
+            rs = connection.prepareStatement("SELECT COUNT(*) AS counts FROM purchase_order_receives WHERE `status` = 'Not Paid' and farm = " + farmId() + "").executeQuery();
             while (rs.next()) {
                 dashboard.put("to_be_invoiced", rs.getString("counts"));
             }
-            rs = getResults("SELECT COUNT(*) as items FROM items  where farm = " + farmId() + "");
+            rs = connection.prepareStatement("SELECT COUNT(*) as items FROM items  where farm = " + farmId() + "").executeQuery();
             while (rs.next()) {
                 dashboard.put("all_items", rs.getString("items"));
             }
-            rs = getResults(
-                    "SELECT  COUNT(CASE WHEN reoder_status = 'Low Stock' then 1 ELSE NULL END) AS reoder_status FROM (SELECT items.id,item_name,item_group,reoder_level,image,SUM(amount) AS units,case when reoder_level>=SUM(amount) then 'Low Stock' ELSE 'Not Low' END AS reoder_status  FROM items LEFT JOIN item_stock ON item_id = items.id where items.farm = " + farmId() + " GROUP BY items.id order by id) c ");
+            rs = connection.prepareStatement(
+                    "SELECT  COUNT(CASE WHEN reoder_status = 'Low Stock' then 1 ELSE NULL END) AS reoder_status FROM (SELECT items.id,item_name,item_group,reoder_level,image,SUM(amount) AS units,case when reoder_level>=SUM(amount) then 'Low Stock' ELSE 'Not Low' END AS reoder_status  FROM items LEFT JOIN item_stock ON item_id = items.id where items.farm = " + farmId() + " GROUP BY items.id order by id) c ").executeQuery();
             while (rs.next()) {
                 dashboard.put("reorder_status", rs.getString("reoder_status"));
             }
-            rs = getResults(
-                    "SELECT item_quantity, (item_price * item_quantity) AS total, day(created_on) AS day FROM purchase_order_items INNER JOIN purchase_order ON purchase_order.id = purchase_order_id WHERE month(created_on) = MONTH(NOW()) AND  year(created_on) = year(NOW()) AND `status`!='Cancelled' AND purchase_order_items.farm = " + farmId() + " ");
+            rs = connection.prepareStatement(
+                    "SELECT item_quantity, (item_price * item_quantity) AS total, day(created_on) AS day FROM purchase_order_items INNER JOIN purchase_order ON purchase_order.id = purchase_order_id WHERE month(created_on) = MONTH(NOW()) AND  year(created_on) = year(NOW()) AND `status`!='Cancelled' AND purchase_order_items.farm = " + farmId() + " ").executeQuery();
             JSONArray monthArray = new JSONArray();
             while (rs.next()) {
                 JSONObject monthOb = new JSONObject();
@@ -245,8 +226,8 @@ public class InventoryController {
                 monthArray.add(monthOb);
             }
             dashboard.put("this_month_purchase_orders", monthArray);
-            rs = getResults(
-                    "SELECT item_quantity, (item_price * item_quantity) AS total, month(created_on) AS month FROM purchase_order_items INNER JOIN purchase_order ON purchase_order.id = purchase_order_id WHERE year(created_on) = year(NOW()) AND `status`!='Cancelled' and purchase_order_items.farm = " + farmId() + " ");
+            rs = connection.prepareStatement(
+                    "SELECT item_quantity, (item_price * item_quantity) AS total, month(created_on) AS month FROM purchase_order_items INNER JOIN purchase_order ON purchase_order.id = purchase_order_id WHERE year(created_on) = year(NOW()) AND `status`!='Cancelled' and purchase_order_items.farm = " + farmId() + " ").executeQuery();
             JSONArray yearArray = new JSONArray();
             while (rs.next()) {
                 JSONObject yearOb = new JSONObject();
@@ -257,8 +238,8 @@ public class InventoryController {
             }
             dashboard.put("this_year_purchase_orders", yearArray);
 
-            rs = getResults(
-                    "SELECT COUNT(*) as counts,item_name,image FROM issued_items INNER JOIN items ON items.id = issued_items.item_id WHERE issued_items.farm = " + farmId() + " GROUP BY item_id ORDER BY COUNT(*) DESC LIMIT 5");
+            rs = connection.prepareStatement(
+                    "SELECT COUNT(*) as counts,item_name,image FROM issued_items INNER JOIN items ON items.id = issued_items.item_id WHERE issued_items.farm = " + farmId() + " GROUP BY item_id ORDER BY COUNT(*) DESC LIMIT 5").executeQuery();
 
             JSONArray itemsArray = new JSONArray();
             while (rs.next()) {
@@ -374,25 +355,25 @@ public class InventoryController {
     @GetMapping(value = "/api/inv/getAllVendors", produces = "application/json")
     private List<VendorsData> allVendors() {
         List<VendorsData> itemslist = new ArrayList<>();
-        ResultSet rs = getResults(
-                "SELECT id,contact_name,company,phone,email,item_group FROM vendors WHERE farm = " + farmId() + " ORDER BY id desc");
-        try {
+        try (Connection connection = DbConnector.getConnection()) {
+            ResultSet rs = connection.prepareStatement(
+                    "SELECT id,contact_name,company,phone,email,item_group FROM vendors WHERE farm = " + farmId() + " ORDER BY id desc").executeQuery();
             while (rs.next()) {
                 double payables = 0.0;
                 double receivables = 0;
-                ResultSet rs2 = getResults(
+                ResultSet rs2 = connection.prepareStatement(
                         "SELECT SUM(item_price*item_quantity) AS totals FROM purchase_order_receives INNER JOIN purchase_order_items ON purchase_order_item_id = "
                                 + "purchase_order_items.id  INNER JOIN purchase_order ON purchase_order.id = purchase_order_id WHERE purchase_order_receives.farm = " + farmId() + " AND purchase_order_receives.`status` = 'Not Paid' and vendor_id = '"
-                                + rs.getInt("id") + "'");
+                                + rs.getInt("id") + "'").executeQuery();
                 while (rs2.next()) {
                     payables = rs2.getDouble("totals");
                 }
-                rs2 = getResults("SELECT SUM(outstanding*item_price) AS totals FROM  (SELECT purchase_order_items.id,item_name,purchase_order_items.item_price,purchase_order_items.item_quantity,ifnull(sum(quantity_received),0) AS quantity_received , \r\n"
+                rs2 = connection.prepareStatement("SELECT SUM(outstanding*item_price) AS totals FROM  (SELECT purchase_order_items.id,item_name,purchase_order_items.item_price,purchase_order_items.item_quantity,ifnull(sum(quantity_received),0) AS quantity_received , \r\n"
                         + "							   purchase_order_items.item_quantity-ifnull(quantity_received,0) AS outstanding,ifnull(purchase_order_receives.comments,'') AS comments,uom, \r\n"
                         + "							   expected_date,company  FROM purchase_order_items LEFT JOIN purchase_order_receives ON purchase_order_items.id = purchase_order_item_id INNER  \r\n"
                         + "							   JOIN items ON items.id = item_id  INNER JOIN purchase_order ON purchase_order.id = purchase_order_items.purchase_order_id INNER JOIN vendors ON  \r\n"
                         + "							   vendors.id = purchase_order.vendor_id   WHERE vendors.id =  \r\n"
-                        + "							  '" + rs.getInt("id") + "'   GROUP BY purchase_order_items.id )h");
+                        + "							  '" + rs.getInt("id") + "'   GROUP BY purchase_order_items.id )h").executeQuery();
                 while (rs2.next()) {
                     receivables = rs2.getDouble("totals");
                 }

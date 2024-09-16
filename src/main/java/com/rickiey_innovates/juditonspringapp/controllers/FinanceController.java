@@ -659,7 +659,7 @@ public class FinanceController {
                     "                  INNER JOIN bankaccounts b ON b.`Acc id` = ac.Bank\n" +
                     "         WHERE p.farm = " + farm().getId() + " AND ac.farm = " + farm().getId() + "\n" +
                     "         GROUP BY `Pv id`\n" +
-                    "     ) k ORDER BY DATE DESC;\n";
+                    "     ) k ORDER BY `pv id` DESC;\n";
             System.out.println(sql);
             ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
             while (resultSet.next()) {
@@ -994,7 +994,7 @@ public class FinanceController {
 
             SmsController smsController = new SmsController(userRepository);
 
-            smsController.sendHostpinacle(phone, textmsg);
+            //smsController.sendHostpinacle(phone, textmsg);
 
             redirectAttributes.addFlashAttribute("message", "Data saved successfully.");
             response.addProperty("response", "Data saved successfully.");
@@ -1628,7 +1628,7 @@ public class FinanceController {
 
             SmsController smsController = new SmsController(userRepository);
 
-            smsController.sendHostpinacle(phone, textmsg);
+            //smsController.sendHostpinacle(phone, textmsg);
 
 
             return ResponseEntity.ok(response.toString());

@@ -1452,7 +1452,7 @@ public class PayrollController {
 
             if (payroll.getId() == null) {
                 payrollRepository.save(payroll);
-                redirectAttributes.addFlashAttribute("message", "Paroll has been saved successfully!");
+                redirectAttributes.addFlashAttribute("message", "Payroll has been saved successfully!");
 
             } else {
                 payrollRepository.updateEarningById(String.valueOf(payroll.getDate()), payroll.getId());
@@ -4145,7 +4145,7 @@ public class PayrollController {
                 String last9Digits = phone.substring(Math.max(0, phone.length() - 9));
                 phone = "254" + last9Digits;
 
-                String response = smsController.sendHostpinacle(phone, message);
+                //String response = smsController.sendHostpinacle(phone, message);
             }
 
 
