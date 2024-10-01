@@ -329,7 +329,7 @@
 
    $(document).ready(function() {
        let dt = $('#accountsTable').DataTable({
-           order: "original"
+           order: []
        });
 
        $('input[name="withholding"], input[name="vat"], input[name="profFees"]').on("input", function () {
@@ -352,6 +352,7 @@
        $(".quantity-input, .rate-input").on("input", function() {
            // Get the current row
            var row = $(this).closest("tr");
+           console.log(row)
            updateAmount(row);
            updateTotalAmount();
        });
@@ -365,7 +366,7 @@
        // Calculate the amount and update the amount input
        var amount = quantity * rate;
        row.find(".amount-input").val(amount.toFixed(2));
-
+       console.log("amount: " + amount)
        // Return the calculated amount for summing up
        return amount;
    }

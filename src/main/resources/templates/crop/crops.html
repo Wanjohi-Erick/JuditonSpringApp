@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        Dashboard
+    </title>
+    <div th:replace="~{fragments/head}"></div>
+</head>
+
+<body class="g-sidenav-show text-xxs bg-gray-200">
+<div th:replace="~{fragments/crop/sidenav}"></div>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <div th:replace="~{fragments/crop/navbar}"></div>
+    <!-- End Navbar -->
+    <div class="py-4 container-fluid mb-4">
+
+
+        <div id="fragstudents" class="col-lg-12 position-relative z-index-2 mt-n4">
+            <div id="divserchbarreg" class="card-header pb-0"
+                 style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="d-flex align-items-center" style="width:200px">
+                    <div class="form-check form-check-info text-start ps-0" id="searchstudentiddiv"
+                         style="width:200px;margin: 0 auto;">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#popupfilterexams">
+                            <i class="material-icons text-black position-relative text-xl pe-2"
+                               style="font-size: 2rem;">filter_list</i>
+                        </a>
+                    </div>
+                </div>
+
+                <a href="javascript:;" id="payregisterpopup" data-bs-toggle="dropdown" aria-haspopup="true"
+                   class="btn btn-icon bg-gradient-primary float-right"
+                >Add New</a>
+                <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" aria-labelledby="payregisterpopup">
+                    <a class="dropdown-item" @click="opendefaultmodal" href="javascript:;">Normal exam</a>
+                    <a class="dropdown-item" data-bs-target="#modalcreatecombinedexam" data-bs-toggle="modal"
+                       href="javascript:;">Combined exam</a>
+                    <a class="dropdown-item" v-if="showKcseLink" data-bs-target="#popupcreatekcseexam"
+                       data-bs-toggle="modal" href="javascript:;">Kcse</a>
+                </div>
+
+            </div>
+
+            <div id="div1" class="row  mt-4">
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <div id="3695" class="card h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex mt-4">
+                                <div class="avatar avatar-xxl bg-gradient-dark border-radius-xl p-2 mt-n6">
+                                    <div class="d-flex flex-column">
+                                        <div class="d-flex align-items-center"><p class="text-sm mb-0">Avg</p><h6
+                                                class="text-primary text-gradient ms-3 mb-0"></h6></div>
+                                        <div class="d-flex align-items-center"><p class="text-sm mb-0">Grade</p><h6
+                                                class="text-info text-gradient ms-3 mb-0"></h6></div>
+                                        <div class="d-flex align-items-center"><p class="text-sm mb-0">Dev</p></div>
+                                    </div>
+                                </div>
+                                <div class="ms-3 my-auto">
+                                    <div class="avatar-group"></div>
+                                </div>
+                                <div class="ms-auto mt-n4 mb-2">
+                                    <div class="dropdown">
+                                        <button class="btn btn-link text-secondary ps-0 pe-2"
+                                                id="navbarDropdownMenuLink" data-bs-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false"><i
+                                                class="fa fa-ellipsis-v text-lg" aria-hidden="true"></i></button>
+                                        <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3"
+                                             aria-labelledby="navbarDropdownMenuLink"><a id="btnEditExam"
+                                                                                         class="dropdown-item"
+                                                                                         href="javascript:;">Edit</a> <a
+                                                id="btnAprove" class="dropdown-item"
+                                                href="javascript:;">Approve/Publish</a> <a id="btnOpen"
+                                                                                           class="dropdown-item"
+                                                                                           href="javascript:;">Open for
+                                            editing</a> <a id="btnrefresh" class="dropdown-item" href="javascript:;">Refresh
+                                            students</a> <a id="btnsendsms" class="dropdown-item" href="javascript:;">Send
+                                            results</a> <a id="btnsendone" class="dropdown-item" href="javascript:;">Send
+                                            one student</a> <a id="btnvewsent" class="dropdown-item"
+                                                               href="javascript:;">Delivery report</a> <a
+                                                id="btndownloadtemplate" class="dropdown-item" href="javascript:;">Download
+                                            marks template</a> <a id="btnuploadmarks" class="dropdown-item"
+                                                                  href="javascript:;">Upload marks</a> <a id="btnShare"
+                                                                                                          class="dropdown-item"
+                                                                                                          href="javascript:;">Share</a>
+                                            <a id="btnDisableSharing" class="dropdown-item" href="javascript:;">Disable
+                                                sharing</a> <a id="btnDelete" class="dropdown-item" href="javascript:;">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h6 id="examname" class="mb-0 mt-1">GRADE1 TERM2 OPENER EXAM 2024</h6>
+                            <div class="col-12"><span class="badge badge-sm bg-gradient-primary"></span>
+                                <p class="text-secondary text-sm font-weight-normal mb-0">Class teacher Remarks</p>
+                            </div>
+                            <hr class="horizontal dark">
+                            <div class="row">
+                                <div class="col-4"><h6 class="text-md mb-0 font-weight-bolder">181</h6>
+                                    <p class="text-secondary text-sm font-weight-normal mb-0">Students</p></div>
+                                <div class="col-4 text-start"><span
+                                        class="badge badge-sm bg-gradient-warning">Open</span>
+                                    <p class="text-secondary text-sm font-weight-normal mb-0">Status</p></div>
+                                <div class="col-4 text-center"><h6 class="text-sm mb-0">2024-08-29</h6>
+                                    <p class="text-secondary text-sm font-weight-normal mb-0">Due date</p></div>
+                            </div>
+                        </div>
+                        <button id="viewexamdetails" class="btn btn-link bg-gradient-success m-1">View Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</main>
+<div th:replace="~{fragments/ui_settings}"></div>
+<!--   Core JS Files   -->
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/chartjs.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: "/api/getIncomeAndExpenses",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                const groupedData = {};
+
+                // Group data by month and combine tithes and offerings
+                data.forEach(entry => {
+                    const month = entry.monthlyIncome ? entry.monthlyIncome.month : entry.monthlyOffering.month;
+
+                    if (!groupedData[month]) {
+                        groupedData[month] = {tithe: 0, offering: 0};
+                    }
+
+                    if (entry.monthlyIncome) {
+                        groupedData[month].tithe = parseFloat(entry.monthlyIncome.credit);
+                    }
+
+                    if (entry.monthlyOffering) {
+                        groupedData[month].offering = parseFloat(entry.monthlyOffering.credit);
+                    }
+                });
+
+                const months = Object.keys(groupedData);
+                const tithes = months.map(month => groupedData[month].tithe);
+                const offerings = months.map(month => groupedData[month].offering);
+
+                var ctx = document.getElementById("chart-bars").getContext("2d");
+
+                new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: months,
+                        datasets: [
+                            {
+                                label: "Tithe",
+                                tension: 0.4,
+                                borderWidth: 0,
+                                borderRadius: 4,
+                                borderSkipped: false,
+                                backgroundColor: "rgba(255, 255, 255, .8)",
+                                data: tithes,
+                                maxBarThickness: 6,
+                            },
+                            {
+                                label: "Offering",
+                                tension: 0.4,
+                                borderWidth: 0,
+                                borderRadius: 4,
+                                borderSkipped: false,
+                                backgroundColor: "rgba(54, 162, 235, 1)",
+                                data: offerings,
+                                maxBarThickness: 6,
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false,
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index',
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    drawBorder: false,
+                                    display: true,
+                                    drawOnChartArea: true,
+                                    drawTicks: false,
+                                    borderDash: [5, 5],
+                                    color: 'rgba(255, 255, 255, .2)'
+                                },
+                                ticks: {
+                                    display: true,
+                                    color: '#f8f9fa',
+                                    padding: 10,
+                                    font: {
+                                        size: 14,
+                                        weight: 300,
+                                        family: "Roboto",
+                                        style: 'normal',
+                                        lineHeight: 2
+                                    },
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    drawBorder: false,
+                                    display: false,
+                                    drawOnChartArea: false,
+                                    drawTicks: false,
+                                    borderDash: [5, 5]
+                                },
+                                ticks: {
+                                    display: true,
+                                    color: '#f8f9fa',
+                                    padding: 10,
+                                    font: {
+                                        size: 14,
+                                        weight: 300,
+                                        family: "Roboto",
+                                        style: 'normal',
+                                        lineHeight: 2
+                                    },
+                                }
+                            },
+                        },
+                    },
+                });
+            },
+            error: function (error) {
+                console.error("Error fetching data:", error);
+            },
+        });
+
+        $.ajax({
+            url: "/api/getMonthlyIncome",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+
+                const months = data.map(entry => entry.month);
+                const credits = data.map(entry => entry.credit);
+
+                new Chart(ctx2, {
+                    type: "line",
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: "Income",
+                            tension: 0,
+                            borderWidth: 0,
+                            pointRadius: 5,
+                            pointBackgroundColor: "rgba(255, 255, 255, .8)",
+                            pointBorderColor: "transparent",
+                            borderColor: "rgba(255, 255, 255, .8)",
+                            borderColor: "rgba(255, 255, 255, .8)",
+                            borderWidth: 4,
+                            backgroundColor: "transparent",
+                            fill: true,
+                            data: credits,
+                            maxBarThickness: 6
+
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false,
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index',
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    drawBorder: false,
+                                    display: true,
+                                    drawOnChartArea: true,
+                                    drawTicks: false,
+                                    borderDash: [5, 5],
+                                    color: 'rgba(255, 255, 255, .2)'
+                                },
+                                ticks: {
+                                    display: true,
+                                    color: '#f8f9fa',
+                                    padding: 10,
+                                    font: {
+                                        size: 14,
+                                        weight: 300,
+                                        family: "Roboto",
+                                        style: 'normal',
+                                        lineHeight: 2
+                                    },
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    drawBorder: false,
+                                    display: false,
+                                    drawOnChartArea: false,
+                                    drawTicks: false,
+                                    borderDash: [5, 5]
+                                },
+                                ticks: {
+                                    display: true,
+                                    color: '#f8f9fa',
+                                    padding: 10,
+                                    font: {
+                                        size: 14,
+                                        weight: 300,
+                                        family: "Roboto",
+                                        style: 'normal',
+                                        lineHeight: 2
+                                    },
+                                }
+                            },
+                        },
+                    },
+                });
+            },
+            error: function (error) {
+                console.error("Error fetching data:", error);
+            }
+        });
+
+        $.ajax({
+            url: "/api/getMonthlyExpenses",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                const months = data.map(entry => entry.month);
+                const credits = data.map(entry => entry.credit);
+                var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
+
+                new Chart(ctx3, {
+                    type: "line",
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: "Expenses",
+                            tension: 0,
+                            borderWidth: 0,
+                            pointRadius: 5,
+                            pointBackgroundColor: "rgba(255, 255, 255, .8)",
+                            pointBorderColor: "transparent",
+                            borderColor: "rgba(255, 255, 255, .8)",
+                            borderWidth: 4,
+                            backgroundColor: "transparent",
+                            fill: true,
+                            data: credits,
+                            maxBarThickness: 6
+
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false,
+                            }
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'index',
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    drawBorder: false,
+                                    display: true,
+                                    drawOnChartArea: true,
+                                    drawTicks: false,
+                                    borderDash: [5, 5],
+                                    color: 'rgba(255, 255, 255, .2)'
+                                },
+                                ticks: {
+                                    display: true,
+                                    padding: 10,
+                                    color: '#f8f9fa',
+                                    font: {
+                                        size: 14,
+                                        weight: 300,
+                                        family: "Roboto",
+                                        style: 'normal',
+                                        lineHeight: 2
+                                    },
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    drawBorder: false,
+                                    display: false,
+                                    drawOnChartArea: false,
+                                    drawTicks: false,
+                                    borderDash: [5, 5]
+                                },
+                                ticks: {
+                                    display: true,
+                                    color: '#f8f9fa',
+                                    padding: 10,
+                                    font: {
+                                        size: 14,
+                                        weight: 300,
+                                        family: "Roboto",
+                                        style: 'normal',
+                                        lineHeight: 2
+                                    },
+                                }
+                            },
+                        },
+                    },
+                });
+            },
+            error: function (error) {
+                console.error("Error fetching data:", error);
+            }
+        });
+    });
+</script>
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="../assets/js/material-dashboard.min.js?v=3.0.5"></script>
+</body>
+
+</html>

@@ -304,6 +304,65 @@ public class IndexController implements ErrorController {
         return kenyanCurrencyFormat.format(amount);
     }
 
+    @GetMapping({"/crop"})
+    public String crop(Model model, HttpServletRequest request) {
+        User user = userRepository.findById(userId()).get();
+        try {
+            Connection connection = DbConnector.getConnection();
+            String sql = "SELECT (SELECT count(id)\n" +
+                    "        FROM users\n" +
+                    "        where farm = "+farm().getId()+")          AS memberTotal,\n" +
+                    "       (SELECT ifnull(FORMAT(SUM(credit), 0), 0)\n" +
+                    "        FROM accounttransactions\n" +
+                    "        where farm = "+farm().getId()+")                                        AS income,\n" +
+                    "       (SELECT ifnull(FORMAT(SUM(debit), 0), 0)\n" +
+                    "        FROM accounttransactions\n" +
+                    "        where farm = "+farm().getId()+")                                        AS expenses,\n" +
+                    "       (SELECT ifnull(FORMAT((SUM(credit) - SUM(debit)), 0), 0)\n" +
+                    "        FROM accounttransactions\n" +
+                    "        where farm = "+farm().getId()+")                                        AS balance,\n" +
+                    "       (SELECT ifnull(FORMAT(SUM(debit), 0), 0)\n" +
+                    "        FROM accounttransactions\n" +
+                    "        WHERE farm = "+farm().getId()+"\n" +
+                    "         )                    AS currentMonthExpenses,\n" +
+                    "       (SELECT ifnull(FORMAT(SUM(debit), 0), 0)\n" +
+                    "        FROM accounttransactions\n" +
+                    "        WHERE farm = "+farm().getId()+"\n" +
+                    "          and MONTH(Date) = MONTH(CURDATE() - INTERVAL 1 MONTH)) AS previousMonthExpenses,\n" +
+                    "       IFNULL(\n" +
+                    "                       ((SELECT SUM(debit)\n" +
+                    "                         FROM accounttransactions\n" +
+                    "                         WHERE farm = "+farm().getId()+"\n" +
+                    "                           and MONTH(Date) = MONTH(CURDATE())) /\n" +
+                    "                        (SELECT SUM(debit)\n" +
+                    "                         FROM accounttransactions\n" +
+                    "                         WHERE farm = "+farm().getId()+"\n" +
+                    "                           and MONTH(Date) = MONTH(CURDATE() - INTERVAL 1 MONTH))) * 100 - 100,\n" +
+                    "                       0)                                        AS percentageIncrease;";
+            ResultSet rs = connection.prepareStatement(sql).executeQuery();
+            SummaryDTO summaryDTO = new SummaryDTO();
+            while(rs.next()) {
+                summaryDTO.setMemberTotal(rs.getInt("memberTotal"));
+                summaryDTO.setIncome(rs.getString("income"));
+                summaryDTO.setExpenses(rs.getString("expenses"));
+                summaryDTO.setBalance(rs.getString("balance"));
+                summaryDTO.setPercentageExpensesIncrease(rs.getDouble("percentageIncrease"));
+            }
+            rs.close();
+            connection.close();
+            model.addAttribute("summary", summaryDTO);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        List<Accounttransaction> accounttransactions = accounttransactionRepository.findByPayeeNameNotLikeAndChurchLikeOrderByIdDesc("MERU CENTRAL COFFEE CO-OPERATIVE UNION LTD", farm());
+        model.addAttribute("transactions", accounttransactions);
+        model.addAttribute("user", user);
+        model.addAttribute("page", "dashboard");
+        model.addAttribute("main", "farm");
+        model.addAttribute("requestURI", request.getRequestURI());
+        return "finance/dashboard";
+    }
+
     @GetMapping({"/finance"})
     public String index(Model model, HttpServletRequest request) {
         User user = userRepository.findById(userId()).get();
