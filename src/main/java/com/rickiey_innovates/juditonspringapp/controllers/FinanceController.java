@@ -1590,6 +1590,7 @@ public class FinanceController {
         try {
             System.out.println("Received data: " + request.toString());
 
+            Long plantedCropId = request.getPlantedCropId();
             LocalDate date = request.getDate();
             String payee = request.getReceivedFrom();
             String details = request.getDetails();
@@ -1601,8 +1602,18 @@ public class FinanceController {
             double totalAmount = 0.00;
 
             int rctRef = referenceRepository.findByChurch(farm()).getRct() + 1;
-
+            int ref = referenceRepository.findByChurch(farm()).getRef() + 1;
+            PlantedCrop plantedCrop = plantedCropRepository.findById(plantedCropId).orElseThrow(EntityNotFoundException::new);
             for (ReceiptTableRow receiptTableRow : voucherTableData) {
+                Activity activity1 = activityRepository.findById(receiptTableRow.getActivity()).orElseThrow(EntityNotFoundException::new);
+                FarmActivity farmActivity = new FarmActivity();
+                farmActivity.setFarm(farm());
+                farmActivity.setPlantedCrop(plantedCrop);
+                farmActivity.setDescription(details);
+                farmActivity.setRef("TR" + ref);
+                farmActivity.setAccount(activity1);
+                FarmActivity savedActivity = farmActivityRepository.save(farmActivity);
+
                 Accounttransaction transactToProvider = new Accounttransaction();
                 transactToProvider.setDate(date);
                 transactToProvider.setRef("RCT" + rctRef);
@@ -1614,6 +1625,7 @@ public class FinanceController {
                 transactToProvider.setCheque(transRef);
                 transactToProvider.setActivity(0);
                 transactToProvider.setCredit(receiptTableRow.getAmount());
+                transactToProvider.setFarmActivity(savedActivity);
 
                 totalAmount += receiptTableRow.getAmount();
 
@@ -1621,10 +1633,13 @@ public class FinanceController {
                 transactToProvider.setStatus("Approved");
                 transactToProvider.setFarm(farm());
 
-                accounttransactionRepository.save(transactToProvider);
+                Accounttransaction savedTr = accounttransactionRepository.save(transactToProvider);
+                savedActivity.setAccounttransaction(savedTr);
+                farmActivityRepository.save(savedActivity);
             }
 
             referenceRepository.updateRctByChurch(rctRef, farm());
+            referenceRepository.updateRefByFarm(ref, farm());
 
             redirectAttributes.addFlashAttribute("message", "Data saved successfully.");
             response.addProperty("response", "Data saved successfully.");
