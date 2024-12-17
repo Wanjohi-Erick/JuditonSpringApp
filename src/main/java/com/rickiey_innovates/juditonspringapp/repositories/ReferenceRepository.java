@@ -18,4 +18,9 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
     @Modifying
     @Query("update Reference r set r.pv = ?1 where r.farm = ?2")
     void updatePvByChurch(Integer pv, Farm farm);
+
+    @Transactional
+    @Modifying
+    @Query("update Reference r set r.ref = ?1 where r.farm = ?2")
+    void updateRefByFarm(Integer ref, Farm farm);
 }

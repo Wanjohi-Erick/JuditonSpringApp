@@ -18,8 +18,11 @@ public class CropVariety {
     @Column(name = "id", nullable = false)
     private Long id;
     private String name;
-    @ManyToOne
-    private CropName cropName;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "crop")
+    private Crop crop;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

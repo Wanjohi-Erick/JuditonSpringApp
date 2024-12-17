@@ -16,6 +16,8 @@
     <!-- End Navbar -->
     <div class="py-4 container-fluid mb-4">
 
+        <div id="successMessage" th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div id="errorMessage" th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
         <div id="fragstudents" class="col-lg-12 position-relative z-index-2 mt-n4">
             <div id="divserchbarreg" class="card-header pb-0"
@@ -30,21 +32,14 @@
                     </div>
                 </div>
 
-                <a href="javascript:;" id="payregisterpopup" data-bs-toggle="dropdown" aria-haspopup="true"
-                   class="btn btn-icon bg-gradient-primary float-right"
-                >Add New</a>
-                <div class="dropdown-menu dropdown-menu-end me-sm-n4 me-n3" aria-labelledby="payregisterpopup">
-                    <a class="dropdown-item" @click="opendefaultmodal" href="javascript:;">Normal exam</a>
-                    <a class="dropdown-item" data-bs-target="#modalcreatecombinedexam" data-bs-toggle="modal"
-                       href="javascript:;">Combined exam</a>
-                    <a class="dropdown-item" v-if="showKcseLink" data-bs-target="#popupcreatekcseexam"
-                       data-bs-toggle="modal" href="javascript:;">Kcse</a>
-                </div>
+                <button type="button" class="btn btn-primary float-right" data-bs-toggle="modal" data-bs-target="#plantingModal">
+                    <i class="material-icons text-sm">add</i>&nbsp;&nbsp;Add New
+                </button>
 
             </div>
 
             <div id="div1" class="row  mt-4">
-                <div class="col-lg-4 col-md-6 mb-5">
+                <div th:each="plantedCrop : ${plantedCrops}" class="col-lg-4 col-md-6 mb-5">
                     <div id="3695" class="card h-100">
                         <div class="card-body p-3">
                             <div class="d-flex mt-4">
@@ -90,22 +85,22 @@
                                     </div>
                                 </div>
                             </div>
-                            <h6 id="examname" class="mb-0 mt-1">GRADE1 TERM2 OPENER EXAM 2024</h6>
+                            <h6 id="examname" class="mb-0 mt-1" th:text="${plantedCrop.variety.name}"></h6>
                             <div class="col-12"><span class="badge badge-sm bg-gradient-primary"></span>
                                 <p class="text-secondary text-sm font-weight-normal mb-0">Class teacher Remarks</p>
                             </div>
                             <hr class="horizontal dark">
                             <div class="row">
-                                <div class="col-4"><h6 class="text-md mb-0 font-weight-bolder">181</h6>
-                                    <p class="text-secondary text-sm font-weight-normal mb-0">Students</p></div>
+                                <div class="col-4"><h6 class="text-md mb-0 font-weight-bolder" th:text="${plantedCrop.season.name}"></h6>
+                                    <p class="text-secondary text-sm font-weight-normal mb-0">Season</p></div>
                                 <div class="col-4 text-start"><span
-                                        class="badge badge-sm bg-gradient-warning">Open</span>
+                                        class="badge badge-sm bg-gradient-warning">In Field</span>
                                     <p class="text-secondary text-sm font-weight-normal mb-0">Status</p></div>
-                                <div class="col-4 text-center"><h6 class="text-sm mb-0">2024-08-29</h6>
-                                    <p class="text-secondary text-sm font-weight-normal mb-0">Due date</p></div>
+                                <div class="col-4 text-center"><h6 class="text-sm mb-0" th:text="${plantedCrop.plantedDate}"></h6>
+                                    <p class="text-secondary text-sm font-weight-normal mb-0">Planting date</p></div>
                             </div>
                         </div>
-                        <button id="viewexamdetails" class="btn btn-link bg-gradient-success m-1">View Analytics
+                        <button id="viewexamdetails" data-bs-toggle="modal" data-bs-target="#popupeexamdetails" th:data-id="${plantedCrop.id}" class="btn btn-link bg-gradient-success m-1">View Analytics
                         </button>
                     </div>
                 </div>
@@ -118,329 +113,1323 @@
     </div>
 </main>
 <div th:replace="~{fragments/ui_settings}"></div>
-<!--   Core JS Files   -->
+
+<!-- Modal -->
+<div class="modal fade" id="plantingModal" tabindex="-1" aria-labelledby="plantingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="card card-plain">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="plantingModalLabel">Planting Form</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <form id="plantingForm">
+                    <div class="form-check form-check-info text-start ps-0" >
+                        <label class="mb-0 ms-0" for="cropVariety">Select Crop</label>
+                        <select name="cropVariety" id="cropVariety" type="select" class="floating-select" required>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="plantingType" class="form-label">Planting Type</label>
+                        <select class="form-select" id="plantingType" name="plantingType">
+                            <option value="seed">Seed</option>
+                            <option value="seedling">Seedling</option>
+                        </select>
+                    </div>
+                    <div class="input-group form-floating input-group-dynamic mb-3">
+                        <input type="text" name="plantingAge" id="plantingAge" class="form-control" required>
+                        <label for="plantingAge" class="form-label">Age (if seedling)</label>
+                    </div>
+
+                    <div class="input-group form-floating input-group-dynamic mb-3">
+                        <input type="date" name="plantingDate" id="plantingDate" class="form-control" required>
+                        <label for="plantingDate" class="form-label">Planting Date</label>
+                    </div>
+
+                    <div class="form-check form-check-info text-start ps-0" >
+                        <label class="mb-0 ms-0" for="season">Season</label>
+                        <select name="season" id="season" type="select" class="floating-select" required>
+                        </select>
+                    </div>
+
+                    <div class="input-group form-floating input-group-dynamic mb-3">
+                        <input type="number" name="daysToHarvest" id="daysToHarvest" class="form-control" required>
+                        <label for="daysToHarvest" class="form-label">Days from Planting to Harvest</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="plantingMethod" class="form-label">Planting Method</label>
+                        <select class="form-select" id="plantingMethod" name="plantingMethod">
+                            <option value="row">Row</option>
+                            <option value="bed">Bed</option>
+                            <option value="individual">Individual</option>
+                            <option value="container">Container</option>
+                        </select>
+                    </div>
+
+                    <!-- Bed Section -->
+                    <div id="bedSection" class="d-none">
+                        <div class="mb-3">
+                            <label for="numBeds" class="form-label">Number of Beds</label>
+                            <input type="number" class="form-control" id="numBeds" name="numBeds" placeholder="Enter number of beds">
+                        </div>
+                        <div class="mb-3">
+                            <label for="rowsPerBed" class="form-label">Rows per Bed</label>
+                            <input type="number" class="form-control" id="rowsPerBed" name="rowsPerBed" placeholder="Enter rows per bed">
+                        </div>
+                        <div class="mb-3">
+                            <label for="lengthOfBed" class="form-label">Length of Bed (m)</label>
+                            <input type="number" class="form-control" id="lengthOfBed" name="lengthOfBed" placeholder="Enter length of bed">
+                        </div>
+                        <div class="mb-3">
+                            <label for="plantSpacingBed" class="form-label">Plant Spacing in Bed (cm)</label>
+                            <input type="number" class="form-control" id="plantSpacingBed" name="plantSpacingBed" placeholder="Enter spacing">
+                        </div>
+                    </div>
+
+                    <!-- Row Section -->
+                    <div id="rowSection" class="d-none">
+                        <div class="mb-3">
+                            <label for="numRows" class="form-label">Number of Rows</label>
+                            <input type="number" class="form-control" id="numRows" name="numRows" placeholder="Enter number of rows">
+                        </div>
+                        <div class="mb-3">
+                            <label for="lengthOfRow" class="form-label">Length of Row (m)</label>
+                            <input type="number" class="form-control" id="lengthOfRow" name="lengthOfRow" placeholder="Enter length of row">
+                        </div>
+                        <div class="mb-3">
+                            <label for="plantSpacingRow" class="form-label">Plant Spacing in Row (cm)</label>
+                            <input type="number" class="form-control" id="plantSpacingRow" name="plantSpacingRow" placeholder="Enter spacing">
+                        </div>
+                    </div>
+
+                    <!-- Individual Section -->
+                    <div id="individualSection" class="d-none">
+                        <div class="mb-3">
+                            <label for="numPlants" class="form-label">Number of Plants</label>
+                            <input type="number" class="form-control" id="numPlants" name="numPlants" placeholder="Enter number of plants">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <input type="submit" id="submit" value="Plant" class="btn btn-primary">
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="popupeexamdetails" data-bs-backdrop="static" tabindex="-1" aria-labelledby="popupeexamdetailsLabel" style="z-index: 10000 !important;" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <input type="hidden" id="plantedCropId" name="plantedCropId">
+            <div class="modal-header"><h5 id="examdetails" class="modal-title">PP1 TERM3 OPENER EXAM 2024 -
+                ANALYSIS</h5>
+                <button aria-label="Close" class="btn-close text-dark" data-bs-dismiss="modal" type="button"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="container mt-n1">
+                    <ul class="nav nav-tabs" id="myTabs" role="tablist">
+                        <li class="nav-item" role="presentation"><a class="nav-link active" id="tab1" data-bs-toggle="tab"
+                                                                    href="#content1" aria-selected="false" role="tab"
+                                                                    tabindex="-1">Analysis</a></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link" id="tab2"
+                                                                    data-bs-toggle="tab" href="#content2"
+                                                                    aria-selected="true" role="tab">Activity and
+                            reports</a></li>
+                    </ul>
+                    <div class="tab-content" style="max-height: 500px; overflow-y: auto;">
+                        <div class="tab-pane fade active show" id="content1" role="tabpanel" aria-labelledby="#tab1">
+                            <div class="row">
+                                <div class="col-lg-2 d-flex flex-column mt-2">
+                                    <div class="text-center"><p class="text-sm mb-0">Running Costs</p>
+                                        <h3 id="totalCosts"
+                                            class="text-danger font-weight-bolder text-gradient mb-0"></h3></div>
+                                    <hr class="horizontal light">
+                                    <div class="text-center"><p class="text-sm mb-0">This Month</p>
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa fa-arrow-down text-danger"></i> <p id="monthExpenses">0</p>
+                                            </div>
+                                            <div class="col">
+                                                <i class="fa fa-arrow-up text-success"></i> <p id="monthIncomes">0</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-2 d-flex flex-column mt-2">
+                                    <div class="text-center"><p class="text-sm mb-0">Running Income</p>
+                                        <h3 id="totalIncome"
+                                            class="text-success font-weight-bolder text-gradient mb-0"></h3></div>
+                                    <hr class="horizontal light">
+                                    <div class="text-center"><p class="text-sm mb-0">This Year</p>
+                                        <div class="row">
+                                            <div class="col">
+                                                <i class="fa fa-arrow-down text-danger"></i> <p id="annualExpenses">0</p>
+                                            </div>
+                                            <div class="col">
+                                                <i class="fa fa-arrow-up text-success"></i> <p id="annualIncomes">0</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 mt-4">
+                                    <div class="card z-index-2 h-100">
+                                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                                            <div class="bg-gradient-primary shadow-primary border-radius-lg py-1 pe-1">
+                                                <div class="chart">
+                                                    <canvas id="chart-line" class="chart-canvas" height="340"
+                                                            style="box-sizing: border-box; display: block; height: 170px; width: 308.7px;"
+                                                            width="617"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body"><h6 class="mb-0">Expenses this year</h6></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 mt-4">
+                                    <div class="card z-index-2 h-100">
+                                        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                                            <div class="bg-gradient-success shadow-success border-radius-lg py-1 pe-1">
+                                                <div class="chart">
+                                                    <canvas id="chart-line-tasks" class="chart-canvas" height="340"
+                                                            style="box-sizing: border-box; display: block; height: 170px; width: 308.7px;"
+                                                            width="617"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body"><h6 class="mb-0">Income this year</h6></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="div1scoreperstream" class="table-responsive col-md-12"></div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="content2" role="tabpanel" aria-labelledby="#tab2">
+                            <div class="row">
+                                <div class="col-md-2" style="margin-top: 17px; margin-bottom: -10px;">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newActivityModal">
+                                        <i class="material-icons text-sm">add</i>&nbsp;&nbsp;Add New
+                                    </button>
+                                </div>
+                                <div class="col-md-2" style="margin-top: 17px; margin-bottom: -10px;"></div>
+                                <div class="col-md-2" style="margin-top: 17px; margin-bottom: -10px;"></div>
+                                <div class="col-md-2" style="margin-top: 17px; margin-bottom: -10px;"></div>
+                                <div class="col-md-1" style="margin-top: 17px; margin-bottom: -10px;"></div>
+                                <div class="col-md-3">
+                                    <div class="form-check form-check-info text-start ps-0">
+                                        <label>Select report</label>
+                                        <select id="selectgetexamreports" type="select" class="floating-select" required>
+                                            <option value="">Generate analysis reports</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="div1marksasadmin" class="table-responsive col-md-12 ps ps--active-x">
+                                <table id="activitiesTable" class="table align-items-center justify-content-center mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Activity</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cost</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Income</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="buttmarksasadmin" type="button" class="btn btn-primary" data-bs-dismiss="modal">Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div data-bs-backdrop="static" class="modal fade z-index-10000" id="newActivityModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card card-plain">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-normal">Add Activity</h5>
+                        <button onclick="clearInputFields('newActivityModal')" type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="card-body pb-3">
+                        <div class="input-group input-group-static mb-3">
+                            <label for="activity" class="ms-0">Activity Nature</label>
+                            <select class="form-control form-dark-select" name="activityType" id="activityType" required>
+                                <option value="Income">Income</option>
+                                <option value="Expense">Expenses</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div id="vouchers" class="row">
+                            <div class="col-md-3">
+                                <form id="addVoucherForm">
+                                    <div class="input-group input-group-outline my-3 is-filled">
+                                        <label class="form-label">Date</label>
+                                        <input type="date" id="voucherDate" name="voucherDate" class="form-control" required>
+                                    </div>
+                                    <div class="input-group input-group-static mb-3">
+                                        <label for="voucherActivity" class="ms-0">Select Activity</label>
+                                        <select class="form-control form-dark-select" name="voucherActivity" id="voucherActivity" required>
+                                            <option th:each="activity : ${activities}" th:value="${activity.id}" th:text="${activity.account}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label for="voucherPayee" class="form-label">Payee Name</label>
+                                        <input type="text" id="voucherPayee" name="voucherPayee" class="form-control" required>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label for="voucherDetails" class="form-label">Payment Details</label>
+                                        <input type="text" id="voucherDetails" name="voucherDetails" class="form-control" required>
+                                    </div>
+                                    <div class="input-group input-group-static mb-3">
+                                        <label for="voucherBank" class="ms-0">Paid Through</label>
+                                        <select class="form-control form-dark-select" name="voucherBank" id="voucherBank" required>
+                                            <option th:each="bankAccount : ${bankaccounts}" th:value="${bankAccount.id}" th:text="${bankAccount.accountName}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label for="voucherTransRef" class="form-label">Transaction #/Check #</label>
+                                        <input type="text" id="voucherTransRef" name="voucherTransRef" class="form-control">
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" onclick="addVoucher(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <div class=" me-3 my-3 text-end">
+                                    <button type="button" class="btn btn-primary" onclick="addRow('newActivityModal')">
+                                        <i class="material-icons text-sm">add</i>
+                                    </button>
+                                </div>
+                                <table id="vouchersTable" class="table align-items-center justify-content-center mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Particulars</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rate</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Amount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="particulars" class="form-control" required>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-outline">
+                                                <input required type="number" value="1" name="quantity" class="form-control quantity-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-outline">
+                                                <input required type="number" value="0" name="rate" class="form-control rate-input">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-outline">
+                                                <input required type="number" value="0.00" name="amount" class="form-control amount-input" readonly>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-danger" onclick="deleteThisRow(this)"> <i class="fa fa-trash" aria-hidden="true"></i> </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="col-md-3">
+                                <form role="form" method="post">
+                                    <h6 class="text-warning" id="beforeTax">Before Tax: 0.00</h6>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Withholding tax</label>
+                                        <input type="number" value="0" id="withholding" name="withholding" class="form-control">
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">VAT</label>
+                                        <input type="number" value="0" id="vat" name="vat" class="form-control">
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Professional Fees</label>
+                                        <input type="number" value="0" id="profFees" name="profFees" class="form-control">
+                                    </div>
+
+                                    <h6 class="text-warning" id="voucherTotalPayable">Total Payable: 0.00</h6>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="receipts" class="row d-none">
+                            <div class="col-md-6">
+                                <form id="addReceiptForm">
+                                    <div class="input-group input-group-outline my-3 is-filled">
+                                        <label class="form-label">Date</label>
+                                        <input type="date" id="date" name="date" class="form-control" required>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Received From</label>
+                                        <input type="text" id="payee" name="payee" class="form-control" required>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Receipt Details</label>
+                                        <input type="text" id="details" name="details" class="form-control" required>
+                                    </div>
+
+                                    <div class="input-group input-group-static mb-3">
+                                        <label for="bank" class="ms-0">Received Through</label>
+                                        <select class="form-control form-dark-select" name="bank" id="bank" required>
+                                        </select>
+                                    </div>
+                                    <div class="input-group input-group-outline my-3">
+                                        <label class="form-label">Transaction #/Check #</label>
+                                        <input type="text" id="transRef" name="transRef" class="form-control">
+                                    </div>
+                                    <h6 class="text-warning" id="totalPayable">Total Payable: 0.00</h6>
+                                    <div class="text-center">
+                                        <button type="submit" onclick="addReceipt(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <div class=" me-3 my-3 text-end">
+                                    <button type="button" class="btn btn-primary" onclick="addRow('newReceiptModal')">
+                                        <i class="material-icons text-sm">add</i>
+                                    </button>
+                                </div>
+                                <table id="receiptsTable" class="table align-items-center justify-content-center mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Activity</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Amount</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group input-group-static mb-3">
+                                                <label for="bank" class="ms-0">Select Activity</label>
+                                                <select class="form-control form-dark-select" name="particulars" required>
+                                                    <option th:each="activity : ${activities}" th:value="${activity.id}" th:text="${activity.account}"></option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-outline">
+                                                <input type="number" value="0" name="amount" class="form-control amount-input" required>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-danger" onclick="deleteThisRow(this)"> <i class="fa fa-trash" aria-hidden="true"></i> </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div id="others" class="row d-none">
+                            <form id="farmActivityForm">
+                                <!-- Activity Date -->
+                                <div class="mb-3">
+                                    <label for="activityDate" class="form-label">Date of Activity</label>
+                                    <input type="date" class="form-control" id="activityDate" name="activityDate" required>
+                                </div>
+
+                                <!-- Activity Type -->
+                                <div class="input-group input-group-static mb-3">
+                                    <label for="activity" class="ms-0">Type of Activity</label>
+                                    <select class="form-control form-dark-select" id="activity" name="activity" required>
+                                        <option th:each="activity : ${activities}" th:value="${activity.id}" th:text="${activity.account}"></option>
+                                    </select>
+                                </div>
+
+                                <!-- Location or Field Name -->
+                                <div class="mb-3">
+                                    <label for="fieldName" class="form-label">Field/Location Name</label>
+                                    <input type="text" class="form-control" id="fieldName" name="fieldName" placeholder="e.g., Field A, North Block" required>
+                                </div>
+
+                                <!-- Number of People Involved -->
+                                <div class="mb-3">
+                                    <label for="peopleInvolved" class="form-label">Number of People Involved</label>
+                                    <input type="number" class="form-control" id="peopleInvolved" name="peopleInvolved" min="1" value="1" required>
+                                </div>
+
+                                <!-- Notes or Description -->
+                                <div class="mb-3">
+                                    <label for="notes" class="form-label">Notes/Description</label>
+                                    <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Provide additional details about the activity..."></textarea>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-success">Record Activity</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addVoucher(event) {
+        event.preventDefault();
+        let modal = $('#vouchers');
+
+        let dateField = modal.find('#voucherDate');
+        let activityField = modal.find('#voucherActivity');
+        let payeeField = modal.find('#voucherPayee');
+        let detailsField = modal.find('#voucherDetails');
+        let bankField = modal.find('#voucherBank');
+        let transRefField = modal.find('#voucherTransRef');
+        let withholdingField = modal.find('#withholding');
+        let vatField = modal.find('#vat');
+        let profFeesField = modal.find('#profFees');
+
+        let errorMessages = [];
+        let errorFields = [dateField, activityField, payeeField, detailsField, bankField, withholdingField, vatField, profFeesField];
+
+        if (!dateField.val()) {
+            errorMessages.push('Date is required.');
+        }
+        if (!activityField.val()) {
+            errorMessages.push('Activity is required.');
+        }
+
+        if (!payeeField.val()) {
+            errorMessages.push('Payee is required.');
+        }
+
+        if (!detailsField.val()) {
+            errorMessages.push('Details are required.');
+        }
+
+        if (!bankField.val()) {
+            errorMessages.push('Bank is required.');
+        }
+
+        if (!withholdingField.val()) {
+            errorMessages.push('Withholding is required.');
+        }
+
+        if (!vatField.val()) {
+            errorMessages.push('VAT is required.');
+        }
+
+        if (!profFeesField.val()) {
+            errorMessages.push('Professional Fees are required.');
+        }
+
+        errorFields.forEach(function (field) {
+            field.removeClass('is-invalid');
+        });
+
+        if (errorMessages.length > 0) {
+            errorFields.forEach(function (field, index) {
+                if (errorMessages[index]) {
+                    field.addClass('is-invalid');
+                    field.next('.invalid-feedback').text(errorMessages[index]);
+                }
+            });
+            return;
+        }
+
+        modal.modal('hide');
+        let date = modal.find('#voucherDate').val();
+        let activity = modal.find('#voucherActivity').val();
+        let payee = modal.find('#voucherPayee').val();
+        let details = modal.find('#voucherDetails').val();
+        let bank = modal.find('#voucherBank').val();
+        let transRef = modal.find('#voucherTransRef').val();
+        let withholding = modal.find('#withholding').val();
+        let vat = modal.find('#vat').val();
+        let profFees = modal.find('#profFees').val();
+        let voucherTableData = createDataArray();
+        let amountBeforeTax = localStorage.getItem("totalBeforeTax");
+        let totalPayable = localStorage.getItem("totalPayable");
+        let cropId = $("#plantedCropId").val();
+
+        let myObject = {
+            plantedCropId: cropId,
+            date: date,
+            activity: activity,
+            payee: payee,
+            details: details,
+            bank: bank,
+            transRef: transRef,
+            withholding: withholding,
+            vat: vat,
+            profFees: profFees,
+            amountBeforeTax: amountBeforeTax,
+            totalPayable: totalPayable,
+            voucherTableData: voucherTableData
+        };
+
+        let jsonData = JSON.stringify(myObject);
+
+        console.log(myObject)
+
+        $.ajax({
+            url: "/finance/voucher/add",
+            method: "POST",
+            data: jsonData,
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                console.log("Data successfully sent to the server!");
+                console.log(response);
+                if (response.response === 'Data saved successfully.') {
+                    Swal.fire({
+                        title: 'success',
+                        text: response.response,
+                        icon: 'success',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'error',
+                        text: response.response,
+                        icon: 'error',
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'error',
+                    text: error.response,
+                    icon: 'error',
+                });
+                console.error("Error sending data to the server:", error);
+            },
+        });
+
+    }
+
+    function addReceipt(event) {
+        event.preventDefault();
+        let modal = $('#receipts');
+        let date = modal.find('#date').val();
+        let receivedFrom = modal.find('#payee').val();
+        let details = modal.find('#details').val();
+        let bank = modal.find('#bank').val();
+        let transRef = modal.find('#transRef').val();
+        let receiptTableRow = createReceiptRow();
+
+        let myObject = {
+            date: date,
+            receivedFrom: receivedFrom,
+            details: details,
+            bank: bank,
+            transRef: transRef,
+            receiptTableRowList: receiptTableRow
+        };
+        console.log(myObject);
+
+        let jsonData = JSON.stringify(myObject);
+
+        let isValid = validateForm();
+        if (isValid) {
+            console.log("valid");
+        } else {
+            return;
+        }
+
+        modal.modal('hide');
+
+        console.log(jsonData)
+
+        /*$.ajax({
+            url: "/finance/receipt/add",
+            method: "POST",
+            data: jsonData,
+            contentType: "application/json",
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+                if (response.response === 'Data saved successfully.') {
+                    Swal.fire({
+                        title: 'success',
+                        text: response.response,
+                        icon: 'success',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'error',
+                        text: response.response,
+                        icon: 'error',
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                Swal.fire({
+                    title: 'error',
+                    text: error.response,
+                    icon: 'error',
+                });
+                console.error("Error sending data to the server:", error);
+            },
+        });*/
+
+    }
+</script>
+
+<script>
+    let selectActivitySelect = document.getElementById("activityType");
+
+    function changeForm() {
+        let activityType = selectActivitySelect.value;
+        if (activityType === "Expense") {
+            $("#vouchers").removeClass("d-none");
+            $("#receipts").addClass("d-none");
+            $("#others").addClass("d-none");
+        } else if (activityType === "Income") {
+            $("#vouchers").addClass("d-none");
+            $("#others").addClass("d-none");
+            $("#receipts").removeClass("d-none");
+        } else {
+            $("#vouchers").addClass("d-none");
+            $("#receipts").addClass("d-none");
+            $("#others").removeClass("d-none");
+        }
+    }
+
+    selectActivitySelect.addEventListener("change", changeForm);
+
+    changeForm(); // Run initially to set the correct form visibility
+
+</script>
+
+<script !src="">
+
+    document.addEventListener('click', function (e) {
+        // Check if the clicked element is the "View Analytics" button
+        if (e.target && e.target.id === 'viewexamdetails') {
+            // Extract the `data-id` value
+            const plantedCropId = e.target.getAttribute('data-id');
+
+            // Log or use the ID as needed
+            console.log('Planted Crop ID:', plantedCropId);
+
+            document.getElementById('plantedCropId').value = plantedCropId;
+
+            // Perform the AJAX request
+            $.ajax({
+                url: '/finance/farm-activities/get/all/' + plantedCropId,
+                contentType: 'application/json'
+            }).done(function (accountData) {
+                console.log("Details: ", accountData);
+
+                if (!Array.isArray(accountData)) {
+                    console.error("Unexpected response format: not an array");
+                    return;
+                }
+
+                // Initialize or clear the DataTable
+                const table = $('#activitiesTable').DataTable({
+                    destroy: true, // Reinitialize the table if it already exists
+                    order: [],
+                    data: accountData, // Pass the response data here
+                    columns: [
+                        { data: 'ref', title: '#' }, // Assuming `ref` is the ID
+                        { data: 'account.account', title: 'Activity' }, // Adjust based on your JSON structure
+                        { data: 'description', title: 'Description' },
+                        {
+                            data: 'accounttransaction.debit',
+                            title: 'Cost',
+                            render: function(data) {
+                                return data || 0; // Display 0 if null or undefined
+                            }
+                        },
+                        {
+                            data: 'accounttransaction.credit',
+                            title: 'Income',
+                            render: function(data) {
+                                return data || 0; // Display 0 if null or undefined
+                            }
+                        },
+                        {
+                            data: null,
+                            title: 'Actions',
+                            render: function(row) {
+                                return `
+                                <a href="#" class="btn btn-warning" onclick="openEditModal('${row.id}')">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </a>
+                                <a href="#" class="btn btn-danger" onclick="deleteActivity('${row.id}')">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>`;
+                            }
+                        }
+                    ]
+                });
+
+                // Calculate total costs
+                let totalCosts = accountData.reduce((total, activity) => {
+                    if (activity.accounttransaction && activity.accounttransaction.debit) {
+                        return total + activity.accounttransaction.debit;
+                    }
+                    return total; // Skip if no debit value
+                }, 0);
+
+                let totalIncome = accountData.reduce((total, activity) => {
+                    if (activity.accounttransaction && activity.accounttransaction.credit) {
+                        return total + activity.accounttransaction.credit;
+                    }
+                    return total; // Skip if no debit value
+                }, 0);
+
+                $('#totalCosts').text(totalCosts.toLocaleString());
+                $('#totalIncome').text(totalIncome.toLocaleString());
+
+                let currentMonth = new Date().getMonth() + 1; // Months are 0-indexed, so add 1
+                let currentYear = new Date().getFullYear();
+
+                let totalIncomeThis = accountData.reduce((total, activity) => {
+                    if (activity.accounttransaction && activity.accounttransaction.credit) {
+                        // Check if the transaction date is within the current month and year
+                        let transactionDate = new Date(activity.accounttransaction.date);
+                        if (
+                            transactionDate.getMonth() + 1 === currentMonth &&
+                            transactionDate.getFullYear() === currentYear
+                        ) {
+                            return total + activity.accounttransaction.credit;
+                        }
+                    }
+                    return total; // Skip if not this month's transaction
+                }, 0);
+
+                let totalCostsThis = accountData.reduce((total, activity) => {
+                    if (activity.accounttransaction && activity.accounttransaction.debit) {
+                        // Check if the transaction date is within the current month and year
+                        let transactionDate = new Date(activity.accounttransaction.date);
+                        if (
+                            transactionDate.getMonth() + 1 === currentMonth &&
+                            transactionDate.getFullYear() === currentYear
+                        ) {
+                            return total + activity.accounttransaction.debit;
+                        }
+                    }
+                    return total; // Skip if not this month's transaction
+                }, 0);
+
+                $('#monthIncomes').text(totalIncomeThis.toLocaleString());
+                $('#monthCosts').text(totalCostsThis.toLocaleString());
+
+                let totalIncomeYear = accountData.reduce((total, activity) => {
+                    if (activity.accounttransaction && activity.accounttransaction.credit) {
+                        // Check if the transaction date is within the current month and year
+                        let transactionDate = new Date(activity.accounttransaction.date);
+                        if (
+                            transactionDate.getFullYear() === currentYear
+                        ) {
+                            return total + activity.accounttransaction.credit;
+                        }
+                    }
+                    return total; // Skip if not this month's transaction
+                }, 0);
+
+                let totalCostsYear = accountData.reduce((total, activity) => {
+                    if (activity.accounttransaction && activity.accounttransaction.debit) {
+                        // Check if the transaction date is within the current month and year
+                        let transactionDate = new Date(activity.accounttransaction.date);
+                        if (
+                            transactionDate.getFullYear() === currentYear
+                        ) {
+                            return total + activity.accounttransaction.debit;
+                        }
+                    }
+                    return total; // Skip if not this month's transaction
+                }, 0);
+
+                $('#annualIncomes').text(totalIncomeYear.toLocaleString());
+                $('#annualExpenses').text(totalCostsYear.toLocaleString());
+
+                let currentChart = null;
+                $.ajax({
+                    url: "/crop/api/getMonthlyIncome/" + plantedCropId,
+                    method: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+                        if (currentChart) {
+                            currentChart.destroy();
+                        }
+
+                        const months = data.map(entry => entry.month);
+                        const credits = data.map(entry => entry.credit);
+
+                        currentChart = new Chart(ctx2, {
+                            type: "line",
+                            data: {
+                                labels: months,
+                                datasets: [{
+                                    label: "Income",
+                                    tension: 0,
+                                    borderWidth: 0,
+                                    pointRadius: 5,
+                                    pointBackgroundColor: "rgba(255, 255, 255, .8)",
+                                    pointBorderColor: "transparent",
+                                    borderColor: "rgba(255, 255, 255, .8)",
+                                    borderColor: "rgba(255, 255, 255, .8)",
+                                    borderWidth: 4,
+                                    backgroundColor: "transparent",
+                                    fill: true,
+                                    data: credits,
+                                    maxBarThickness: 6
+
+                                }],
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        display: false,
+                                    }
+                                },
+                                interaction: {
+                                    intersect: false,
+                                    mode: 'index',
+                                },
+                                scales: {
+                                    y: {
+                                        grid: {
+                                            drawBorder: false,
+                                            display: true,
+                                            drawOnChartArea: true,
+                                            drawTicks: false,
+                                            borderDash: [5, 5],
+                                            color: 'rgba(255, 255, 255, .2)'
+                                        },
+                                        ticks: {
+                                            display: true,
+                                            color: '#f8f9fa',
+                                            padding: 10,
+                                            font: {
+                                                size: 14,
+                                                weight: 300,
+                                                family: "Roboto",
+                                                style: 'normal',
+                                                lineHeight: 2
+                                            },
+                                        }
+                                    },
+                                    x: {
+                                        grid: {
+                                            drawBorder: false,
+                                            display: false,
+                                            drawOnChartArea: false,
+                                            drawTicks: false,
+                                            borderDash: [5, 5]
+                                        },
+                                        ticks: {
+                                            display: true,
+                                            color: '#f8f9fa',
+                                            padding: 10,
+                                            font: {
+                                                size: 14,
+                                                weight: 300,
+                                                family: "Roboto",
+                                                style: 'normal',
+                                                lineHeight: 2
+                                            },
+                                        }
+                                    },
+                                },
+                            },
+                        });
+                    },
+                    error: function (error) {
+                        console.error("Error fetching data:", error);
+                    }
+                });
+
+                $.ajax({
+                    url: "/crop/api/getMonthlyExpenses/" + plantedCropId,
+                    method: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        const months = data.map(entry => entry.month);
+                        const credits = data.map(entry => entry.credit);
+                        var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
+
+                        if (currentChart) {
+                            currentChart.destroy();
+                        }
+
+                        currentChart = new Chart(ctx3, {
+                            type: "line",
+                            data: {
+                                labels: months,
+                                datasets: [{
+                                    label: "Expenses",
+                                    tension: 0,
+                                    borderWidth: 0,
+                                    pointRadius: 5,
+                                    pointBackgroundColor: "rgba(255, 255, 255, .8)",
+                                    pointBorderColor: "transparent",
+                                    borderColor: "rgba(255, 255, 255, .8)",
+                                    borderWidth: 4,
+                                    backgroundColor: "transparent",
+                                    fill: true,
+                                    data: credits,
+                                    maxBarThickness: 6
+
+                                }],
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        display: false,
+                                    }
+                                },
+                                interaction: {
+                                    intersect: false,
+                                    mode: 'index',
+                                },
+                                scales: {
+                                    y: {
+                                        grid: {
+                                            drawBorder: false,
+                                            display: true,
+                                            drawOnChartArea: true,
+                                            drawTicks: false,
+                                            borderDash: [5, 5],
+                                            color: 'rgba(255, 255, 255, .2)'
+                                        },
+                                        ticks: {
+                                            display: true,
+                                            padding: 10,
+                                            color: '#f8f9fa',
+                                            font: {
+                                                size: 14,
+                                                weight: 300,
+                                                family: "Roboto",
+                                                style: 'normal',
+                                                lineHeight: 2
+                                            },
+                                        }
+                                    },
+                                    x: {
+                                        grid: {
+                                            drawBorder: false,
+                                            display: false,
+                                            drawOnChartArea: false,
+                                            drawTicks: false,
+                                            borderDash: [5, 5]
+                                        },
+                                        ticks: {
+                                            display: true,
+                                            color: '#f8f9fa',
+                                            padding: 10,
+                                            font: {
+                                                size: 14,
+                                                weight: 300,
+                                                family: "Roboto",
+                                                style: 'normal',
+                                                lineHeight: 2
+                                            },
+                                        }
+                                    },
+                                },
+                            },
+                        });
+                    },
+                    error: function (error) {
+                        console.error("Error fetching data:", error);
+                    }
+                });
+
+            }).fail(function (response) {
+                console.log("Failed to load data: ", response);
+            });
+        }
+    });
+
+    $(document).ready(function() {
+        let dt = $('#activitiesTable').DataTable({
+            order: []
+        });
+
+        $('input[name="withholding"], input[name="vat"], input[name="profFees"]').on("input", function () {
+            let withholding;
+            let vat;
+            let profFees;
+
+            withholding = parseFloat($('input[name="withholding"]').val());
+            vat = parseFloat($('input[name="vat"]').val());
+            profFees = parseFloat($('input[name="profFees"]').val());
+
+            let amountBeforeTax = localStorage.getItem("totalBeforeTax");
+            let payableAmount = amountBeforeTax - (((withholding / 100) * amountBeforeTax) + ((vat / 100) * amountBeforeTax) + ((profFees / 100) * amountBeforeTax));
+            $('#voucherTotalPayable').text("Total Payable: " + payableAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+            $('#editTotalPayable').text("Total Payable: " + payableAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+
+            localStorage.setItem("totalPayable", payableAmount);
+        });
+
+        $(".quantity-input, .rate-input").on("input", function() {
+            // Get the current row
+            var row = $(this).closest("tr");
+            console.log(row)
+            updateAmount(row);
+            updateTotalAmount();
+        });
+    });
+
+    function updateAmount(row) {
+        // Get the quantity and rate values from the inputs
+        var quantity = parseFloat(row.find(".quantity-input").val());
+        var rate = parseFloat(row.find(".rate-input").val());
+
+        // Calculate the amount and update the amount input
+        var amount = quantity * rate;
+        row.find(".amount-input").val(amount.toFixed(2));
+        console.log("amount: " + amount)
+        // Return the calculated amount for summing up
+        return amount;
+    }
+
+    function updateTotalAmount() {
+        var totalAmount = 0;
+        // Loop through each row and calculate the amount
+        $("#vouchersTable tbody tr").each(function() {
+            totalAmount += updateAmount($(this));
+        });
+
+        // Update the total amount display element
+        localStorage.setItem("totalBeforeTax", totalAmount.toFixed(2));
+        $("#beforeTax").text("Before tax: " + totalAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+
+        let withholding;
+        let vat;
+        let profFees;
+
+        withholding = parseFloat($('input[name="withholding"]').val());
+        vat = parseFloat($('input[name="vat"]').val());
+        profFees = parseFloat($('input[name="profFees"]').val());
+
+        let amountBeforeTax = localStorage.getItem("totalBeforeTax");
+        let payableAmount = amountBeforeTax - (((withholding / 100) * amountBeforeTax) + ((vat / 100) * amountBeforeTax) + ((profFees / 100) * amountBeforeTax));
+        $('#voucherTotalPayable').text("Total Payable: " + payableAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+        $('#editTotalPayable').text("Total Payable: " + payableAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+
+        localStorage.setItem("totalPayable", payableAmount);
+    }
+
+    async function addRow(modal) {
+        var tableBody = $("#" + modal + " tbody");
+
+        // Create a new row and append it to the table body
+        var newRow = $("<tr>");
+        newRow.append("<td>\n" +
+            "                                            <div class=\"input-group input-group-outline\">\n" +
+            "                                                <input required type=\"text\" name=\"particulars\" class=\"form-control\">\n" +
+            "                                            </div>\n" +
+            "                                        </td>");
+        newRow.append("<td>\n" +
+            "                                            <div class=\"input-group input-group-outline\">\n" +
+            "                                                <input required type=\"number\" value='1' name=\"quantity\" class=\"form-control quantity-input\">\n" +
+            "                                            </div>\n" +
+            "                                        </td>");
+        newRow.append("<td>\n" +
+            "                                            <div class=\"input-group input-group-outline\">\n" +
+            "                                                <input required type=\"number\" value='0' name=\"rate\" class=\"form-control rate-input\">\n" +
+            "                                            </div>\n" +
+            "                                        </td>");
+        newRow.append("<td>\n" +
+            "                                            <div class=\"input-group input-group-outline\">\n" +
+            "                                                <input required type=\"number\" value='0.00' name=\"amount\" class=\"form-control amount-input\" readonly>\n" +
+            "                                            </div>\n" +
+            "                                        </td>");
+
+        newRow.append('    <td>\n' +
+            '        <a class="btn btn-danger" onclick="deleteThisRow(this)"> <i class="fa fa-trash" aria-hidden="true"></i> </a>\n' +
+            '    </td>')
+
+        tableBody.append(newRow);
+
+        newRow.find(".quantity-input, .rate-input").on("input", function () {
+            var row = $(this).closest("tr");
+            updateAmount(row);
+            updateTotalAmount();
+        });
+    }
+
+    function deleteThisRow(button) {
+        var row = button.closest("tr");
+
+        row.remove();
+    }
+
+</script>
+
+
+<script>
+    let varietyChoices  =  new Choices(document.getElementById('cropVariety'), {
+        searchEnabled: true,
+        duplicateItemsAllowed: false,
+        renderChoiceLimit: 6,
+    });
+
+    varietyChoices.passedElement.element.addEventListener('showDropdown',
+        function() {
+            varietyChoices.clearStore()
+            varietyChoices.setChoices(async () => {
+                try {
+                    let cropVarieties = await getCropVarieties();
+                    console.log("varieties: " + cropVarieties.name)
+                    return cropVarieties.map(item => {
+                        return {
+                            value: item.id,   // Assuming 'id' is the key for the value
+                            label: item.name // Assuming 'itemName' is the key for the label
+                        };
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+            });
+        },
+        false,
+    );
+
+    let seasonChoices  =  new Choices(document.getElementById('season'), {
+        searchEnabled: true,
+        duplicateItemsAllowed: false,
+        renderChoiceLimit: 6,
+    });
+
+    seasonChoices.passedElement.element.addEventListener('showDropdown',
+        function() {
+            seasonChoices.clearStore()
+            seasonChoices.setChoices(async () => {
+                try {
+                    let seasons = await getSeasons();
+                    console.log("seasons: " + seasons)
+                    return seasons.map(item => {
+                        return {
+                            value: item.id,   // Assuming 'id' is the key for the value
+                            label: item.name // Assuming 'itemName' is the key for the label
+                        };
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+            });
+        },
+        false,
+    );
+
+    // Show/hide form sections based on planting method
+    const plantingMethodSelect = document.getElementById('plantingMethod');
+    const bedSection = document.getElementById('bedSection');
+    const rowSection = document.getElementById('rowSection');
+    const individualSection = document.getElementById('individualSection');
+
+    function updateFormSections() {
+        const plantingMethod = plantingMethodSelect.value;
+
+        bedSection.classList.add('d-none');
+        rowSection.classList.add('d-none');
+        individualSection.classList.add('d-none');
+
+        if (plantingMethod === 'bed') {
+            bedSection.classList.remove('d-none');
+        } else if (plantingMethod === 'row') {
+            rowSection.classList.remove('d-none');
+        } else if (plantingMethod === 'individual') {
+            individualSection.classList.remove('d-none');
+        }
+    }
+
+    plantingMethodSelect.addEventListener('change', updateFormSections);
+
+    // Initialize form section visibility
+    updateFormSections();
+
+
+    document.getElementById('plantingForm').addEventListener('submit', async function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Get the form data
+        const formData = new FormData(this);
+
+        // Convert formData to a plain object
+        const plantingData = Object.fromEntries(formData.entries());
+        console.log("crop: " + plantingData)
+        try {
+            const response = await fetch('/crop/planting', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(plantingData)
+            });
+
+            if (response.ok) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Your planting information has been submitted successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    // Optionally, reload the page after the user clicks "OK"
+                    //location.reload();
+                });
+            } else {
+                throw new Error("Submission failed.");
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Error!',
+                text: error.message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+
+</script>
 <script src="../assets/js/core/popper.min.js"></script>
 <script src="../assets/js/core/bootstrap.min.js"></script>
 <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
 <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
 <script src="../assets/js/plugins/chartjs.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            url: "/api/getIncomeAndExpenses",
-            method: "GET",
-            dataType: "json",
-            success: function (data) {
-                console.log(data)
-                const groupedData = {};
-
-                // Group data by month and combine tithes and offerings
-                data.forEach(entry => {
-                    const month = entry.monthlyIncome ? entry.monthlyIncome.month : entry.monthlyOffering.month;
-
-                    if (!groupedData[month]) {
-                        groupedData[month] = {tithe: 0, offering: 0};
-                    }
-
-                    if (entry.monthlyIncome) {
-                        groupedData[month].tithe = parseFloat(entry.monthlyIncome.credit);
-                    }
-
-                    if (entry.monthlyOffering) {
-                        groupedData[month].offering = parseFloat(entry.monthlyOffering.credit);
-                    }
-                });
-
-                const months = Object.keys(groupedData);
-                const tithes = months.map(month => groupedData[month].tithe);
-                const offerings = months.map(month => groupedData[month].offering);
-
-                var ctx = document.getElementById("chart-bars").getContext("2d");
-
-                new Chart(ctx, {
-                    type: "bar",
-                    data: {
-                        labels: months,
-                        datasets: [
-                            {
-                                label: "Tithe",
-                                tension: 0.4,
-                                borderWidth: 0,
-                                borderRadius: 4,
-                                borderSkipped: false,
-                                backgroundColor: "rgba(255, 255, 255, .8)",
-                                data: tithes,
-                                maxBarThickness: 6,
-                            },
-                            {
-                                label: "Offering",
-                                tension: 0.4,
-                                borderWidth: 0,
-                                borderRadius: 4,
-                                borderSkipped: false,
-                                backgroundColor: "rgba(54, 162, 235, 1)",
-                                data: offerings,
-                                maxBarThickness: 6,
-                            },
-                        ],
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false,
-                            }
-                        },
-                        interaction: {
-                            intersect: false,
-                            mode: 'index',
-                        },
-                        scales: {
-                            y: {
-                                grid: {
-                                    drawBorder: false,
-                                    display: true,
-                                    drawOnChartArea: true,
-                                    drawTicks: false,
-                                    borderDash: [5, 5],
-                                    color: 'rgba(255, 255, 255, .2)'
-                                },
-                                ticks: {
-                                    display: true,
-                                    color: '#f8f9fa',
-                                    padding: 10,
-                                    font: {
-                                        size: 14,
-                                        weight: 300,
-                                        family: "Roboto",
-                                        style: 'normal',
-                                        lineHeight: 2
-                                    },
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    drawBorder: false,
-                                    display: false,
-                                    drawOnChartArea: false,
-                                    drawTicks: false,
-                                    borderDash: [5, 5]
-                                },
-                                ticks: {
-                                    display: true,
-                                    color: '#f8f9fa',
-                                    padding: 10,
-                                    font: {
-                                        size: 14,
-                                        weight: 300,
-                                        family: "Roboto",
-                                        style: 'normal',
-                                        lineHeight: 2
-                                    },
-                                }
-                            },
-                        },
-                    },
-                });
-            },
-            error: function (error) {
-                console.error("Error fetching data:", error);
-            },
-        });
-
-        $.ajax({
-            url: "/api/getMonthlyIncome",
-            method: "GET",
-            dataType: "json",
-            success: function (data) {
-                var ctx2 = document.getElementById("chart-line").getContext("2d");
-
-
-                const months = data.map(entry => entry.month);
-                const credits = data.map(entry => entry.credit);
-
-                new Chart(ctx2, {
-                    type: "line",
-                    data: {
-                        labels: months,
-                        datasets: [{
-                            label: "Income",
-                            tension: 0,
-                            borderWidth: 0,
-                            pointRadius: 5,
-                            pointBackgroundColor: "rgba(255, 255, 255, .8)",
-                            pointBorderColor: "transparent",
-                            borderColor: "rgba(255, 255, 255, .8)",
-                            borderColor: "rgba(255, 255, 255, .8)",
-                            borderWidth: 4,
-                            backgroundColor: "transparent",
-                            fill: true,
-                            data: credits,
-                            maxBarThickness: 6
-
-                        }],
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false,
-                            }
-                        },
-                        interaction: {
-                            intersect: false,
-                            mode: 'index',
-                        },
-                        scales: {
-                            y: {
-                                grid: {
-                                    drawBorder: false,
-                                    display: true,
-                                    drawOnChartArea: true,
-                                    drawTicks: false,
-                                    borderDash: [5, 5],
-                                    color: 'rgba(255, 255, 255, .2)'
-                                },
-                                ticks: {
-                                    display: true,
-                                    color: '#f8f9fa',
-                                    padding: 10,
-                                    font: {
-                                        size: 14,
-                                        weight: 300,
-                                        family: "Roboto",
-                                        style: 'normal',
-                                        lineHeight: 2
-                                    },
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    drawBorder: false,
-                                    display: false,
-                                    drawOnChartArea: false,
-                                    drawTicks: false,
-                                    borderDash: [5, 5]
-                                },
-                                ticks: {
-                                    display: true,
-                                    color: '#f8f9fa',
-                                    padding: 10,
-                                    font: {
-                                        size: 14,
-                                        weight: 300,
-                                        family: "Roboto",
-                                        style: 'normal',
-                                        lineHeight: 2
-                                    },
-                                }
-                            },
-                        },
-                    },
-                });
-            },
-            error: function (error) {
-                console.error("Error fetching data:", error);
-            }
-        });
-
-        $.ajax({
-            url: "/api/getMonthlyExpenses",
-            method: "GET",
-            dataType: "json",
-            success: function (data) {
-                const months = data.map(entry => entry.month);
-                const credits = data.map(entry => entry.credit);
-                var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
-
-                new Chart(ctx3, {
-                    type: "line",
-                    data: {
-                        labels: months,
-                        datasets: [{
-                            label: "Expenses",
-                            tension: 0,
-                            borderWidth: 0,
-                            pointRadius: 5,
-                            pointBackgroundColor: "rgba(255, 255, 255, .8)",
-                            pointBorderColor: "transparent",
-                            borderColor: "rgba(255, 255, 255, .8)",
-                            borderWidth: 4,
-                            backgroundColor: "transparent",
-                            fill: true,
-                            data: credits,
-                            maxBarThickness: 6
-
-                        }],
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false,
-                            }
-                        },
-                        interaction: {
-                            intersect: false,
-                            mode: 'index',
-                        },
-                        scales: {
-                            y: {
-                                grid: {
-                                    drawBorder: false,
-                                    display: true,
-                                    drawOnChartArea: true,
-                                    drawTicks: false,
-                                    borderDash: [5, 5],
-                                    color: 'rgba(255, 255, 255, .2)'
-                                },
-                                ticks: {
-                                    display: true,
-                                    padding: 10,
-                                    color: '#f8f9fa',
-                                    font: {
-                                        size: 14,
-                                        weight: 300,
-                                        family: "Roboto",
-                                        style: 'normal',
-                                        lineHeight: 2
-                                    },
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    drawBorder: false,
-                                    display: false,
-                                    drawOnChartArea: false,
-                                    drawTicks: false,
-                                    borderDash: [5, 5]
-                                },
-                                ticks: {
-                                    display: true,
-                                    color: '#f8f9fa',
-                                    padding: 10,
-                                    font: {
-                                        size: 14,
-                                        weight: 300,
-                                        family: "Roboto",
-                                        style: 'normal',
-                                        lineHeight: 2
-                                    },
-                                }
-                            },
-                        },
-                    },
-                });
-            },
-            error: function (error) {
-                console.error("Error fetching data:", error);
-            }
-        });
-    });
-</script>
 <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {

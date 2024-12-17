@@ -61,6 +61,12 @@ public class PendingTransaction {
     @Column(name = "Status", length = 500)
     private String status;
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "farm_activity")
+    private FarmActivity farmActivity;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "farm")

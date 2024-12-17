@@ -21,9 +21,9 @@ public class PlantedCrop {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "crop")
+    @JoinColumn(name = "crop_variety")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Crop crop;
+    private CropVariety variety;
     private Long plantedQuantity;
     private Long harvestedQuantity;
     private LocalDate plantedDate;

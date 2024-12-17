@@ -2,9 +2,12 @@ package com.rickiey_innovates.juditonspringapp.controllers;
 
 import com.google.gson.JsonObject;
 import com.rickiey_innovates.juditonspringapp.DbConnector;
+import com.rickiey_innovates.juditonspringapp.crop.models.PlantedCrop;
+import com.rickiey_innovates.juditonspringapp.crop.repositories.PlantedCropRepository;
 import com.rickiey_innovates.juditonspringapp.models.*;
 import com.rickiey_innovates.juditonspringapp.repositories.*;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +37,10 @@ public class FinanceController {
     private final ReferenceRepository referenceRepository;
 
     private final UserRepository userRepository;
+    @Autowired
+    private FarmActivityRepository farmActivityRepository;
+    @Autowired
+    private PlantedCropRepository plantedCropRepository;
 
     public FinanceController(ActivityRepository activityRepository,
                              ActivitygroupRepository activitygroupRepository,
@@ -725,6 +732,7 @@ public class FinanceController {
         try {
             System.out.println("Received data: " + request.toString());
 
+            Long plantedCropId = request.getPlantedCropId();
             LocalDate date = request.getDate();
             int activity = request.getActivity();
             String payee = request.getPayee();
@@ -740,6 +748,7 @@ public class FinanceController {
             System.out.println(voucherTableData.toString());
 
             int pv = referenceRepository.findByChurch(farm()).getPv() + 1;
+            int ref = referenceRepository.findByChurch(farm()).getRef() + 1;
 
             Paymentvoucher paymentvoucherToProvider = new Paymentvoucher();
             paymentvoucherToProvider.setVoucher("PV" + pv);
@@ -762,6 +771,15 @@ public class FinanceController {
             voucherSignatoryRepository.save(voucherSignatory);
 
             // changing to pending transaction
+            PlantedCrop plantedCrop = plantedCropRepository.findById(plantedCropId).orElseThrow(EntityNotFoundException::new);
+            Activity activity1 = activityRepository.findById(activity).orElseThrow(EntityNotFoundException::new);
+            FarmActivity farmActivity = new FarmActivity();
+            farmActivity.setFarm(farm());
+            farmActivity.setPlantedCrop(plantedCrop);
+            farmActivity.setDescription(details);
+            farmActivity.setRef("TR" + ref);
+            farmActivity.setAccount(activity1);
+            FarmActivity savedActivity = farmActivityRepository.save(farmActivity);
 
             PendingTransaction pendingTransaction = new PendingTransaction();
 
@@ -779,6 +797,7 @@ public class FinanceController {
             pendingTransaction.setCredit(0.0);
             pendingTransaction.setStatus("Pending");
             pendingTransaction.setFarm(farm());
+            pendingTransaction.setFarmActivity(savedActivity);
 
             pendingTransactionRepository.save(pendingTransaction);
 
@@ -811,6 +830,7 @@ public class FinanceController {
             }
 
             referenceRepository.updatePvByChurch(pv, farm());
+            referenceRepository.updateRefByFarm(ref, farm());
             pv++;
 
             if (withholding > 0) {
@@ -1380,7 +1400,12 @@ public class FinanceController {
                     accounttransaction.setStatus("Approved");
                     accounttransaction.setFarm(pendingTransaction.getFarm());
 
-                    accounttransactionRepository.save(accounttransaction);
+                    FarmActivity farmActivity = pendingTransaction.getFarmActivity();
+                    accounttransaction.setFarmActivity(farmActivity);
+
+                    Accounttransaction savedTransaction = accounttransactionRepository.save(accounttransaction);
+                    farmActivity.setAccounttransaction(savedTransaction);
+                    farmActivityRepository.save(farmActivity);
 
                     pendingTransactionRepository.delete(pendingTransaction);
 
@@ -1858,12 +1883,22 @@ public class FinanceController {
             redirectAttributes.addFlashAttribute("message", "Data updated successfully.");
             response.addProperty("response", "Data updated successfully.");
         } catch (Exception e) {
-            e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", e.getLocalizedMessage());
             response.addProperty("response", e.getLocalizedMessage());
         }
         return response.toString();
     }
 
+    @GetMapping("/farm-activities/get/all")
+    @ResponseBody
+    private ResponseEntity<?> farmActivities() {
+        return ResponseEntity.ok().body(farmActivityRepository.findAll());
+    }
+
+    @GetMapping("/farm-activities/get/all/{plantedCrop}")
+    @ResponseBody
+    private ResponseEntity<?> farmActivities(@PathVariable Long plantedCrop) {
+        return ResponseEntity.ok().body(farmActivityRepository.findByPlantedCrop_Id(plantedCrop));
+    }
 
 }

@@ -4409,3 +4409,46 @@ function login() {
 
 }
 */
+
+
+function getCropVarieties() {
+    return new Promise(function (resolve) {
+        $.ajax({
+            contentType: "application/json",
+            url: "/crop/varieties/get/all",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                resolve(data);
+            }
+        });
+    });
+}
+
+function getAct() {
+    return new Promise(function (resolve) {
+        $.ajax({
+            contentType: "application/json",
+            url: "/finance/farm-activities/get/all",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                resolve(data);
+            }
+        });
+    });
+}
+
+function getSeasons() {
+    return new Promise(function (resolve) {
+        $.ajax({
+            contentType: "application/json",
+            url: "/crop/seasons/get/all",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                resolve(data);
+            }
+        });
+    });
+}

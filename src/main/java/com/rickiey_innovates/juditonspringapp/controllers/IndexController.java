@@ -360,14 +360,13 @@ public class IndexController implements ErrorController {
         model.addAttribute("page", "dashboard");
         model.addAttribute("main", "farm");
         model.addAttribute("requestURI", request.getRequestURI());
-        return "finance/dashboard";
+        return "crop/crops";
     }
 
     @GetMapping({"/finance"})
     public String index(Model model, HttpServletRequest request) {
         User user = userRepository.findById(userId()).get();
-        try {
-            Connection connection = DbConnector.getConnection();
+        try (Connection connection = DbConnector.getConnection()) {
             String sql = "SELECT (SELECT count(id)\n" +
                     "        FROM users\n" +
                     "        where farm = "+farm().getId()+")          AS memberTotal,\n" +

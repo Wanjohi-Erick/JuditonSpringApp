@@ -1,20 +1,30 @@
 package com.rickiey_innovates.juditonspringapp.crop.controller;
 
+import com.rickiey_innovates.juditonspringapp.DbConnector;
 import com.rickiey_innovates.juditonspringapp.controllers.LoginController;
 import com.rickiey_innovates.juditonspringapp.crop.dtos.CropTypeDto;
 import com.rickiey_innovates.juditonspringapp.crop.dtos.CropVarietyDTO;
+import com.rickiey_innovates.juditonspringapp.crop.dtos.PlantingForm;
 import com.rickiey_innovates.juditonspringapp.crop.models.*;
 import com.rickiey_innovates.juditonspringapp.crop.repositories.*;
-import com.rickiey_innovates.juditonspringapp.models.Farm;
-import com.rickiey_innovates.juditonspringapp.models.User;
+import com.rickiey_innovates.juditonspringapp.models.*;
+import com.rickiey_innovates.juditonspringapp.repositories.ActivityRepository;
+import com.rickiey_innovates.juditonspringapp.repositories.BankaccountRepository;
+import com.rickiey_innovates.juditonspringapp.repositories.FarmActivityRepository;
 import com.rickiey_innovates.juditonspringapp.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -27,19 +37,29 @@ public class CropController {
     private final CropVarietyRepository cropVarietyRepository;
     private final CropNameRepository cropNameRepository;
     private final SeasonRepository seasonRepository;
+    private final PlantedCropRepository plantedCropRepository;
+    private final FarmActivityRepository farmActivityRepository;
+    private final ActivityRepository activityRepository;
+    private final BankaccountRepository bankaccountRepository;
 
     public CropController(UserRepository userRepository,
                           CropRepository cropRepository,
                           CropTypeRepository cropTypeRepository,
                           CropVarietyRepository cropVarietyRepository,
                           CropNameRepository cropNameRepository,
-                          SeasonRepository seasonRepository) {
+                          SeasonRepository seasonRepository,
+                          PlantedCropRepository plantedCropRepository,
+                          FarmActivityRepository farmActivityRepository, ActivityRepository activityRepository, BankaccountRepository bankaccountRepository) {
         this.userRepository = userRepository;
         this.cropRepository = cropRepository;
         this.cropTypeRepository = cropTypeRepository;
         this.cropVarietyRepository = cropVarietyRepository;
         this.cropNameRepository = cropNameRepository;
         this.seasonRepository = seasonRepository;
+        this.plantedCropRepository = plantedCropRepository;
+        this.farmActivityRepository = farmActivityRepository;
+        this.activityRepository = activityRepository;
+        this.bankaccountRepository = bankaccountRepository;
     }
 
     private Long userId() {
@@ -56,8 +76,8 @@ public class CropController {
     public String types(Model model, HttpServletRequest request) {
 
         User user = userRepository.findById(userId()).get();
-        List<CropType> cropTypes = cropTypeRepository.findAll();
-        List<CropName> cropNames = cropNameRepository.findAll();
+        List<CropType> cropTypes = cropTypeRepository.findByFarm(farm());
+        List<CropName> cropNames = cropNameRepository.findByFarm(farm());
         model.addAttribute("user", user);
         model.addAttribute("page", "List of crops");
         model.addAttribute("main", "Crops");
@@ -151,8 +171,8 @@ public class CropController {
     public String varieties(Model model, HttpServletRequest request) {
 
         User user = userRepository.findById(userId()).get();
-        List<CropName> cropNames = cropNameRepository.findAll();
-        List<CropVariety> cropVarieties = cropVarietyRepository.findAll();
+        List<CropName> cropNames = cropNameRepository.findByFarm(farm());
+        List<CropVariety> cropVarieties = cropVarietyRepository.findByFarm(farm());
         model.addAttribute("user", user);
         model.addAttribute("page", "List of crops");
         model.addAttribute("main", "Crops");
@@ -175,8 +195,6 @@ public class CropController {
         try {
             CropVariety cropVariety = new CropVariety();
             cropVariety.setName(cropVarietyDTO.getName());
-            CropName crop = cropNameRepository.findById(cropVarietyDTO.getCropName()).orElseThrow(EntityNotFoundException::new);
-            cropVariety.setCropName(crop);
             cropVariety.setFarm(farm());
             cropVarietyRepository.save(cropVariety);
             message = "Crop variety added successfully";
@@ -204,7 +222,6 @@ public class CropController {
         try {
             CropVariety existingCropVariety = cropVarietyRepository.findById(updatedCropVariety.getId()).orElse(null);
             if (existingCropVariety != null) {
-                existingCropVariety.setCropName(updatedCropVariety.getCropName());
                 existingCropVariety.setName(updatedCropVariety.getName());
 
                 cropVarietyRepository.save(existingCropVariety);
@@ -247,7 +264,7 @@ public class CropController {
     public String names(Model model, HttpServletRequest request) {
 
         User user = userRepository.findById(userId()).get();
-        List<CropName> cropNames = cropNameRepository.findAll();
+        List<CropName> cropNames = cropNameRepository.findByFarm(farm());
         model.addAttribute("user", user);
         model.addAttribute("page", "List of crops");
         model.addAttribute("main", "Crops");
@@ -336,11 +353,17 @@ public class CropController {
     public String crops(Model model, HttpServletRequest request) {
 
         User user = userRepository.findById(userId()).get();
-        List<Crop> crops = cropRepository.findAll();
+        List<PlantedCrop> plantedCrops = plantedCropRepository.findByFarm(farm());
+        List<FarmActivity> farmActivities = farmActivityRepository.findByFarm(farm());
+        List<Activity> activityList = activityRepository.findByChurch(farm());
+        List<Bankaccount> bankaccounts = bankaccountRepository.findByChurch(farm());
         model.addAttribute("user", user);
         model.addAttribute("page", "List of crops");
         model.addAttribute("main", "Crops");
-        model.addAttribute("crops", crops);
+        model.addAttribute("plantedCrops", plantedCrops);
+        model.addAttribute("farmActivities", farmActivities);
+        model.addAttribute("activities", activityList);
+        model.addAttribute("bankaccounts", bankaccounts);
         model.addAttribute("requestURI", request.getRequestURI());
         return "crop/crops";
     }
@@ -354,7 +377,7 @@ public class CropController {
     public String seasons(Model model, HttpServletRequest request) {
 
         User user = userRepository.findById(userId()).get();
-        List<Season> seasons = seasonRepository.findAll();
+        List<Season> seasons = seasonRepository.findByFarm(farm());
         model.addAttribute("user", user);
         model.addAttribute("page", "List of crops");
         model.addAttribute("main", "Crops");
@@ -436,5 +459,109 @@ public class CropController {
     }
 
     /** CROP NAMES SECTION **/
+
+
+    /** PLANTING SECTION**/
+
+    @PostMapping("/planting")
+    public ResponseEntity<String> submitPlantingForm(@RequestBody PlantingForm plantingForm) {
+        try {
+            System.out.println("Plant reg: " + plantingForm);
+
+            CropVariety variety = cropVarietyRepository.findById(Long.valueOf(plantingForm.getCropVariety())).orElseThrow(EntityNotFoundException::new);
+            Season season = seasonRepository.findById(plantingForm.getSeason()).orElseThrow(EntityNotFoundException::new);
+            PlantedCrop plantedCrop = new PlantedCrop();
+            plantedCrop.setFarm(farm());
+            plantedCrop.setVariety(variety);
+            plantedCrop.setPlantedDate(plantingForm.getPlantingDate());
+            plantedCrop.setSeason(season);
+            plantedCrop.setPlantedQuantity(1L);
+            plantedCropRepository.save(plantedCrop);
+
+            return ResponseEntity.ok("Planting data submitted successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    /** PLANTING SECTION**/
+
+
+
+    @GetMapping(value = "/api/getMonthlyExpenses/{plantedCropId}", produces = "application/json")
+    @ResponseBody
+    public List<MonthlyTransactions> MonthlyExpenses (@PathVariable Long plantedCropId) {
+        List<MonthlyTransactions> monthlyExpensesList = new ArrayList<>();
+        try {
+            Connection connection = DbConnector.getConnection();
+            String sql = "SELECT year,\n" +
+                    "       month,\n" +
+                    "       credit\n" +
+                    "FROM (SELECT YEAR(`Date`)                                                       AS year,\n" +
+                    "             DATE_FORMAT(`Date`, '%b')                                          AS month,\n" +
+                    "             SUM(debit)                                                         AS credit,\n" +
+                    "             ROW_NUMBER() OVER (ORDER BY YEAR(`Date`) DESC, MONTH(`Date`) DESC) AS row_num\n" +
+                    "      FROM accounttransactions a\n" +
+                    "               inner join farm_activity f on a.`transaction id` = f.`accounttransaction_transaction id`\n" +
+                    "      where a.farm = "+farm().getId()+"\n" +
+                    "        and f.planted_crop = "+plantedCropId+"\n" +
+                    "      GROUP BY YEAR(`Date`), MONTH(`Date`)\n" +
+                    "      ORDER BY YEAR(`Date`) DESC, MONTH(`Date`) DESC) AS subquery\n" +
+                    "WHERE row_num <= 6\n" +
+                    "ORDER BY year, month;";
+
+            System.out.println(sql);
+
+            ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
+            while(resultSet.next()) {
+                MonthlyTransactions monthlyExpenses = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
+                monthlyExpensesList.add(monthlyExpenses);
+            }
+
+            resultSet.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return monthlyExpensesList;
+    }
+
+    @GetMapping(value = "/api/getMonthlyIncome/{plantedCropId}", produces = "application/json")
+    @ResponseBody
+    public List<MonthlyTransactions> MonthlyIncome (@PathVariable Long plantedCropId) {
+        List<MonthlyTransactions> monthlyTransactionsList = new ArrayList<>();
+        try {
+            Connection connection = DbConnector.getConnection();
+            String sql = "SELECT year,\n" +
+                    "       month,\n" +
+                    "       credit\n" +
+                    "FROM (SELECT YEAR(`Date`)                                                       AS year,\n" +
+                    "             DATE_FORMAT(`Date`, '%b')                                          AS month,\n" +
+                    "             SUM(credit)                                                        AS credit,\n" +
+                    "             ROW_NUMBER() OVER (ORDER BY YEAR(`Date`) DESC, MONTH(`Date`) DESC) AS row_num\n" +
+                    "      FROM accounttransactions a\n" +
+                    "               inner join farm_activity f\n" +
+                    "      where a.farm = "+farm().getId()+"\n" +
+                    "        and f.planted_crop = "+plantedCropId+"\n" +
+                    "      GROUP BY YEAR(`Date`), MONTH(`Date`)\n" +
+                    "      ORDER BY YEAR(`Date`) DESC, MONTH(`Date`) DESC) AS subquery\n" +
+                    "WHERE row_num <= 6\n" +
+                    "ORDER BY year, month;";
+
+            System.out.println(sql);
+
+            ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
+            while(resultSet.next()) {
+                MonthlyTransactions monthlyExpenses = new MonthlyTransactions(resultSet.getString("year"), resultSet.getString("month"), resultSet.getString("credit"));
+                monthlyTransactionsList.add(monthlyExpenses);
+            }
+
+            resultSet.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return monthlyTransactionsList;
+    }
 
 }
