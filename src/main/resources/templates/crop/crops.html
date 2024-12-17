@@ -85,7 +85,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <h6 id="examname" class="mb-0 mt-1" th:text="${plantedCrop.variety.name}"></h6>
+                            <h6 id="examname" class="mb-0 mt-1"
+                                th:text="|${plantedCrop?.variety?.name} ${plantedCrop?.season?.name} ${plantedCrop?.plantedDate?.year}|">
+                            </h6>
                             <div class="col-12"><span class="badge badge-sm bg-gradient-primary"></span>
                                 <p class="text-secondary text-sm font-weight-normal mb-0">Class teacher Remarks</p>
                             </div>
@@ -100,7 +102,7 @@
                                     <p class="text-secondary text-sm font-weight-normal mb-0">Planting date</p></div>
                             </div>
                         </div>
-                        <button id="viewexamdetails" data-bs-toggle="modal" data-bs-target="#popupeexamdetails" th:data-id="${plantedCrop.id}" class="btn btn-link bg-gradient-success m-1">View Analytics
+                        <button id="viewexamdetails" data-bs-toggle="modal" data-bs-target="#popupeexamdetails" th:data-id="${plantedCrop.id}" th:data-title="|${plantedCrop?.variety?.name} ${plantedCrop?.season?.name} ${plantedCrop?.plantedDate?.year}|" class="btn btn-link bg-gradient-success m-1">View Analytics
                         </button>
                     </div>
                 </div>
@@ -225,8 +227,8 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <input type="hidden" id="plantedCropId" name="plantedCropId">
-            <div class="modal-header"><h5 id="examdetails" class="modal-title">PP1 TERM3 OPENER EXAM 2024 -
-                ANALYSIS</h5>
+            <div class="modal-header">
+                <h5 id="cropTitle" class="modal-title"></h5>
                 <button aria-label="Close" class="btn-close text-dark" data-bs-dismiss="modal" type="button"><span
                         aria-hidden="true">×</span></button>
             </div>
@@ -322,10 +324,13 @@
                                 <div class="col-md-2" style="margin-top: 17px; margin-bottom: -10px;"></div>
                                 <div class="col-md-1" style="margin-top: 17px; margin-bottom: -10px;"></div>
                                 <div class="col-md-3">
-                                    <div class="form-check form-check-info text-start ps-0">
-                                        <label>Select report</label>
-                                        <select id="selectgetexamreports" type="select" class="floating-select" required>
-                                            <option value="">Generate analysis reports</option>
+                                    <div class="input-group input-group-static mb-3">
+                                        <label for="report" class="ms-0">Generate Report</label>
+                                        <select class="form-control form-dark-select" name="report" id="report" required>
+                                            <option disabled selected>Select Report</option>
+                                            <option value="trial">Trial Balance</option>
+                                            <option value="ie">Income and Expenditure</option>
+                                            <option value="Other">Other</option>
                                         </select>
                                     </div>
                                 </div>
@@ -595,6 +600,57 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="trialBalanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" style="z-index: 10000 !important;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+                <div class="card card-plain">
+                    <div class="card-body pb-3">
+                        <form>
+                            <div class="input-group input-group-outline my-3">
+                                <select name="activity" class="form-select">
+                                    <option selected disabled>Select Activity</option>
+                                    <option value="all">All</option>
+                                </select>
+
+                                <script>
+                                    populateOptions(null).then(function (optionsHtml) {
+                                        $('#trialBalanceModal select[name= "activity"]').append(optionsHtml);
+                                    });
+                                </script>
+                            </div>
+                            <!--<div class="input-group input-group-outline my-3">
+                              <select name="type" class="form-select">
+                                <option selected disabled>Select One</option>
+                                <option value="income">Income</option>
+                                <option value="expenditure">Expenditure</option>
+                              </select>
+                            </div>-->
+
+                            <div class="input-group input-group-outline my-3">
+                                <select name="groupBy" class="form-select">
+                                    <option selected disabled>Summarise By</option>
+                                    <option value="year">Year</option>
+                                    <option value="month">Month</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group input-group-outline my-3">
+                                <label class="form-label">Upto</label>
+                                <input type="date" name="date" class="form-control">
+                            </div>
+
+                            <div class="text-center">
+                                <button onclick="printTrialBalance(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Ok</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     function addVoucher(event) {
@@ -692,7 +748,6 @@
 
         let jsonData = JSON.stringify(myObject);
 
-        console.log(myObject)
 
         $.ajax({
             url: "/finance/voucher/add",
@@ -702,7 +757,6 @@
             dataType: "json",
             success: function (response) {
                 console.log("Data successfully sent to the server!");
-                console.log(response);
                 if (response.response === 'Data saved successfully.') {
                     Swal.fire({
                         title: 'success',
@@ -753,7 +807,6 @@
             transRef: transRef,
             receiptTableRowList: receiptTableRow
         };
-        console.log(myObject);
 
         let jsonData = JSON.stringify(myObject);
 
@@ -766,7 +819,6 @@
 
         modal.modal('hide');
 
-        console.log(jsonData)
 
         $.ajax({
             url: "/finance/receipt/add",
@@ -775,7 +827,6 @@
             contentType: "application/json",
             dataType: "json",
             success: function (response) {
-                console.log(response);
                 if (response.response === 'Data saved successfully.') {
                     Swal.fire({
                         title: 'success',
@@ -805,6 +856,19 @@
         });
 
     }
+</script>
+
+<script>
+    let reportSelect = document.getElementById('report');
+
+    function showReportModal() {
+        let reportType = reportSelect.value;
+        if (reportType === 'trial') {
+            $("#trialBalanceModal").modal('show');
+        }
+    }
+
+    reportSelect.addEventListener('change', showReportModal);
 </script>
 
 <script>
@@ -840,9 +904,7 @@
         if (e.target && e.target.id === 'viewexamdetails') {
             // Extract the `data-id` value
             const plantedCropId = e.target.getAttribute('data-id');
-
-            // Log or use the ID as needed
-            console.log('Planted Crop ID:', plantedCropId);
+            document.getElementById('cropTitle').textContent = e.target.getAttribute('data-title');
 
             document.getElementById('plantedCropId').value = plantedCropId;
 
@@ -851,7 +913,6 @@
                 url: '/finance/farm-activities/get/all/' + plantedCropId,
                 contentType: 'application/json'
             }).done(function (accountData) {
-                console.log("Details: ", accountData);
 
                 if (!Array.isArray(accountData)) {
                     console.error("Unexpected response format: not an array");
@@ -1222,7 +1283,6 @@
         // Calculate the amount and update the amount input
         var amount = quantity * rate;
         row.find(".amount-input").val(amount.toFixed(2));
-        console.log("amount: " + amount)
         // Return the calculated amount for summing up
         return amount;
     }
@@ -1315,7 +1375,6 @@
             varietyChoices.setChoices(async () => {
                 try {
                     let cropVarieties = await getCropVarieties();
-                    console.log("varieties: " + cropVarieties.name)
                     return cropVarieties.map(item => {
                         return {
                             value: item.id,   // Assuming 'id' is the key for the value
@@ -1342,7 +1401,6 @@
             seasonChoices.setChoices(async () => {
                 try {
                     let seasons = await getSeasons();
-                    console.log("seasons: " + seasons)
                     return seasons.map(item => {
                         return {
                             value: item.id,   // Assuming 'id' is the key for the value
@@ -1393,7 +1451,6 @@
 
         // Convert formData to a plain object
         const plantingData = Object.fromEntries(formData.entries());
-        console.log("crop: " + plantingData)
         try {
             const response = await fetch('/crop/planting', {
                 method: 'POST',

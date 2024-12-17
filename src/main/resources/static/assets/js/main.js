@@ -4180,8 +4180,9 @@ function printTrialBalance(event) {
     let activity = $('#trialBalanceModal select[name="activity"]').val();
     let groupBy = $('#trialBalanceModal select[name="groupBy"]').val();
     let date = $('#trialBalanceModal input[name="date"]').val();
+    let plantedCropId = $('#plantedCropId').val();
 
-    let url = "/reports/trial/generate?activity=" + activity + "&type=" + groupBy + "&date=" + date;
+    let url = "/reports/trial/generate?activity=" + activity + "&type=" + groupBy + "&date=" + date + "&plantedCropId=" + plantedCropId;
     console.log(url);
     var xhr = new XMLHttpRequest();
 
