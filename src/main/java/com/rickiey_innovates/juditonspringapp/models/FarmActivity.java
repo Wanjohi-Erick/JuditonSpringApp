@@ -31,6 +31,7 @@ public class FarmActivity {
     private String description;
 
     @OneToOne(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Accounttransaction accounttransaction;
 
     @ManyToOne(fetch = FetchType.EAGER)

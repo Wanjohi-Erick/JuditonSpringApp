@@ -417,7 +417,7 @@
                                         <input type="text" id="voucherTransRef" name="voucherTransRef" class="form-control">
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" onclick="addVoucher(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add</button>
+                                        <button type="submit" data-bs-dismiss="modal" onclick="addVoucher(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add</button>
                                     </div>
                                 </form>
                             </div>
@@ -513,7 +513,7 @@
                                     </div>
                                     <h6 class="text-warning" id="totalPayable">Total Payable: 0.00</h6>
                                     <div class="text-center">
-                                        <button type="submit" onclick="addReceipt(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add</button>
+                                        <button type="submit" data-bs-dismiss="modal" onclick="addReceipt(event)" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Add</button>
                                     </div>
                                 </form>
                             </div>
@@ -590,7 +590,7 @@
 
                                 <!-- Submit Button -->
                                 <div class="text-center">
-                                    <button type="submit" class="btn btn-success">Record Activity</button>
+                                    <button type="submit" data-bs-dismiss="modal" class="btn btn-success">Record Activity</button>
                                 </div>
                             </form>
                         </div>
@@ -950,13 +950,15 @@
                                 <a href="#" class="btn btn-warning" onclick="openEditModal('${row.id}')">
                                     <i class="fa fa-pencil" aria-hidden="true"></i>
                                 </a>
-                                <a href="#" class="btn btn-danger" onclick="deleteActivity('${row.id}')">
+                                <a href="#" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteActivity('${row.id}')">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </a>`;
                             }
                         }
                     ]
                 });
+
+
 
                 // Calculate total costs
                 let totalCosts = accountData.reduce((total, activity) => {

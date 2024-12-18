@@ -1229,6 +1229,55 @@ function openEditModal(model, id) {
     $('#editModal').modal('show');
 }
 
+function deleteActivity(id) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // User confirmed, proceed with deletion
+            $.ajax({
+                url: "/finance/farm-activities/delete/" + id,
+                contentType: 'application/json',
+                method: 'DELETE',
+                success: function (response) {
+                    if (response === 'Activity deleted successfully') {
+                        Swal.fire({
+                            title: 'Success',
+                            text: response.response,
+                            icon: 'success',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: response.response,
+                            icon: 'error',
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error.response,
+                        icon: 'error',
+                    });
+                    console.error('Error sending data to the server:', error);
+                },
+            });
+        }
+    });
+}
+
+
 function searchPersonA() {
     var query = $('#searchMember').val();
     console.log(query);

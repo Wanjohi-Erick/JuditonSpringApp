@@ -21,6 +21,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.RGBColor;
+import com.rickiey_innovates.juditonspringapp.crop.models.PlantedCrop;
+import com.rickiey_innovates.juditonspringapp.crop.repositories.PlantedCropRepository;
 import com.rickiey_innovates.juditonspringapp.repositories.ClosingBalanceRepository;
 import com.rickiey_innovates.juditonspringapp.repositories.UserRepository;
 import com.rickiey_innovates.juditonspringapp.DbConnector;
@@ -28,6 +30,7 @@ import com.rickiey_innovates.juditonspringapp.models.Farm;
 import com.rickiey_innovates.juditonspringapp.models.ClosingBalance;
 import com.rickiey_innovates.juditonspringapp.models.accountsmodel;
 import com.rickiey_innovates.juditonspringapp.repositories.ActivityRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.JRDesignQuery;
@@ -80,6 +83,7 @@ public class ReportsController {
     String bugcurrency = "";
     String echrate = "";
     String title = "";
+    String subtitle = "";
 
     int cash = 0;
     int bank = 0;
@@ -97,6 +101,8 @@ public class ReportsController {
 
     @Autowired
     ClosingBalanceRepository closingBalanceRepository;
+    @Autowired
+    private PlantedCropRepository plantedCropRepository;
 
     private Long userId() {
         return LoginController.getLoggedInUserId();
@@ -578,10 +584,10 @@ public class ReportsController {
         String jrxmlPath = "/reports/TrialBalance.jrxml";
         String sql = "";
 
-        System.out.println("plantedcropid: " + plantedCropId);
 
         if (plantedCropId.equalsIgnoreCase("undefined") || plantedCropId.isEmpty()) {
             System.out.println("Without planted crop id");
+            subtitle = "ALL FARM ACTIVITIES";
             if (activity.equalsIgnoreCase("all")) {
                 if (type.equalsIgnoreCase("year")) {
                     title = "Trial Balance as at " + date;
@@ -614,7 +620,7 @@ public class ReportsController {
                             "ORDER BY year, m;\n";
                     List<String> sql1 = new ArrayList<>();
                     int farm = 3;
-                    testReport(sql, portrait_report_template, "trial", 0, sql1, title, "", uploadDir + File.separator + RequestContextHolder.
+                    testReport(sql, portrait_report_template, "trial", 0, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
                             currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
                 } else {
                     title = "Trial Balance as at " + date;
@@ -622,8 +628,9 @@ public class ReportsController {
                             "       description,\n" +
                             "       income,\n" +
                             "       expenditure,\n" +
-                            "       SUM(income - expenditure) OVER (ORDER BY DATE, Account) AS balance\n" +
-                            "FROM (SELECT DATE, a.Account,\n" +
+                            "       SUM(income - expenditure) OVER (ORDER BY DATE, Account, `transaction id`) AS balance\n" +
+                            "FROM (SELECT `transaction id`,\n" +
+                            "             DATE, a.Account,\n" +
                             "             MONTHNAME(Date) as month,\n" +
                             "             YEAR(Date) as year,\n" +
                             "             description,\n" +
@@ -716,6 +723,8 @@ public class ReportsController {
             }
         } else {
             System.out.println("With planted crop id");
+            PlantedCrop plantedCrop = plantedCropRepository.findById(Long.valueOf(plantedCropId)).orElseThrow(EntityNotFoundException::new);
+            subtitle = plantedCrop.getVariety().getName() + " " +plantedCrop.getSeason().getName() + " " + plantedCrop.getPlantedDate().getYear();
             if (activity.equalsIgnoreCase("all")) {
                 if (type.equalsIgnoreCase("year")) {
                     title = "Trial Balance as at " + date;
@@ -747,7 +756,7 @@ public class ReportsController {
                             "ORDER BY year, m;";
                     List<String> sql1 = new ArrayList<>();
                     int farm = 3;
-                    testReport(sql, portrait_report_template, "trial", 0, sql1, title, "", uploadDir + File.separator + RequestContextHolder.
+                    testReport(sql, portrait_report_template, "trial", 0, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
                             currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
                 } else {
                     title = "Trial Balance as at " + date;
@@ -758,8 +767,9 @@ public class ReportsController {
                             "       description,\n" +
                             "       income,\n" +
                             "       expenditure,\n" +
-                            "       SUM(income - expenditure) OVER (ORDER BY DATE, Account) AS balance\n" +
-                            "FROM (SELECT DATE,\n" +
+                            "       SUM(income - expenditure) OVER (ORDER BY DATE, Account, `transaction id`) AS balance\n" +
+                            "FROM (SELECT `transaction id`,\n" +
+                            "             DATE,\n" +
                             "             a.Account,\n" +
                             "             MONTHNAME(Date) as month,\n" +
                             "             YEAR(Date)      as year,\n" +
@@ -783,7 +793,7 @@ public class ReportsController {
 
                     List<String> sql1 = new ArrayList<>();
                     int farm = 3;
-                    testReport(sql, portrait_report_template, "trial", 1, sql1, title, "", uploadDir + File.separator + RequestContextHolder.
+                    testReport(sql, portrait_report_template, "trial", 1, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
                             currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
                 }
             } else {
@@ -819,7 +829,7 @@ public class ReportsController {
                             "ORDER BY year, m;";
                     List<String> sql1 = new ArrayList<>();
                     int farm = 3;
-                    testReport(sql, portrait_report_template, "trial", 0, sql1, title, "", uploadDir + File.separator + RequestContextHolder.
+                    testReport(sql, portrait_report_template, "trial", 0, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
                             currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
                 } else {
                     sql = "SELECT DATE,\n" +
@@ -855,7 +865,7 @@ public class ReportsController {
 
                     List<String> sql1 = new ArrayList<>();
                     int farm = farm().getId();
-                    testReport(sql, portrait_report_template, "trial", 1, sql1, title, "", uploadDir + File.separator + RequestContextHolder.
+                    testReport(sql, portrait_report_template, "trial", 1, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
                             currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
                 }
             }

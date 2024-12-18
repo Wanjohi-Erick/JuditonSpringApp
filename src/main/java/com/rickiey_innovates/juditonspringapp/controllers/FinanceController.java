@@ -1916,4 +1916,24 @@ public class FinanceController {
         return ResponseEntity.ok().body(farmActivityRepository.findByPlantedCrop_Id(plantedCrop));
     }
 
+    @DeleteMapping("farm-activities/delete/{id}")
+    @ResponseBody
+    private ResponseEntity<?> farmActivitiesDelete(@PathVariable Long id) {
+        try {
+            FarmActivity farmActivity = farmActivityRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+            if (accounttransactionRepository.existsById(farmActivity.getAccounttransaction().getId())) {
+                Accounttransaction accounttransaction = accounttransactionRepository.findById(farmActivity.getAccounttransaction().getId()).orElse(null);
+                if (paymentvoucherRepository.existsByVoucherAndFarm(accounttransaction.getRef(), farm())) {
+                    Paymentvoucher paymentvoucher = paymentvoucherRepository.findByVoucherAndChurch(accounttransaction.getRef(), farm());
+                    paymentvoucherRepository.delete(paymentvoucher);
+                }
+                accounttransactionRepository.delete(accounttransaction);
+            }
+            return ResponseEntity.ok("Activity deleted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Failed to delete activity");
+        }
+    }
+
 }

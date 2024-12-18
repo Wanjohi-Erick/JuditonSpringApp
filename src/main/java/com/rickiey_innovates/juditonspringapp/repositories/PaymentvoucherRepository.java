@@ -12,4 +12,10 @@ public interface PaymentvoucherRepository extends JpaRepository<Paymentvoucher, 
     Paymentvoucher findByVoucherAndChurch(String voucher, Farm farm);
     @Query("select p from Paymentvoucher p where p.payeeName not like ?1 order by p.id DESC LIMIT 7")
     List<Paymentvoucher> findByPayeeNameNotLikeOrderByIdDesc(String payeeName);
+
+    @Query("select (count(p) > 0) from Paymentvoucher p where p.voucher = ?1")
+    boolean existsByVoucher(String voucher);
+
+    @Query("select (count(p) > 0) from Paymentvoucher p where p.voucher = ?1 and p.farm = ?2")
+    boolean existsByVoucherAndFarm(String voucher, Farm farm);
 }
