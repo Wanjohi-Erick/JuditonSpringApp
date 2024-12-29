@@ -1907,7 +1907,7 @@ public class FinanceController {
     @GetMapping("/farm-activities/get/all")
     @ResponseBody
     private ResponseEntity<?> farmActivities() {
-        return ResponseEntity.ok().body(farmActivityRepository.findAll());
+        return ResponseEntity.ok().body(farmActivityRepository.findByFarm(farm()));
     }
 
     @GetMapping("/farm-activities/get/all/{plantedCrop}")

@@ -2,16 +2,11 @@ package com.rickiey_innovates.juditonspringapp.crop.controller;
 
 import com.rickiey_innovates.juditonspringapp.DbConnector;
 import com.rickiey_innovates.juditonspringapp.controllers.LoginController;
-import com.rickiey_innovates.juditonspringapp.crop.dtos.CropTypeDto;
-import com.rickiey_innovates.juditonspringapp.crop.dtos.CropVarietyDTO;
-import com.rickiey_innovates.juditonspringapp.crop.dtos.PlantingForm;
+import com.rickiey_innovates.juditonspringapp.crop.dtos.*;
 import com.rickiey_innovates.juditonspringapp.crop.models.*;
 import com.rickiey_innovates.juditonspringapp.crop.repositories.*;
 import com.rickiey_innovates.juditonspringapp.models.*;
-import com.rickiey_innovates.juditonspringapp.repositories.ActivityRepository;
-import com.rickiey_innovates.juditonspringapp.repositories.BankaccountRepository;
-import com.rickiey_innovates.juditonspringapp.repositories.FarmActivityRepository;
-import com.rickiey_innovates.juditonspringapp.repositories.UserRepository;
+import com.rickiey_innovates.juditonspringapp.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +18,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -35,31 +35,31 @@ public class CropController {
     private final CropRepository cropRepository;
     private final CropTypeRepository cropTypeRepository;
     private final CropVarietyRepository cropVarietyRepository;
-    private final CropNameRepository cropNameRepository;
     private final SeasonRepository seasonRepository;
     private final PlantedCropRepository plantedCropRepository;
     private final FarmActivityRepository farmActivityRepository;
     private final ActivityRepository activityRepository;
     private final BankaccountRepository bankaccountRepository;
+    private final UnitsRepository unitsRepository;
 
     public CropController(UserRepository userRepository,
                           CropRepository cropRepository,
                           CropTypeRepository cropTypeRepository,
                           CropVarietyRepository cropVarietyRepository,
-                          CropNameRepository cropNameRepository,
                           SeasonRepository seasonRepository,
                           PlantedCropRepository plantedCropRepository,
-                          FarmActivityRepository farmActivityRepository, ActivityRepository activityRepository, BankaccountRepository bankaccountRepository) {
+                          FarmActivityRepository farmActivityRepository, ActivityRepository activityRepository, BankaccountRepository bankaccountRepository,
+                          UnitsRepository unitsRepository) {
         this.userRepository = userRepository;
         this.cropRepository = cropRepository;
         this.cropTypeRepository = cropTypeRepository;
         this.cropVarietyRepository = cropVarietyRepository;
-        this.cropNameRepository = cropNameRepository;
         this.seasonRepository = seasonRepository;
         this.plantedCropRepository = plantedCropRepository;
         this.farmActivityRepository = farmActivityRepository;
         this.activityRepository = activityRepository;
         this.bankaccountRepository = bankaccountRepository;
+        this.unitsRepository = unitsRepository;
     }
 
     private Long userId() {
@@ -77,7 +77,7 @@ public class CropController {
 
         User user = userRepository.findById(userId()).get();
         List<CropType> cropTypes = cropTypeRepository.findByFarm(farm());
-        List<CropName> cropNames = cropNameRepository.findByFarm(farm());
+        List<Crop> cropNames = cropRepository.findByFarm(farm());
         model.addAttribute("user", user);
         model.addAttribute("page", "List of crops");
         model.addAttribute("main", "Crops");
@@ -100,8 +100,6 @@ public class CropController {
         try {
             CropType cropType = new CropType();
             cropType.setCropType(cropTypeDto.getCropType());
-            CropName crop = cropNameRepository.findById(cropTypeDto.getCropName()).orElseThrow(EntityNotFoundException::new);
-            cropType.setCrop(crop);
             cropType.setFarm(farm());
             cropTypeRepository.save(cropType);
             message = "Crop type added successfully";
@@ -130,7 +128,6 @@ public class CropController {
             CropType existingCropType = cropTypeRepository.findById(updatedCropType.getId()).orElse(null);
             if (existingCropType != null) {
                 existingCropType.setCropType(updatedCropType.getCropType());
-                existingCropType.setCrop(updatedCropType.getCrop());
 
                 cropTypeRepository.save(existingCropType);
 
@@ -171,7 +168,7 @@ public class CropController {
     public String varieties(Model model, HttpServletRequest request) {
 
         User user = userRepository.findById(userId()).get();
-        List<CropName> cropNames = cropNameRepository.findByFarm(farm());
+        List<Crop> cropNames = cropRepository.findByFarm(farm());
         List<CropVariety> cropVarieties = cropVarietyRepository.findByFarm(farm());
         model.addAttribute("user", user);
         model.addAttribute("page", "List of crops");
@@ -264,29 +261,36 @@ public class CropController {
     public String names(Model model, HttpServletRequest request) {
 
         User user = userRepository.findById(userId()).get();
-        List<CropName> cropNames = cropNameRepository.findByFarm(farm());
+        List<Crop> cropNames = cropRepository.findByFarm(farm());
+        List<Units> units = unitsRepository.findAll();
+        List<CropType> cropTypes = cropTypeRepository.findByFarm(farm());
         model.addAttribute("user", user);
         model.addAttribute("page", "List of crops");
         model.addAttribute("main", "Crops");
         model.addAttribute("cropNames", cropNames);
+        model.addAttribute("units", units);
+        model.addAttribute("cropTypes", cropTypes);
         model.addAttribute("requestURI", request.getRequestURI());
         return "crop/crop_name";
     }
 
     @GetMapping(value = "/names/get/all", produces = "application/json")
     @ResponseBody
-    public List<CropName> cropNames() {
-        return cropNameRepository.findByFarm(farm());
+    public List<Crop> cropNames() {
+        return cropRepository.findByFarm(farm());
     }
 
     @PostMapping("/names/add")
-    public String addName(RedirectAttributes redirectAttributes, String name) {
+    public String addName(RedirectAttributes redirectAttributes, CropDTO cropDTO) {
         String message = "";
         try {
-            CropName cropName = new CropName();
-            cropName.setName(name);
+            Crop cropName = new Crop();
+            cropName.setName(cropDTO.getName());
+            cropName.setPlantingUnits(unitsRepository.findById(cropDTO.getPlantingUnits()).orElse(null));
+            cropName.setHarvestingUnits(unitsRepository.findById(cropDTO.getHarvestingUnits()).orElse(null));
+            cropName.setType(cropTypeRepository.findById(cropDTO.getType()).orElse(null));
             cropName.setFarm(farm());
-            cropNameRepository.save(cropName);
+            cropRepository.save(cropName);
             message = "Crop name added successfully";
             redirectAttributes.addFlashAttribute("message", message);
         } catch (Exception e) {
@@ -301,31 +305,33 @@ public class CropController {
 
     @GetMapping(value = "/names/get/{id}", produces = "application/json")
     @ResponseBody
-    public CropName getCropName(@PathVariable Long id) {
+    public Crop getCropName(@PathVariable Long id) {
 
-        return cropNameRepository.findById(id).orElse(null);
+        return cropRepository.findById(id).orElse(null);
     }
 
     @PostMapping("/names/update")
-    public String updateCropName(CropName cropName, RedirectAttributes redirectAttributes) {
+    public String updateCropName(CropDTO cropDto, RedirectAttributes redirectAttributes) {
         String message, error;
         try {
-            CropName existingCropname = cropNameRepository.findById(cropName.getId()).orElse(null);
+            Crop existingCropname = cropRepository.findById(cropDto.getId()).orElse(null);
             if (existingCropname != null) {
-                existingCropname.setName(cropName.getName());
+                existingCropname.setName(cropDto.getName());
+                existingCropname.setPlantingUnits(unitsRepository.findById(cropDto.getPlantingUnits()).orElse(null));
+                existingCropname.setHarvestingUnits(unitsRepository.findById(cropDto.getHarvestingUnits()).orElse(null));
+                existingCropname.setType(cropTypeRepository.findById(cropDto.getType()).orElse(null));
+                cropRepository.save(existingCropname);
 
-                cropNameRepository.save(existingCropname);
-
-                message = "Crop name updated successfully";
+                message = "Crop updated successfully";
                 redirectAttributes.addFlashAttribute("message", message);
 
             } else {
-                error = "Crop name not found. Update failed.";
+                error = "Crop not found. Update failed.";
                 redirectAttributes.addFlashAttribute("error", error);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            error = "Crop name update failed";
+            error = "Crop update failed";
             redirectAttributes.addFlashAttribute("error", error);
         }
 
@@ -335,7 +341,7 @@ public class CropController {
     @GetMapping("/name/delete/{id}")
     public String deleteCropName(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
-            cropNameRepository.deleteById(id);
+            cropRepository.deleteById(id);
 
             redirectAttributes.addFlashAttribute("message", "The crop name has been deleted successfully!");
         } catch (Exception e) {
@@ -357,11 +363,46 @@ public class CropController {
         List<FarmActivity> farmActivities = farmActivityRepository.findByFarm(farm());
         List<Activity> activityList = activityRepository.findByChurch(farm());
         List<Bankaccount> bankaccounts = bankaccountRepository.findByChurch(farm());
+        List<PlantedCropSummary> plantedCropSummaries = plantedCrops.stream()
+                .map(crop -> {
+                    double exp = farmActivities.stream()
+                            .filter(activity -> activity.getPlantedCrop() != null) // Ensure PlantedCrop is not null
+                            .filter(activity -> activity.getPlantedCrop().getId().equals(crop.getId()))
+                            .mapToDouble(activity -> activity.getAccounttransaction().getDebit())
+                            .sum();
+
+                    double inc = farmActivities.stream()
+                            .filter(activity -> activity.getPlantedCrop() != null) // Ensure PlantedCrop is not null
+                            .filter(activity -> activity.getPlantedCrop().getId().equals(crop.getId()))
+                            .mapToDouble(activity -> activity.getAccounttransaction().getCredit())
+                            .sum();
+
+                    double pro = inc - exp;
+                    DecimalFormat df = new DecimalFormat("#,##0.00;(#,##0.00)");
+                    Double pPro = (pro / exp) * 100;
+                    String formattedPPro = df.format(pPro);
+
+                    PlantedCropSummary summary = new PlantedCropSummary();
+                    summary.setCropId(crop.getId());
+                    summary.setCropName(crop.getVariety().getName());
+                    summary.setExp(exp);
+                    summary.setInc(inc);
+                    summary.setPro(formattedPPro + "%");
+                    return summary;
+                })
+                .toList();
+
+// Assuming plantedCrops and plantedCropSummaries are fetched
+        Map<Long, PlantedCropSummary> summaries = plantedCropSummaries.stream()
+                .collect(Collectors.toMap(PlantedCropSummary::getCropId, Function.identity()));
+
+
         model.addAttribute("user", user);
         model.addAttribute("page", "List of crops");
         model.addAttribute("main", "Crops");
         model.addAttribute("plantedCrops", plantedCrops);
         model.addAttribute("farmActivities", farmActivities);
+        model.addAttribute("summaries", summaries);
         model.addAttribute("activities", activityList);
         model.addAttribute("bankaccounts", bankaccounts);
         model.addAttribute("requestURI", request.getRequestURI());
@@ -458,7 +499,7 @@ public class CropController {
         return "redirect:/crop/seasons";
     }
 
-    /** CROP NAMES SECTION **/
+    /** END SEASONS SECTION **/
 
 
     /** PLANTING SECTION**/

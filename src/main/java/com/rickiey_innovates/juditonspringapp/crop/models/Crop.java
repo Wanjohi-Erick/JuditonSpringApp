@@ -19,8 +19,8 @@ public class Crop {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private CropName name;
+    private String name;
+
     @ManyToOne
     private CropType type;
     private String imageUrl;

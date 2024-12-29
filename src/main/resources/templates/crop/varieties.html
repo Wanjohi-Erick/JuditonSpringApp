@@ -51,7 +51,7 @@
                                 <tr th:each="variety : ${varieties}">
 
                                     <!-- Member properties -->
-                                    <td th:text="${variety.cropName.name}"></td>
+                                    <td th:text="${variety.crop.name}"></td>
                                     <td th:text="${variety.name}"></td>
                                     <td>
                                         <a class="btn btn-warning" th:onclick="|openEditModal('varieties', '${variety.id}')|"><i class="fa fa-pencil" aria-hidden="true"></i></a>

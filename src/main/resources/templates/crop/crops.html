@@ -45,11 +45,24 @@
                             <div class="d-flex mt-4">
                                 <div class="avatar avatar-xxl bg-gradient-dark border-radius-xl p-2 mt-n6">
                                     <div class="d-flex flex-column">
-                                        <div class="d-flex align-items-center"><p class="text-sm mb-0">Avg</p><h6
-                                                class="text-primary text-gradient ms-3 mb-0"></h6></div>
-                                        <div class="d-flex align-items-center"><p class="text-sm mb-0">Grade</p><h6
-                                                class="text-info text-gradient ms-3 mb-0"></h6></div>
-                                        <div class="d-flex align-items-center"><p class="text-sm mb-0">Dev</p></div>
+                                        <div class="d-flex align-items-center">
+                                            <p class="text-sm mb-0">EXP</p>
+                                            <h6 id="exp" class="text-danger text-sm text-gradient ms-2 mb-0"
+                                                th:text="${#numbers.formatDecimal(summaries[plantedCrop.id]?.exp ?: 0.0, 0, 'COMMA', 2, 'POINT' )}">
+                                            </h6>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <p class="text-sm mb-0">INC</p>
+                                            <h6 id="inc" class="text-success text-sm text-gradient ms-2 mb-0"
+                                                th:text="${#numbers.formatDecimal(summaries[plantedCrop.id]?.inc ?: 0.0, 0, 'COMMA', 2, 'POINT' )}">
+                                            </h6>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <p class="text-sm mb-0">PRO</p>
+                                            <h6 id="pro" class="text-info text-sm text-gradient ms-2 mb-0"
+                                                th:text="${summaries[plantedCrop.id]?.pro ?: 0}">]}">
+                                            </h6>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="ms-3 my-auto">
@@ -86,17 +99,20 @@
                                 </div>
                             </div>
                             <h6 id="examname" class="mb-0 mt-1"
-                                th:text="|${plantedCrop?.variety?.name} ${plantedCrop?.season?.name} ${plantedCrop?.plantedDate?.year}|">
+                                th:text="|${plantedCrop?.variety?.name} ${plantedCrop?.variety.crop.name} ${plantedCrop?.season?.name} ${plantedCrop?.plantedDate?.year}|">
                             </h6>
-                            <div class="col-12"><span class="badge badge-sm bg-gradient-primary"></span>
-                                <p class="text-secondary text-sm font-weight-normal mb-0">Class teacher Remarks</p>
+                            <div class="col-12">
+                                <p class="text-secondary text-sm font-weight-normal mb-0">Remarks</p>
+                                <span class="badge badge-sm bg-gradient-primary"> GOOD SEASON</span>
                             </div>
                             <hr class="horizontal dark">
                             <div class="row">
                                 <div class="col-4"><h6 class="text-md mb-0 font-weight-bolder" th:text="${plantedCrop.season.name}"></h6>
                                     <p class="text-secondary text-sm font-weight-normal mb-0">Season</p></div>
-                                <div class="col-4 text-start"><span
-                                        class="badge badge-sm bg-gradient-warning">In Field</span>
+                                <div class="col-4 text-start">
+                                    <span th:if='${plantedCrop.status.equalsIgnoreCase("sold")}' class="badge badge-sm bg-success" th:text="${plantedCrop.status}"></span>
+                                    <span th:if='${plantedCrop.status.equalsIgnoreCase("harvested")}' class="badge badge-sm bg-info" th:text="${plantedCrop.status}"></span>
+                                    <span th:if='${plantedCrop.status.equalsIgnoreCase("in field")}' class="badge badge-sm bg-warning" th:text="${plantedCrop.status}"></span>
                                     <p class="text-secondary text-sm font-weight-normal mb-0">Status</p></div>
                                 <div class="col-4 text-center"><h6 class="text-sm mb-0" th:text="${plantedCrop.plantedDate}"></h6>
                                     <p class="text-secondary text-sm font-weight-normal mb-0">Planting date</p></div>
@@ -975,8 +991,15 @@
                     return total; // Skip if no debit value
                 }, 0);
 
+                let profit = totalIncome - totalCosts;
+                let percentageProfit = (profit / totalCosts) * 100;
+
                 $('#totalCosts').text(totalCosts.toLocaleString());
                 $('#totalIncome').text(totalIncome.toLocaleString());
+                $('#exp').text(totalCosts.toLocaleString());
+                $('#inc').text(totalIncome.toLocaleString());
+                $('#pro').text(percentageProfit.toLocaleString());
+
 
                 let currentMonth = new Date().getMonth() + 1; // Months are 0-indexed, so add 1
                 let currentYear = new Date().getFullYear();
@@ -1285,6 +1308,7 @@
         // Calculate the amount and update the amount input
         var amount = quantity * rate;
         row.find(".amount-input").val(amount.toFixed(2));
+        console.log("amount: " + amount)
         // Return the calculated amount for summing up
         return amount;
     }
@@ -1350,6 +1374,7 @@
 
         newRow.find(".quantity-input, .rate-input").on("input", function () {
             var row = $(this).closest("tr");
+            console.log("updating new row amount: " + row.find(".quantity-input").val());
             updateAmount(row);
             updateTotalAmount();
         });

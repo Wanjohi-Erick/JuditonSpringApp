@@ -28,6 +28,7 @@ public class PlantedCrop {
     private Long harvestedQuantity;
     private LocalDate plantedDate;
     private LocalDate harvestedDate;
+    private String status;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)

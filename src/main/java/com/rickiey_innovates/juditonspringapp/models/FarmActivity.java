@@ -44,4 +44,17 @@ public class FarmActivity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "farm")
     private Farm farm;
+
+    @Override
+    public String toString() {
+        return "FarmActivity{" +
+                "id=" + id +
+                ", ref='" + ref + '\'' +
+                ", account=" + account +
+                ", description='" + description + '\'' +
+                ", accounttransaction=" + accounttransaction +
+                ", plantedCrop=" + plantedCrop +
+                ", farm=" + farm +
+                '}';
+    }
 }

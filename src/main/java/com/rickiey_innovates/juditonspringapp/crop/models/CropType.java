@@ -17,8 +17,6 @@ public class CropType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @ManyToOne
-    private CropName crop;
     private String cropType;
 
     @JsonIgnore
@@ -31,7 +29,6 @@ public class CropType {
     public String toString() {
         return "CropType{" +
                 "id=" + id +
-                ", crop=" + crop +
                 ", cropType='" + cropType + '\'' +
                 ", farm=" + farm +
                 '}';
