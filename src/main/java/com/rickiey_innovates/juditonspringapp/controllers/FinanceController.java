@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import com.rickiey_innovates.juditonspringapp.DbConnector;
 import com.rickiey_innovates.juditonspringapp.crop.models.PlantedCrop;
 import com.rickiey_innovates.juditonspringapp.crop.repositories.PlantedCropRepository;
+import com.rickiey_innovates.juditonspringapp.livestock.models.FarmedLivestock;
+import com.rickiey_innovates.juditonspringapp.livestock.repositories.FarmedLivestockRepository;
 import com.rickiey_innovates.juditonspringapp.models.*;
 import com.rickiey_innovates.juditonspringapp.repositories.*;
 import jakarta.persistence.EntityManager;
@@ -41,6 +43,8 @@ public class FinanceController {
     private FarmActivityRepository farmActivityRepository;
     @Autowired
     private PlantedCropRepository plantedCropRepository;
+    @Autowired
+    private FarmedLivestockRepository farmedLivestockRepository;
 
     public FinanceController(ActivityRepository activityRepository,
                              ActivitygroupRepository activitygroupRepository,
@@ -732,6 +736,7 @@ public class FinanceController {
         try {
             System.out.println("Received data: " + request.toString());
 
+            String recordFor = request.getRecordFor();
             Long plantedCropId = request.getPlantedCropId();
             LocalDate date = request.getDate();
             int activity = request.getActivity();
@@ -770,12 +775,20 @@ public class FinanceController {
 
             voucherSignatoryRepository.save(voucherSignatory);
 
+            FarmedLivestock farmedLivestock = null;
+            PlantedCrop plantedCrop = null;
+            if (recordFor.equalsIgnoreCase("livestock")) {
+                farmedLivestock = farmedLivestockRepository.findById(plantedCropId).orElseThrow(EntityNotFoundException::new);
+            } else if (recordFor.equalsIgnoreCase("crops")) {
+                plantedCrop = plantedCropRepository.findById(plantedCropId).orElseThrow(EntityNotFoundException::new);
+            }
+
             // changing to pending transaction
-            PlantedCrop plantedCrop = plantedCropRepository.findById(plantedCropId).orElseThrow(EntityNotFoundException::new);
             Activity activity1 = activityRepository.findById(activity).orElseThrow(EntityNotFoundException::new);
             FarmActivity farmActivity = new FarmActivity();
             farmActivity.setFarm(farm());
             farmActivity.setPlantedCrop(plantedCrop);
+            farmActivity.setFarmedLivestock(farmedLivestock);
             farmActivity.setDescription(details);
             farmActivity.setRef("TR" + ref);
             farmActivity.setAccount(activity1);
@@ -1603,12 +1616,21 @@ public class FinanceController {
 
             int rctRef = referenceRepository.findByChurch(farm()).getRct() + 1;
             int ref = referenceRepository.findByChurch(farm()).getRef() + 1;
-            PlantedCrop plantedCrop = plantedCropRepository.findById(plantedCropId).orElseThrow(EntityNotFoundException::new);
+            String recordFor = request.getRecordFor();
+            FarmedLivestock farmedLivestock = null;
+            PlantedCrop plantedCrop = null;
+            if (recordFor.equalsIgnoreCase("livestock")) {
+                farmedLivestock = farmedLivestockRepository.findById(plantedCropId).orElseThrow(EntityNotFoundException::new);
+            } else if (recordFor.equalsIgnoreCase("crops")) {
+                plantedCrop = plantedCropRepository.findById(plantedCropId).orElseThrow(EntityNotFoundException::new);
+            }
+
             for (ReceiptTableRow receiptTableRow : voucherTableData) {
                 Activity activity1 = activityRepository.findById(receiptTableRow.getActivity()).orElseThrow(EntityNotFoundException::new);
                 FarmActivity farmActivity = new FarmActivity();
                 farmActivity.setFarm(farm());
                 farmActivity.setPlantedCrop(plantedCrop);
+                farmActivity.setFarmedLivestock(farmedLivestock);
                 farmActivity.setDescription(details);
                 farmActivity.setRef("TR" + ref);
                 farmActivity.setAccount(activity1);
@@ -1910,10 +1932,14 @@ public class FinanceController {
         return ResponseEntity.ok().body(farmActivityRepository.findByFarm(farm()));
     }
 
-    @GetMapping("/farm-activities/get/all/{plantedCrop}")
+    @GetMapping("/farm-activities/{recordFor}/get/all/{plantedCrop}")
     @ResponseBody
-    private ResponseEntity<?> farmActivities(@PathVariable Long plantedCrop) {
-        return ResponseEntity.ok().body(farmActivityRepository.findByPlantedCrop_Id(plantedCrop));
+    private ResponseEntity<?> farmActivities(@PathVariable String recordFor, @PathVariable Long plantedCrop) {
+        if (recordFor.equalsIgnoreCase("crops")) {
+            return ResponseEntity.ok().body(farmActivityRepository.findByPlantedCrop_Id(plantedCrop));
+        } else {
+            return ResponseEntity.ok().body(farmActivityRepository.findByFarmedLivestock_Id(plantedCrop));
+        }
     }
 
     @DeleteMapping("farm-activities/delete/{id}")

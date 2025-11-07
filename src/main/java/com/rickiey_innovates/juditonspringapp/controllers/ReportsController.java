@@ -23,6 +23,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.RGBColor;
 import com.rickiey_innovates.juditonspringapp.crop.models.PlantedCrop;
 import com.rickiey_innovates.juditonspringapp.crop.repositories.PlantedCropRepository;
+import com.rickiey_innovates.juditonspringapp.livestock.models.FarmedLivestock;
+import com.rickiey_innovates.juditonspringapp.livestock.repositories.FarmedLivestockRepository;
 import com.rickiey_innovates.juditonspringapp.repositories.ClosingBalanceRepository;
 import com.rickiey_innovates.juditonspringapp.repositories.UserRepository;
 import com.rickiey_innovates.juditonspringapp.DbConnector;
@@ -103,6 +105,8 @@ public class ReportsController {
     ClosingBalanceRepository closingBalanceRepository;
     @Autowired
     private PlantedCropRepository plantedCropRepository;
+    @Autowired
+    private FarmedLivestockRepository farmedLivestockRepository;
 
     private Long userId() {
         return LoginController.getLoggedInUserId();
@@ -577,7 +581,7 @@ public class ReportsController {
 
     @RequestMapping(path = {"/trial/generate"}, method = {RequestMethod.GET})
     @ResponseBody
-    public ResponseEntity<byte[]> printTrialBalance(@RequestParam(name = "activity") String activity, @RequestParam(name = "type") String type, @RequestParam(name = "date") String date, @RequestParam(name = "plantedCropId") String plantedCropId) throws Exception {
+    public ResponseEntity<byte[]> printTrialBalance(@RequestParam(name = "activity") String activity, @RequestParam(name = "type") String type, @RequestParam(name = "date") String date, @RequestParam(name = "reportFor") String reportFor, @RequestParam(name = "plantedCropId") String plantedCropId) throws Exception {
         String uploadDir = "static/" + farm().getUploadPath() + "/pdf";
         String EXTENSION = ".pdf";
         File file = new File(uploadDir + File.separator + RequestContextHolder.currentRequestAttributes().getSessionId() + ".pdf");
@@ -723,152 +727,303 @@ public class ReportsController {
             }
         } else {
             System.out.println("With planted crop id");
-            PlantedCrop plantedCrop = plantedCropRepository.findById(Long.valueOf(plantedCropId)).orElseThrow(EntityNotFoundException::new);
-            subtitle = plantedCrop.getVariety().getName() + " " +plantedCrop.getSeason().getName() + " " + plantedCrop.getPlantedDate().getYear();
-            if (activity.equalsIgnoreCase("all")) {
-                if (type.equalsIgnoreCase("year")) {
-                    title = "Trial Balance as at " + date;
-                    sql = "SELECT year,\n" +
-                            "       month,\n" +
-                            "       CONCAT(month, ' ', year)                              AS yearMonth,\n" +
-                            "       SUM(credit)                                           AS credit,\n" +
-                            "       SUM(debit)                                            AS debit,\n" +
-                            "       SUM(SUM(credit) - SUM(debit)) OVER (ORDER BY year, m) AS balance\n" +
-                            "FROM (SELECT MONTH(Date)     AS m,\n" +
-                            "             MONTHNAME(Date) AS month,\n" +
-                            "             YEAR(Date)      AS year,\n" +
-                            "             credit,\n" +
-                            "             debit\n" +
-                            "      FROM accounttransactions a\n" +
-                            "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
-                            "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
-                            "      WHERE a.description NOT IN (\n" +
-                            "                                  'Cash Withdraw',\n" +
-                            "                                  'Cash From Bank',\n" +
-                            "                                  'Cash Deposit',\n" +
-                            "                                  'Opening Balance',\n" +
-                            "                                  'Deposit to Bank'\n" +
-                            "          )\n" +
-                            "        AND DATE <= '"+date+"'\n" +
-                            "        AND a.farm = "+farm().getId()+"\n" +
-                            "        AND planted_crop = "+plantedCropId+") AS subquery\n" +
-                            "GROUP BY year, yearMonth\n" +
-                            "ORDER BY year, m;";
-                    List<String> sql1 = new ArrayList<>();
-                    int farm = 3;
-                    testReport(sql, portrait_report_template, "trial", 0, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
-                            currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
-                } else {
-                    title = "Trial Balance as at " + date;
-                    sql = "SELECT month,\n" +
-                            "       year,\n" +
-                            "       CONCAT(month, ' ', year)                                as yearMonth,\n" +
-                            "       DATE,\n" +
-                            "       description,\n" +
-                            "       income,\n" +
-                            "       expenditure,\n" +
-                            "       SUM(income - expenditure) OVER (ORDER BY DATE, Account, `transaction id`) AS balance\n" +
-                            "FROM (SELECT `transaction id`,\n" +
-                            "             DATE,\n" +
-                            "             a.Account,\n" +
-                            "             MONTHNAME(Date) as month,\n" +
-                            "             YEAR(Date)      as year,\n" +
-                            "             a.description,\n" +
-                            "             credit          AS income,\n" +
-                            "             debit           AS expenditure\n" +
-                            "      FROM accounttransactions a\n" +
-                            "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
-                            "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
-                            "      WHERE a.description NOT IN (\n" +
-                            "                                  'Cash Withdraw',\n" +
-                            "                                  'Cash From Bank',\n" +
-                            "                                  'Cash Deposit',\n" +
-                            "                                  'Opening Balance',\n" +
-                            "                                  'Deposit to Bank'\n" +
-                            "          )\n" +
-                            "        AND DATE <= '"+date+"'\n" +
-                            "        AND a.farm = "+farm().getId()+"\n" +
-                            "        AND f.planted_crop = "+plantedCropId+") AS subquery\n" +
-                            "order by Date;";
 
-                    List<String> sql1 = new ArrayList<>();
-                    int farm = 3;
-                    testReport(sql, portrait_report_template, "trial", 1, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
-                            currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
+            if (reportFor.equalsIgnoreCase("crops")) {
+                PlantedCrop plantedCrop = plantedCropRepository.findById(Long.valueOf(plantedCropId)).orElseThrow(EntityNotFoundException::new);
+                subtitle = plantedCrop.getVariety().getName() + " " +plantedCrop.getSeason().getName() + " " + plantedCrop.getPlantedDate().getYear();
+                if (activity.equalsIgnoreCase("all")) {
+                    if (type.equalsIgnoreCase("year")) {
+                        title = "Trial Balance as at " + date;
+                        sql = "SELECT year,\n" +
+                                "       month,\n" +
+                                "       CONCAT(month, ' ', year)                              AS yearMonth,\n" +
+                                "       SUM(credit)                                           AS credit,\n" +
+                                "       SUM(debit)                                            AS debit,\n" +
+                                "       SUM(SUM(credit) - SUM(debit)) OVER (ORDER BY year, m) AS balance\n" +
+                                "FROM (SELECT MONTH(Date)     AS m,\n" +
+                                "             MONTHNAME(Date) AS month,\n" +
+                                "             YEAR(Date)      AS year,\n" +
+                                "             credit,\n" +
+                                "             debit\n" +
+                                "      FROM accounttransactions a\n" +
+                                "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
+                                "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
+                                "      WHERE a.description NOT IN (\n" +
+                                "                                  'Cash Withdraw',\n" +
+                                "                                  'Cash From Bank',\n" +
+                                "                                  'Cash Deposit',\n" +
+                                "                                  'Opening Balance',\n" +
+                                "                                  'Deposit to Bank'\n" +
+                                "          )\n" +
+                                "        AND DATE <= '"+date+"'\n" +
+                                "        AND a.farm = "+farm().getId()+"\n" +
+                                "        AND planted_crop = "+plantedCropId+") AS subquery\n" +
+                                "GROUP BY year, yearMonth\n" +
+                                "ORDER BY year, m;";
+                        List<String> sql1 = new ArrayList<>();
+                        int farm = 3;
+                        testReport(sql, portrait_report_template, "trial", 0, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
+                                currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
+                    } else {
+                        title = "Trial Balance as at " + date;
+                        sql = "SELECT month,\n" +
+                                "       year,\n" +
+                                "       CONCAT(month, ' ', year)                                as yearMonth,\n" +
+                                "       DATE,\n" +
+                                "       description,\n" +
+                                "       income,\n" +
+                                "       expenditure,\n" +
+                                "       SUM(income - expenditure) OVER (ORDER BY DATE, Account, `transaction id`) AS balance\n" +
+                                "FROM (SELECT `transaction id`,\n" +
+                                "             DATE,\n" +
+                                "             a.Account,\n" +
+                                "             MONTHNAME(Date) as month,\n" +
+                                "             YEAR(Date)      as year,\n" +
+                                "             a.description,\n" +
+                                "             credit          AS income,\n" +
+                                "             debit           AS expenditure\n" +
+                                "      FROM accounttransactions a\n" +
+                                "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
+                                "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
+                                "      WHERE a.description NOT IN (\n" +
+                                "                                  'Cash Withdraw',\n" +
+                                "                                  'Cash From Bank',\n" +
+                                "                                  'Cash Deposit',\n" +
+                                "                                  'Opening Balance',\n" +
+                                "                                  'Deposit to Bank'\n" +
+                                "          )\n" +
+                                "        AND DATE <= '"+date+"'\n" +
+                                "        AND a.farm = "+farm().getId()+"\n" +
+                                "        AND f.planted_crop = "+plantedCropId+") AS subquery\n" +
+                                "order by Date;";
+
+                        List<String> sql1 = new ArrayList<>();
+                        int farm = 3;
+                        testReport(sql, portrait_report_template, "trial", 1, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
+                                currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
+                    }
+                } else {
+                    String activityName = activityRepository.findById(Integer.valueOf(activity)).orElse(null).getAccount();
+                    title = activityName + " ACCOUNT TRIAL BALANCE AS AT " + date;
+                    if (type.equalsIgnoreCase("year")) {
+                        sql = "SELECT year,\n" +
+                                "       month,\n" +
+                                "       CONCAT(month, ' ', year)                              AS yearMonth,\n" +
+                                "       SUM(credit)                                           AS credit,\n" +
+                                "       SUM(debit)                                            AS debit,\n" +
+                                "       SUM(SUM(credit) - SUM(debit)) OVER (ORDER BY year, m) AS balance\n" +
+                                "FROM (SELECT MONTH(Date)     AS m,\n" +
+                                "             MONTHNAME(Date) AS month,\n" +
+                                "             YEAR(Date)      AS year,\n" +
+                                "             credit,\n" +
+                                "             debit\n" +
+                                "      FROM accounttransactions a\n" +
+                                "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
+                                "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
+                                "      WHERE a.Account = "+activity+"\n" +
+                                "        AND a.description NOT IN (\n" +
+                                "                                  'Cash Withdraw',\n" +
+                                "                                  'Cash From Bank',\n" +
+                                "                                  'Cash Deposit',\n" +
+                                "                                  'Opening Balance',\n" +
+                                "                                  'Deposit to Bank'\n" +
+                                "          )\n" +
+                                "        AND DATE <= '"+date+"'\n" +
+                                "        AND a.farm = "+farm().getId()+"\n" +
+                                "        and f.planted_crop = "+plantedCropId+") AS subquery\n" +
+                                "GROUP BY year, yearMonth\n" +
+                                "ORDER BY year, m;";
+                        List<String> sql1 = new ArrayList<>();
+                        int farm = 3;
+                        testReport(sql, portrait_report_template, "trial", 0, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
+                                currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
+                    } else {
+                        sql = "SELECT DATE,\n" +
+                                "       month,\n" +
+                                "       description,\n" +
+                                "       income,\n" +
+                                "       expenditure,\n" +
+                                "       (@prev := @prev + income - expenditure) AS balance\n" +
+                                "FROM (SELECT @prev := 0,\n" +
+                                "             DATE,\n" +
+                                "             a.Account,\n" +
+                                "             MONTHNAME(Date) as month,\n" +
+                                "             YEAR(Date)      as year,\n" +
+                                "             a.description,\n" +
+                                "             credit          as income,\n" +
+                                "             debit           as expenditure\n" +
+                                "      FROM accounttransactions a\n" +
+                                "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
+                                "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
+                                "      WHERE a.Account = "+activity+"\n" +
+                                "        and a.description NOT IN (\n" +
+                                "                                  'Cash Withdraw',\n" +
+                                "                                  'Cash From Bank',\n" +
+                                "                                  'Cash Deposit',\n" +
+                                "                                  'Opening Balance',\n" +
+                                "                                  'Deposit to Bank'\n" +
+                                "          )\n" +
+                                "\n" +
+                                "        AND DATE <= '"+date+"'\n" +
+                                "        AND a.farm = "+farm().getId()+"\n" +
+                                "        AND f.planted_crop = "+plantedCropId+"\n" +
+                                "      order by Date) a;";
+
+                        List<String> sql1 = new ArrayList<>();
+                        int farm = farm().getId();
+                        testReport(sql, portrait_report_template, "trial", 1, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
+                                currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
+                    }
                 }
             } else {
-                String activityName = activityRepository.findById(Integer.valueOf(activity)).orElse(null).getAccount();
-                title = activityName + " ACCOUNT TRIAL BALANCE AS AT " + date;
-                if (type.equalsIgnoreCase("year")) {
-                    sql = "SELECT year,\n" +
-                            "       month,\n" +
-                            "       CONCAT(month, ' ', year)                              AS yearMonth,\n" +
-                            "       SUM(credit)                                           AS credit,\n" +
-                            "       SUM(debit)                                            AS debit,\n" +
-                            "       SUM(SUM(credit) - SUM(debit)) OVER (ORDER BY year, m) AS balance\n" +
-                            "FROM (SELECT MONTH(Date)     AS m,\n" +
-                            "             MONTHNAME(Date) AS month,\n" +
-                            "             YEAR(Date)      AS year,\n" +
-                            "             credit,\n" +
-                            "             debit\n" +
-                            "      FROM accounttransactions a\n" +
-                            "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
-                            "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
-                            "      WHERE a.Account = "+activity+"\n" +
-                            "        AND a.description NOT IN (\n" +
-                            "                                  'Cash Withdraw',\n" +
-                            "                                  'Cash From Bank',\n" +
-                            "                                  'Cash Deposit',\n" +
-                            "                                  'Opening Balance',\n" +
-                            "                                  'Deposit to Bank'\n" +
-                            "          )\n" +
-                            "        AND DATE <= '"+date+"'\n" +
-                            "        AND a.farm = "+farm().getId()+"\n" +
-                            "        and f.planted_crop = "+plantedCropId+") AS subquery\n" +
-                            "GROUP BY year, yearMonth\n" +
-                            "ORDER BY year, m;";
-                    List<String> sql1 = new ArrayList<>();
-                    int farm = 3;
-                    testReport(sql, portrait_report_template, "trial", 0, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
-                            currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
-                } else {
-                    sql = "SELECT DATE,\n" +
-                            "       month,\n" +
-                            "       description,\n" +
-                            "       income,\n" +
-                            "       expenditure,\n" +
-                            "       (@prev := @prev + income - expenditure) AS balance\n" +
-                            "FROM (SELECT @prev := 0,\n" +
-                            "             DATE,\n" +
-                            "             a.Account,\n" +
-                            "             MONTHNAME(Date) as month,\n" +
-                            "             YEAR(Date)      as year,\n" +
-                            "             a.description,\n" +
-                            "             credit          as income,\n" +
-                            "             debit           as expenditure\n" +
-                            "      FROM accounttransactions a\n" +
-                            "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
-                            "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
-                            "      WHERE a.Account = "+activity+"\n" +
-                            "        and a.description NOT IN (\n" +
-                            "                                  'Cash Withdraw',\n" +
-                            "                                  'Cash From Bank',\n" +
-                            "                                  'Cash Deposit',\n" +
-                            "                                  'Opening Balance',\n" +
-                            "                                  'Deposit to Bank'\n" +
-                            "          )\n" +
-                            "\n" +
-                            "        AND DATE <= '"+date+"'\n" +
-                            "        AND a.farm = "+farm().getId()+"\n" +
-                            "        AND f.planted_crop = "+plantedCropId+"\n" +
-                            "      order by Date) a;";
+                FarmedLivestock plantedCrop = farmedLivestockRepository.findById(Long.valueOf(plantedCropId)).orElseThrow(EntityNotFoundException::new);
+                subtitle = plantedCrop.getBreed().getName() + " " + plantedCrop.getKeepingDate().getYear();
+                if (activity.equalsIgnoreCase("all")) {
+                    if (type.equalsIgnoreCase("year")) {
+                        title = "Trial Balance as at " + date;
+                        sql = "SELECT year,\n" +
+                                "       month,\n" +
+                                "       CONCAT(month, ' ', year)                              AS yearMonth,\n" +
+                                "       SUM(credit)                                           AS credit,\n" +
+                                "       SUM(debit)                                            AS debit,\n" +
+                                "       SUM(SUM(credit) - SUM(debit)) OVER (ORDER BY year, m) AS balance\n" +
+                                "FROM (SELECT MONTH(Date)     AS m,\n" +
+                                "             MONTHNAME(Date) AS month,\n" +
+                                "             YEAR(Date)      AS year,\n" +
+                                "             credit,\n" +
+                                "             debit\n" +
+                                "      FROM accounttransactions a\n" +
+                                "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
+                                "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
+                                "      WHERE a.description NOT IN (\n" +
+                                "                                  'Cash Withdraw',\n" +
+                                "                                  'Cash From Bank',\n" +
+                                "                                  'Cash Deposit',\n" +
+                                "                                  'Opening Balance',\n" +
+                                "                                  'Deposit to Bank'\n" +
+                                "          )\n" +
+                                "        AND DATE <= '"+date+"'\n" +
+                                "        AND a.farm = "+farm().getId()+"\n" +
+                                "        AND farmed_livestock = "+plantedCropId+") AS subquery\n" +
+                                "GROUP BY year, yearMonth\n" +
+                                "ORDER BY year, m;";
+                        List<String> sql1 = new ArrayList<>();
+                        int farm = 3;
+                        testReport(sql, portrait_report_template, "trial", 0, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
+                                currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
+                    } else {
+                        title = "Trial Balance as at " + date;
+                        sql = "SELECT month,\n" +
+                                "       year,\n" +
+                                "       CONCAT(month, ' ', year)                                as yearMonth,\n" +
+                                "       DATE,\n" +
+                                "       description,\n" +
+                                "       income,\n" +
+                                "       expenditure,\n" +
+                                "       SUM(income - expenditure) OVER (ORDER BY DATE, Account, `transaction id`) AS balance\n" +
+                                "FROM (SELECT `transaction id`,\n" +
+                                "             DATE,\n" +
+                                "             a.Account,\n" +
+                                "             MONTHNAME(Date) as month,\n" +
+                                "             YEAR(Date)      as year,\n" +
+                                "             a.description,\n" +
+                                "             credit          AS income,\n" +
+                                "             debit           AS expenditure\n" +
+                                "      FROM accounttransactions a\n" +
+                                "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
+                                "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
+                                "      WHERE a.description NOT IN (\n" +
+                                "                                  'Cash Withdraw',\n" +
+                                "                                  'Cash From Bank',\n" +
+                                "                                  'Cash Deposit',\n" +
+                                "                                  'Opening Balance',\n" +
+                                "                                  'Deposit to Bank'\n" +
+                                "          )\n" +
+                                "        AND DATE <= '"+date+"'\n" +
+                                "        AND a.farm = "+farm().getId()+"\n" +
+                                "        AND f.farmed_livestock = "+plantedCropId+") AS subquery\n" +
+                                "order by Date;";
 
-                    List<String> sql1 = new ArrayList<>();
-                    int farm = farm().getId();
-                    testReport(sql, portrait_report_template, "trial", 1, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
-                            currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
+                        List<String> sql1 = new ArrayList<>();
+                        int farm = 3;
+                        testReport(sql, portrait_report_template, "trial", 1, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
+                                currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
+                    }
+                } else {
+                    String activityName = activityRepository.findById(Integer.valueOf(activity)).orElse(null).getAccount();
+                    title = activityName + " ACCOUNT TRIAL BALANCE AS AT " + date;
+                    if (type.equalsIgnoreCase("year")) {
+                        sql = "SELECT year,\n" +
+                                "       month,\n" +
+                                "       CONCAT(month, ' ', year)                              AS yearMonth,\n" +
+                                "       SUM(credit)                                           AS credit,\n" +
+                                "       SUM(debit)                                            AS debit,\n" +
+                                "       SUM(SUM(credit) - SUM(debit)) OVER (ORDER BY year, m) AS balance\n" +
+                                "FROM (SELECT MONTH(Date)     AS m,\n" +
+                                "             MONTHNAME(Date) AS month,\n" +
+                                "             YEAR(Date)      AS year,\n" +
+                                "             credit,\n" +
+                                "             debit\n" +
+                                "      FROM accounttransactions a\n" +
+                                "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
+                                "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
+                                "      WHERE a.Account = "+activity+"\n" +
+                                "        AND a.description NOT IN (\n" +
+                                "                                  'Cash Withdraw',\n" +
+                                "                                  'Cash From Bank',\n" +
+                                "                                  'Cash Deposit',\n" +
+                                "                                  'Opening Balance',\n" +
+                                "                                  'Deposit to Bank'\n" +
+                                "          )\n" +
+                                "        AND DATE <= '"+date+"'\n" +
+                                "        AND a.farm = "+farm().getId()+"\n" +
+                                "        and f.farmed_livestock = "+plantedCropId+") AS subquery\n" +
+                                "GROUP BY year, yearMonth\n" +
+                                "ORDER BY year, m;";
+                        List<String> sql1 = new ArrayList<>();
+                        int farm = 3;
+                        testReport(sql, portrait_report_template, "trial", 0, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
+                                currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
+                    } else {
+                        sql = "SELECT DATE,\n" +
+                                "       month,\n" +
+                                "       description,\n" +
+                                "       income,\n" +
+                                "       expenditure,\n" +
+                                "       (@prev := @prev + income - expenditure) AS balance\n" +
+                                "FROM (SELECT @prev := 0,\n" +
+                                "             DATE,\n" +
+                                "             a.Account,\n" +
+                                "             MONTHNAME(Date) as month,\n" +
+                                "             YEAR(Date)      as year,\n" +
+                                "             a.description,\n" +
+                                "             credit          as income,\n" +
+                                "             debit           as expenditure\n" +
+                                "      FROM accounttransactions a\n" +
+                                "               INNER JOIN activities b ON a.Account = b.`Account id`\n" +
+                                "               INNER JOIN farm_activity f ON a.`transaction id` = f.`accounttransaction_transaction id`\n" +
+                                "      WHERE a.Account = "+activity+"\n" +
+                                "        and a.description NOT IN (\n" +
+                                "                                  'Cash Withdraw',\n" +
+                                "                                  'Cash From Bank',\n" +
+                                "                                  'Cash Deposit',\n" +
+                                "                                  'Opening Balance',\n" +
+                                "                                  'Deposit to Bank'\n" +
+                                "          )\n" +
+                                "\n" +
+                                "        AND DATE <= '"+date+"'\n" +
+                                "        AND a.farm = "+farm().getId()+"\n" +
+                                "        AND f.farmed_livestock = "+plantedCropId+"\n" +
+                                "      order by Date) a;";
+
+                        List<String> sql1 = new ArrayList<>();
+                        int farm = farm().getId();
+                        testReport(sql, portrait_report_template, "trial", 1, sql1, title, subtitle, uploadDir + File.separator + RequestContextHolder.
+                                currentRequestAttributes().getSessionId() + EXTENSION, farm, "");
+                    }
                 }
             }
+
         }
 
         System.out.println(sql);

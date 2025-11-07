@@ -9,6 +9,5 @@ import java.io.Serializable;
  */
 @Value
 public class CropTypeDto implements Serializable {
-    Long cropName;
     String cropType;
 }

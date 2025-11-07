@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ReceiptRequest {
+    private String recordFor;
     Long plantedCropId;
     private LocalDate date;
     private String receivedFrom;
@@ -21,6 +22,7 @@ public class ReceiptRequest {
     @Override
     public String toString() {
         return "ReceiptRequest{" +
+                "recordFor=" + recordFor +
                 "plantedCropId=" + plantedCropId +
                 ", date=" + date +
                 ", receivedFrom='" + receivedFrom + '\'' +

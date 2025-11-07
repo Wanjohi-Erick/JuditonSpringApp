@@ -190,8 +190,10 @@ public class CropController {
         System.out.println(cropVarietyDTO);
         String message = "";
         try {
+            Crop crop = cropRepository.findById(cropVarietyDTO.getCropName()).orElseThrow(EntityNotFoundException::new);
             CropVariety cropVariety = new CropVariety();
             cropVariety.setName(cropVarietyDTO.getName());
+            cropVariety.setCrop(crop);
             cropVariety.setFarm(farm());
             cropVarietyRepository.save(cropVariety);
             message = "Crop variety added successfully";
@@ -219,7 +221,9 @@ public class CropController {
         try {
             CropVariety existingCropVariety = cropVarietyRepository.findById(updatedCropVariety.getId()).orElse(null);
             if (existingCropVariety != null) {
+
                 existingCropVariety.setName(updatedCropVariety.getName());
+                existingCropVariety.setCrop(updatedCropVariety.getCrop());
 
                 cropVarietyRepository.save(existingCropVariety);
 
@@ -282,6 +286,7 @@ public class CropController {
 
     @PostMapping("/names/add")
     public String addName(RedirectAttributes redirectAttributes, CropDTO cropDTO) {
+        System.out.println("cropdto: " + cropDTO);
         String message = "";
         try {
             Crop cropName = new Crop();
@@ -368,13 +373,17 @@ public class CropController {
                     double exp = farmActivities.stream()
                             .filter(activity -> activity.getPlantedCrop() != null) // Ensure PlantedCrop is not null
                             .filter(activity -> activity.getPlantedCrop().getId().equals(crop.getId()))
-                            .mapToDouble(activity -> activity.getAccounttransaction().getDebit())
+                            .mapToDouble(activity -> activity.getAccounttransaction() != null
+                                    ? activity.getAccounttransaction().getDebit()
+                                    : 0.0)
                             .sum();
 
                     double inc = farmActivities.stream()
                             .filter(activity -> activity.getPlantedCrop() != null) // Ensure PlantedCrop is not null
                             .filter(activity -> activity.getPlantedCrop().getId().equals(crop.getId()))
-                            .mapToDouble(activity -> activity.getAccounttransaction().getCredit())
+                            .mapToDouble(activity -> activity.getAccounttransaction() != null
+                                    ? activity.getAccounttransaction().getCredit()
+                                    : 0.0)
                             .sum();
 
                     double pro = inc - exp;

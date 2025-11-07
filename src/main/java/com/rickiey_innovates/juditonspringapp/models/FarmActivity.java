@@ -3,6 +3,7 @@ package com.rickiey_innovates.juditonspringapp.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rickiey_innovates.juditonspringapp.crop.models.PlantedCrop;
+import com.rickiey_innovates.juditonspringapp.livestock.models.FarmedLivestock;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +39,11 @@ public class FarmActivity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "planted_crop")
     private PlantedCrop plantedCrop;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "farmed_livestock")
+    private FarmedLivestock farmedLivestock;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

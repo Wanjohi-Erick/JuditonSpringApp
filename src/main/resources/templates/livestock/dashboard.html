@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>
+    Dashboard
+  </title>
+  <div th:replace="~{fragments/head}"></div>
+</head>
+
+<body class="g-sidenav-show text-xxs bg-gray-200">
+<div th:replace="~{fragments/livestock/sidenav}"></div>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <!-- Navbar -->
+  <div th:replace="~{fragments/livestock/navbar}"></div>
+  <!-- End Navbar -->
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="card">
+          <div class="card-header p-3 pt-2">
+            <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+              <i class="material-icons opacity-10">weekend</i>
+            </div>
+            <div class="text-end pt-1">
+              <p class="text-sm mb-0 text-capitalize">Total Users</p>
+              <h4 class="mb-0"  th:text="${summary.getMemberTotal()}"></h4>
+            </div>
+          </div>
+          <hr class="dark horizontal my-0">
+        </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="card">
+          <div class="card-header p-3 pt-2">
+            <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+              <i class="material-icons opacity-10">person</i>
+            </div>
+            <div class="text-end pt-1">
+              <p class="text-sm mb-0 text-capitalize">Total Collection</p>
+              <h4 class="mb-0"  th:text="${summary.getIncome()}"></h4>
+            </div>
+          </div>
+          <hr class="dark horizontal my-0">
+        </div>
+      </div>
+      <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+        <div class="card">
+          <div class="card-header p-3 pt-2">
+            <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+              <i class="material-icons opacity-10">person</i>
+            </div>
+            <div class="text-end pt-1">
+              <p class="text-sm mb-0 text-capitalize">Total Expenses</p>
+              <h4 class="mb-0" th:text="${summary.getExpenses()}"></h4>
+            </div>
+          </div>
+          <hr class="dark horizontal my-0">
+        </div>
+      </div>
+      <div class="col-xl-3 col-sm-6">
+        <div class="card">
+          <div class="card-header p-3 pt-2">
+            <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+              <i class="material-icons opacity-10">weekend</i>
+            </div>
+            <div class="text-end pt-1">
+              <p class="text-sm mb-0 text-capitalize">Balance</p>
+              <h4 class="mb-0" th:text="${summary.getBalance()}"></h4>
+            </div>
+          </div>
+          <hr class="dark horizontal my-0">
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-lg-6 col-md-6 mt-4 mb-4">
+        <div class="card z-index-2  ">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+            <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
+              <div class="chart">
+                <canvas id="chart-line" class="chart-canvas" height="170"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <hr class="dark horizontal">
+            <h6 class="mb-0 "> Monthly Income </h6>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 mt-4 mb-3">
+        <div class="card z-index-2 ">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+            <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
+              <div class="chart">
+                <canvas id="chart-line-tasks" class="chart-canvas" height="170"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <hr class="dark horizontal">
+            <h6 class="mb-0 ">Monthly Expenses</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+        <div class="card z-index-2  ">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+            <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
+              <div class="chart">
+                <canvas id="chart-line" class="chart-canvas" height="170"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <hr class="dark horizontal">
+            <h6 class="mb-0 "> Summary </h6>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="card h-100">
+          <div class="card-header pb-0">
+            <h6>Transactions overview</h6>
+            <p class="text-sm">
+              <i th:if="${summary.percentageExpensesIncrease >= 0}" class="fa fa-arrow-up text-success" aria-hidden="true"></i>
+              <i th:if="${summary.percentageExpensesIncrease < 0}" class="fa fa-arrow-down text-danger" aria-hidden="true"></i>
+              <span class="font-weight-bold" th:text="${summary.percentageExpensesIncrease} + '%'"></span> this month
+            </p>
+          </div>
+          <div class="card-body p-3">
+            <div class="timeline timeline-one-side" th:each="transaction : ${transactions}">
+              <div class="timeline-block mb-3">
+                  <span class="timeline-step">
+                    <i th:if="${transaction.credit > 0}" class="fa fa-arrow-up text-success"></i>
+                    <i th:if="${transaction.debit > 0}" class="fa fa-arrow-down text-danger"></i>
+
+                  </span>
+                <div class="timeline-content">
+                  <h6 class="col pe-0 text-dark text-sm font-weight-bold mb-0" th:text="${transaction.description}">
+                    <span th:if="${transaction.credit > 0}" class="text-success font-weight-bold text-xs mt-1 mb-0" th:text="'Ksh. ' + ${transaction.credit}"></span>
+                    <span th:if="${transaction.debit > 0}" class="text-danger font-weight-bold text-xs mt-1 mb-0" th:text="'Ksh. ' + ${transaction.debit}"></span>
+                  </h6>
+                  <p class="text-secondary font-weight-bold text-xs mt-1 mb-0" th:text="${transaction.date}"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div th:replace="~{fragments/footer}"></div>
+  </div>
+</main>
+<div th:replace="~{fragments/ui_settings}"></div>
+<!--   Core JS Files   -->
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/chartjs.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $.ajax({
+      url: "/api/getIncomeAndExpenses",
+      method: "GET",
+      dataType: "json",
+      success: function(data) {
+        console.log(data)
+        const groupedData = {};
+
+        // Group data by month and combine tithes and offerings
+        data.forEach(entry => {
+          const month = entry.monthlyIncome ? entry.monthlyIncome.month : entry.monthlyOffering.month;
+
+          if (!groupedData[month]) {
+            groupedData[month] = { tithe: 0, offering: 0 };
+          }
+
+          if (entry.monthlyIncome) {
+            groupedData[month].tithe = parseFloat(entry.monthlyIncome.credit);
+          }
+
+          if (entry.monthlyOffering) {
+            groupedData[month].offering = parseFloat(entry.monthlyOffering.credit);
+          }
+        });
+
+        const months = Object.keys(groupedData);
+        const tithes = months.map(month => groupedData[month].tithe);
+        const offerings = months.map(month => groupedData[month].offering);
+
+        var ctx = document.getElementById("chart-bars").getContext("2d");
+
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: months,
+            datasets: [
+              {
+                label: "Tithe",
+                tension: 0.4,
+                borderWidth: 0,
+                borderRadius: 4,
+                borderSkipped: false,
+                backgroundColor: "rgba(255, 255, 255, .8)",
+                data: tithes,
+                maxBarThickness: 6,
+              },
+              {
+                label: "Offering",
+                tension: 0.4,
+                borderWidth: 0,
+                borderRadius: 4,
+                borderSkipped: false,
+                backgroundColor: "rgba(54, 162, 235, 1)",
+                data: offerings,
+                maxBarThickness: 6,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              }
+            },
+            interaction: {
+              intersect: false,
+              mode: 'index',
+            },
+            scales: {
+              y: {
+                grid: {
+                  drawBorder: false,
+                  display: true,
+                  drawOnChartArea: true,
+                  drawTicks: false,
+                  borderDash: [5, 5],
+                  color: 'rgba(255, 255, 255, .2)'
+                },
+                ticks: {
+                  display: true,
+                  color: '#f8f9fa',
+                  padding: 10,
+                  font: {
+                    size: 14,
+                    weight: 300,
+                    family: "Roboto",
+                    style: 'normal',
+                    lineHeight: 2
+                  },
+                }
+              },
+              x: {
+                grid: {
+                  drawBorder: false,
+                  display: false,
+                  drawOnChartArea: false,
+                  drawTicks: false,
+                  borderDash: [5, 5]
+                },
+                ticks: {
+                  display: true,
+                  color: '#f8f9fa',
+                  padding: 10,
+                  font: {
+                    size: 14,
+                    weight: 300,
+                    family: "Roboto",
+                    style: 'normal',
+                    lineHeight: 2
+                  },
+                }
+              },
+            },
+          },
+        });
+      },
+      error: function(error) {
+        console.error("Error fetching data:", error);
+      },
+    });
+
+    $.ajax({
+      url: "/api/getMonthlyIncome",
+      method: "GET",
+      dataType: "json",
+      success: function (data) {
+        var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+
+        const months = data.map(entry => entry.month);
+        const credits = data.map(entry => entry.credit);
+
+        new Chart(ctx2, {
+          type: "line",
+          data: {
+            labels: months,
+            datasets: [{
+              label: "Income",
+              tension: 0,
+              borderWidth: 0,
+              pointRadius: 5,
+              pointBackgroundColor: "rgba(255, 255, 255, .8)",
+              pointBorderColor: "transparent",
+              borderColor: "rgba(255, 255, 255, .8)",
+              borderColor: "rgba(255, 255, 255, .8)",
+              borderWidth: 4,
+              backgroundColor: "transparent",
+              fill: true,
+              data: credits,
+              maxBarThickness: 6
+
+            }],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              }
+            },
+            interaction: {
+              intersect: false,
+              mode: 'index',
+            },
+            scales: {
+              y: {
+                grid: {
+                  drawBorder: false,
+                  display: true,
+                  drawOnChartArea: true,
+                  drawTicks: false,
+                  borderDash: [5, 5],
+                  color: 'rgba(255, 255, 255, .2)'
+                },
+                ticks: {
+                  display: true,
+                  color: '#f8f9fa',
+                  padding: 10,
+                  font: {
+                    size: 14,
+                    weight: 300,
+                    family: "Roboto",
+                    style: 'normal',
+                    lineHeight: 2
+                  },
+                }
+              },
+              x: {
+                grid: {
+                  drawBorder: false,
+                  display: false,
+                  drawOnChartArea: false,
+                  drawTicks: false,
+                  borderDash: [5, 5]
+                },
+                ticks: {
+                  display: true,
+                  color: '#f8f9fa',
+                  padding: 10,
+                  font: {
+                    size: 14,
+                    weight: 300,
+                    family: "Roboto",
+                    style: 'normal',
+                    lineHeight: 2
+                  },
+                }
+              },
+            },
+          },
+        });
+      },
+      error: function (error) {
+        console.error("Error fetching data:", error);
+      }
+    });
+
+    $.ajax({
+      url: "/api/getMonthlyExpenses",
+      method: "GET",
+      dataType: "json",
+      success: function (data) {
+        const months = data.map(entry => entry.month);
+        const credits = data.map(entry => entry.credit);
+        var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
+
+        new Chart(ctx3, {
+          type: "line",
+          data: {
+            labels: months,
+            datasets: [{
+              label: "Expenses",
+              tension: 0,
+              borderWidth: 0,
+              pointRadius: 5,
+              pointBackgroundColor: "rgba(255, 255, 255, .8)",
+              pointBorderColor: "transparent",
+              borderColor: "rgba(255, 255, 255, .8)",
+              borderWidth: 4,
+              backgroundColor: "transparent",
+              fill: true,
+              data: credits,
+              maxBarThickness: 6
+
+            }],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              }
+            },
+            interaction: {
+              intersect: false,
+              mode: 'index',
+            },
+            scales: {
+              y: {
+                grid: {
+                  drawBorder: false,
+                  display: true,
+                  drawOnChartArea: true,
+                  drawTicks: false,
+                  borderDash: [5, 5],
+                  color: 'rgba(255, 255, 255, .2)'
+                },
+                ticks: {
+                  display: true,
+                  padding: 10,
+                  color: '#f8f9fa',
+                  font: {
+                    size: 14,
+                    weight: 300,
+                    family: "Roboto",
+                    style: 'normal',
+                    lineHeight: 2
+                  },
+                }
+              },
+              x: {
+                grid: {
+                  drawBorder: false,
+                  display: false,
+                  drawOnChartArea: false,
+                  drawTicks: false,
+                  borderDash: [5, 5]
+                },
+                ticks: {
+                  display: true,
+                  color: '#f8f9fa',
+                  padding: 10,
+                  font: {
+                    size: 14,
+                    weight: 300,
+                    family: "Roboto",
+                    style: 'normal',
+                    lineHeight: 2
+                  },
+                }
+              },
+            },
+          },
+        });
+      },
+      error: function (error) {
+        console.error("Error fetching data:", error);
+      }
+    });
+  });
+</script>
+<script>
+  var win = navigator.platform.indexOf('Win') > -1;
+  if (win && document.querySelector('#sidenav-scrollbar')) {
+    var options = {
+      damping: '0.5'
+    }
+    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+  }
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="../assets/js/material-dashboard.min.js?v=3.0.5"></script>
+</body>
+
+</html>

@@ -56,7 +56,7 @@ dependencies {
 
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'javax.validation:validation-api:2.0.1.Final'
-    implementation 'com.github.AfricasTalkingLtd.africastalking-java:core:3.4.9'
+    implementation 'com.github.AfricasTalkingLtd.africastalking-java:core:3.4.11'
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
     implementation 'net.sf.jasperreports:jasperreports:6.20.5'
     implementation 'ar.com.fdvs:DynamicJasper:5.3.8'
@@ -73,7 +73,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.github.javafaker/javafaker
     implementation 'com.github.javafaker:javafaker:1.0.2'
     implementation 'com.itextpdf:itextpdf:5.5.13.3'
-
+    implementation 'org.jboss.logging:jboss-logging:3.5.0.Final'
 
 
 // https://mvnrepository.com/artifact/org.projectlombok/lombok

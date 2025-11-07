@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class VoucherRequest {
+    private String recordFor;
     private Long plantedCropId;
     private LocalDate date;
     private int activity;
@@ -26,7 +27,8 @@ public class VoucherRequest {
     @Override
     public String toString() {
         return "VoucherRequest{" +
-                "plantedCropId=" + plantedCropId +
+                "recordFor='" + recordFor + '\'' +
+                ", plantedCropId=" + plantedCropId +
                 ", date=" + date +
                 ", activity=" + activity +
                 ", payee='" + payee + '\'' +

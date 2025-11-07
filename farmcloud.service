@@ -1,0 +1,17 @@
+[Unit]
+Description=Shule one  Api
+After=syslog.target
+After=network.target[Service]
+User=username
+Type=simple
+
+[Service]
+ExecStart=/usr/bin/java -jar /usr/local/bin/JuditonSpringApp.jar
+Restart=on-failure
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=JuditonSpringApp
+WorkingDirectory=/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target

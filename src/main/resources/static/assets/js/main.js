@@ -4231,7 +4231,16 @@ function printTrialBalance(event) {
     let date = $('#trialBalanceModal input[name="date"]').val();
     let plantedCropId = $('#plantedCropId').val();
 
-    let url = "/reports/trial/generate?activity=" + activity + "&type=" + groupBy + "&date=" + date + "&plantedCropId=" + plantedCropId;
+    var currentUrl = window.location.href;
+    var wordToCheck = "livestock"; // Replace with the word you're looking for
+    let reportFor = null;
+    if (currentUrl.includes(wordToCheck)) {
+        reportFor = wordToCheck;
+    } else {
+        reportFor = "crops";
+    }
+
+    let url = "/reports/trial/generate?activity=" + activity + "&type=" + groupBy + "&date=" + date + "&reportFor=" + reportFor + "&plantedCropId=" + plantedCropId;
     console.log(url);
     var xhr = new XMLHttpRequest();
 
@@ -4466,6 +4475,20 @@ function getCropVarieties() {
         $.ajax({
             contentType: "application/json",
             url: "/crop/varieties/get/all",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                resolve(data);
+            }
+        });
+    });
+}
+
+function getBreeds() {
+    return new Promise(function (resolve) {
+        $.ajax({
+            contentType: "application/json",
+            url: "/livestock/breeds/get/all",
             dataType: 'json',
             success: function (data) {
                 console.log(data)

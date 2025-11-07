@@ -1,7 +1,9 @@
-package com.rickiey_innovates.juditonspringapp.crop.models;
+package com.rickiey_innovates.juditonspringapp.livestock.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rickiey_innovates.juditonspringapp.crop.models.CropType;
 import com.rickiey_innovates.juditonspringapp.models.Farm;
+import com.rickiey_innovates.juditonspringapp.models.Units;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,18 +13,16 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Setter
 @Entity
-@Table(name = "crop_variety")
-public class CropVariety {
+@Table(name = "livestock")
+public class Livestock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "crop")
-    private Crop crop;
+    private String imageUrl;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

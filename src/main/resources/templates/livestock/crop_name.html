@@ -4,17 +4,17 @@
 
 <head>
     <title>
-        Crop Names
+        LIVESTOCK
     </title>
     <div th:replace="~{fragments/head}"></div>
 </head>
 
 <body class="g-sidenav-show text-xxs bg-gray-200">
 
-<div th:replace="~{fragments/crop/sidenav}"></div>
+<div th:replace="~{fragments/livestock/sidenav}"></div>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-    <div th:replace="~{fragments/crop/navbar}"></div>
+    <div th:replace="~{fragments/livestock/navbar}"></div>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
         <div class="row">
@@ -22,7 +22,7 @@
                 <div class="card my-4">
                     <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                         <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                            <h6 class="text-white text-capitalize ps-3">Crops</h6>
+                            <h6 class="text-white text-capitalize ps-3">Livestock</h6>
                         </div>
                     </div>
 
@@ -32,7 +32,7 @@
                     <div class="card-body px-0 pb-2">
                         <div class=" me-3 my-3 text-end">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newMemberModal">
-                                <i class="material-icons text-sm">add</i>&nbsp;&nbsp;New Crop
+                                <i class="material-icons text-sm">add</i>&nbsp;&nbsp;New Livestock
                             </button>
                         </div>
                         <div class="table-responsive timetable p-0">
@@ -41,10 +41,7 @@
                                 <thead>
                                 <tr>
                                     
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">CROP NAME</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">TYPE</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PLANTING UNITS</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HARVESTING UNITS</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">LIVESTOCK NAME</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -53,13 +50,10 @@
                                 <tr th:each="cropName : ${cropNames}">
 
                                     <td th:text="${cropName.name}"></td>
-                                    <td th:text="${cropName.type.cropType}"></td>
-                                    <td th:text="${cropName.plantingUnits.name}"></td>
-                                    <td th:text="${cropName.harvestingUnits.name}"></td>
                                     <td>
                                         <a class="btn btn-warning" th:onclick="|openEditModal('cropNames', '${cropName.id}')|"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                         |<a class="delete-modal btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModaldelete"
-                                            th:data-link="@{/crop/name/delete/{groupId}(groupId=${cropName.id})}">
+                                            th:data-link="@{/livestock/delete/{groupId}(groupId=${cropName.id})}">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
                                     </td>
@@ -81,30 +75,10 @@
             <div class="modal-body p-0">
                 <div class="card card-plain">
                     <div class="card-body pb-3">
-                        <form role="form" method="post" th:action="@{/crop/names/add}">
+                        <form role="form" method="post" th:action="@{/livestock/add}">
                             <div class="input-group input-group-outline my-3">
-                                <label class="form-label">Crop Name</label>
+                                <label class="form-label">Livestock Name</label>
                                 <input required type="text" name="name" class="form-control">
-                            </div>
-                            <div class="input-group input-group-static mb-3">
-                                <label for="plantingUnits" class="ms-0">Select Planting Units</label>
-                                <select class="form-control form-dark-select" name="plantingUnits" id="plantingUnits" required>
-                                    <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
-                                </select>
-                            </div>
-
-                            <div class="input-group input-group-static mb-3">
-                                <label for="harvestingUnits" class="ms-0">Select Harvesting Units</label>
-                                <select class="form-control form-dark-select" name="harvestingUnits" id="harvestingUnits" required>
-                                    <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
-                                </select>
-                            </div>
-
-                            <div class="input-group input-group-static mb-3">
-                                <label for="harvestingUnits" class="ms-0">Select Crop Type</label>
-                                <select class="form-control form-dark-select" name="type" id="type" required>
-                                    <option th:each="unit : ${cropTypes}" th:value="${unit.id}" th:text="${unit.cropType}"></option>
-                                </select>
                             </div>
 
                             <div class="text-center">
@@ -123,10 +97,10 @@
             <div class="modal-body p-0">
                 <div class="card card-plain">
                     <div class="card-body pb-3">
-                        <form role="form" method="post" th:action="@{/crop/names/update}">
+                        <form role="form" method="post" th:action="@{/livestock/update}">
                             <input type="hidden" name="id">
                             <div class="input-group input-group-outline my-3">
-                                <label class="form-label">Crop Name</label>
+                                <label class="form-label">Livestock Name</label>
                                 <input required type="text" name="name" class="form-control">
                             </div>
                             <div class="text-center">

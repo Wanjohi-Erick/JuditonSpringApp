@@ -4,17 +4,17 @@
 
 <head>
     <title>
-        Crop Names
+        Livestock Breeds
     </title>
     <div th:replace="~{fragments/head}"></div>
 </head>
 
 <body class="g-sidenav-show text-xxs bg-gray-200">
 
-<div th:replace="~{fragments/crop/sidenav}"></div>
+<div th:replace="~{fragments/livestock/sidenav}"></div>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-    <div th:replace="~{fragments/crop/navbar}"></div>
+    <div th:replace="~{fragments/livestock/navbar}"></div>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
         <div class="row">
@@ -22,7 +22,7 @@
                 <div class="card my-4">
                     <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                         <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                            <h6 class="text-white text-capitalize ps-3">Crops</h6>
+                            <h6 class="text-white text-capitalize ps-3">Livestock breeds</h6>
                         </div>
                     </div>
 
@@ -32,7 +32,7 @@
                     <div class="card-body px-0 pb-2">
                         <div class=" me-3 my-3 text-end">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newMemberModal">
-                                <i class="material-icons text-sm">add</i>&nbsp;&nbsp;New Crop
+                                <i class="material-icons text-sm">add</i>&nbsp;&nbsp;New Breed
                             </button>
                         </div>
                         <div class="table-responsive timetable p-0">
@@ -41,25 +41,22 @@
                                 <thead>
                                 <tr>
                                     
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">CROP NAME</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">TYPE</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PLANTING UNITS</th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HARVESTING UNITS</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">LIVESTOCK</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">BREED</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <!-- Iterate through the members list and populate the table rows -->
-                                <tr th:each="cropName : ${cropNames}">
+                                <tr th:each="variety : ${varieties}">
 
-                                    <td th:text="${cropName.name}"></td>
-                                    <td th:text="${cropName.type.cropType}"></td>
-                                    <td th:text="${cropName.plantingUnits.name}"></td>
-                                    <td th:text="${cropName.harvestingUnits.name}"></td>
+                                    <!-- Member properties -->
+                                    <td th:text="${variety.livestock.name}"></td>
+                                    <td th:text="${variety.name}"></td>
                                     <td>
-                                        <a class="btn btn-warning" th:onclick="|openEditModal('cropNames', '${cropName.id}')|"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                        <a class="btn btn-warning" th:onclick="|openEditModal('varieties', '${variety.id}')|"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                         |<a class="delete-modal btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModaldelete"
-                                            th:data-link="@{/crop/name/delete/{groupId}(groupId=${cropName.id})}">
+                                            th:data-link="@{/livestock/breed/delete/{groupId}(groupId=${variety.id})}">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
                                     </td>
@@ -81,29 +78,15 @@
             <div class="modal-body p-0">
                 <div class="card card-plain">
                     <div class="card-body pb-3">
-                        <form role="form" method="post" th:action="@{/crop/names/add}">
+                        <form role="form text-left" method="post" th:action="@{/livestock/breeds/add}">
                             <div class="input-group input-group-outline my-3">
-                                <label class="form-label">Crop Name</label>
+                                <label class="form-label">Breed Name</label>
                                 <input required type="text" name="name" class="form-control">
                             </div>
-                            <div class="input-group input-group-static mb-3">
-                                <label for="plantingUnits" class="ms-0">Select Planting Units</label>
-                                <select class="form-control form-dark-select" name="plantingUnits" id="plantingUnits" required>
-                                    <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
-                                </select>
-                            </div>
-
-                            <div class="input-group input-group-static mb-3">
-                                <label for="harvestingUnits" class="ms-0">Select Harvesting Units</label>
-                                <select class="form-control form-dark-select" name="harvestingUnits" id="harvestingUnits" required>
-                                    <option th:each="unit : ${units}" th:value="${unit.id}" th:text="${unit.name}"></option>
-                                </select>
-                            </div>
-
-                            <div class="input-group input-group-static mb-3">
-                                <label for="harvestingUnits" class="ms-0">Select Crop Type</label>
-                                <select class="form-control form-dark-select" name="type" id="type" required>
-                                    <option th:each="unit : ${cropTypes}" th:value="${unit.id}" th:text="${unit.cropType}"></option>
+                            <div class="input-group input-group-outline my-3">
+                                <select required name="livestockId" id="livestockId" class="form-select">
+                                    <option selected disabled>Livestock Name</option>
+                                    <option th:each="crop : ${cropNames}" th:value="${crop.id}" th:text="${crop.name}"></option>
                                 </select>
                             </div>
 
@@ -123,11 +106,17 @@
             <div class="modal-body p-0">
                 <div class="card card-plain">
                     <div class="card-body pb-3">
-                        <form role="form" method="post" th:action="@{/crop/names/update}">
+                        <form role="form" method="post" th:action="@{/livestock/breeds/update}">
                             <input type="hidden" name="id">
                             <div class="input-group input-group-outline my-3">
-                                <label class="form-label">Crop Name</label>
+                                <label class="form-label">Breed Name</label>
                                 <input required type="text" name="name" class="form-control">
+                            </div>
+                            <div class="input-group input-group-outline my-3">
+                                <select required name="livestockId" class="form-select">
+                                    <option selected disabled>Livestock</option>
+                                    <option th:each="crop : ${cropNames}" th:value="${crop.id}" th:text="${crop.name}"></option>
+                                </select>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn bg-gradient-primary btn-lg btn-rounded w-100 mt-4 mb-0">Update</button>

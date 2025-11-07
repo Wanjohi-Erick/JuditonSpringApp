@@ -9,10 +9,10 @@
 </head>
 
 <body class="g-sidenav-show text-xxs bg-gray-200">
-<div th:replace="~{fragments/crop/sidenav}"></div>
+<div th:replace="~{fragments/livestock/sidenav}"></div>
 <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-    <div th:replace="~{fragments/crop/navbar}"></div>
+    <div th:replace="~{fragments/livestock/navbar}"></div>
     <!-- End Navbar -->
     <div class="py-4 container-fluid mb-4">
 
@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                             <h6 id="examname" class="mb-0 mt-1"
-                                th:text="|${plantedCrop?.variety?.name} ${plantedCrop?.variety.crop.name} ${plantedCrop?.season?.name} ${plantedCrop?.plantedDate?.year}|">
+                                th:text="|${plantedCrop?.breed?.name} ${plantedCrop?.breed.livestock.name} ${plantedCrop?.keepingDate?.year}|">
                             </h6>
                             <div class="col-12">
                                 <p class="text-secondary text-sm font-weight-normal mb-0">Remarks</p>
@@ -107,18 +107,18 @@
                             </div>
                             <hr class="horizontal dark">
                             <div class="row">
-                                <div class="col-4"><h6 class="text-md mb-0 font-weight-bolder" th:text="${plantedCrop.season.name}"></h6>
+                                <div class="col-4"><h6 class="text-md mb-0 font-weight-bolder" th:text="${plantedCrop.keepingDate.year}"></h6>
                                     <p class="text-secondary text-sm font-weight-normal mb-0">Season</p></div>
                                 <div class="col-4 text-start">
                                     <span th:if='${plantedCrop.status.equalsIgnoreCase("sold")}' class="badge badge-sm bg-success" th:text="${plantedCrop.status}"></span>
                                     <span th:if='${plantedCrop.status.equalsIgnoreCase("harvested")}' class="badge badge-sm bg-info" th:text="${plantedCrop.status}"></span>
                                     <span th:if='${plantedCrop.status.equalsIgnoreCase("in field")}' class="badge badge-sm bg-warning" th:text="${plantedCrop.status}"></span>
                                     <p class="text-secondary text-sm font-weight-normal mb-0">Status</p></div>
-                                <div class="col-4 text-center"><h6 class="text-sm mb-0" th:text="${plantedCrop.plantedDate}"></h6>
+                                <div class="col-4 text-center"><h6 class="text-sm mb-0" th:text="${plantedCrop.keepingDate}"></h6>
                                     <p class="text-secondary text-sm font-weight-normal mb-0">Planting date</p></div>
                             </div>
                         </div>
-                        <button id="viewexamdetails" data-bs-toggle="modal" data-bs-target="#popupeexamdetails" th:data-id="${plantedCrop.id}" th:data-title="|${plantedCrop?.variety?.name} ${plantedCrop?.season?.name} ${plantedCrop?.plantedDate?.year}|" class="btn btn-link bg-gradient-success m-1">View Analytics
+                        <button id="viewexamdetails" data-bs-toggle="modal" data-bs-target="#popupeexamdetails" th:data-id="${plantedCrop.id}" th:data-title="|${plantedCrop?.breed?.name} ${plantedCrop?.keepingDate?.year}|" class="btn btn-link bg-gradient-success m-1">View Analytics
                         </button>
                     </div>
                 </div>
@@ -144,89 +144,26 @@
                 <div class="modal-body">
                 <form id="plantingForm">
                     <div class="form-check form-check-info text-start ps-0" >
-                        <label class="mb-0 ms-0" for="cropVariety">Select Crop</label>
-                        <select name="cropVariety" id="cropVariety" type="select" class="floating-select" required>
+                        <label class="mb-0 ms-0" for="breed">Select Livestock</label>
+                        <select name="breed" id="breed" type="select" class="floating-select" required>
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="plantingType" class="form-label">Planting Type</label>
-                        <select class="form-select" id="plantingType" name="plantingType">
-                            <option value="seed">Seed</option>
-                            <option value="seedling">Seedling</option>
-                        </select>
-                    </div>
-                    <div class="input-group form-floating input-group-dynamic mb-3">
-                        <input type="text" name="plantingAge" id="plantingAge" class="form-control" required>
-                        <label for="plantingAge" class="form-label">Age (if seedling)</label>
                     </div>
 
                     <div class="input-group form-floating input-group-dynamic mb-3">
                         <input type="date" name="plantingDate" id="plantingDate" class="form-control" required>
-                        <label for="plantingDate" class="form-label">Planting Date</label>
-                    </div>
-
-                    <div class="form-check form-check-info text-start ps-0" >
-                        <label class="mb-0 ms-0" for="season">Season</label>
-                        <select name="season" id="season" type="select" class="floating-select" required>
-                        </select>
+                        <label for="plantingDate" class="form-label">Keeping Date</label>
                     </div>
 
                     <div class="input-group form-floating input-group-dynamic mb-3">
                         <input type="number" name="daysToHarvest" id="daysToHarvest" class="form-control" required>
-                        <label for="daysToHarvest" class="form-label">Days from Planting to Harvest</label>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="plantingMethod" class="form-label">Planting Method</label>
-                        <select class="form-select" id="plantingMethod" name="plantingMethod">
-                            <option value="row">Row</option>
-                            <option value="bed">Bed</option>
-                            <option value="individual">Individual</option>
-                            <option value="container">Container</option>
-                        </select>
-                    </div>
-
-                    <!-- Bed Section -->
-                    <div id="bedSection" class="d-none">
-                        <div class="mb-3">
-                            <label for="numBeds" class="form-label">Number of Beds</label>
-                            <input type="number" class="form-control" id="numBeds" name="numBeds" placeholder="Enter number of beds">
-                        </div>
-                        <div class="mb-3">
-                            <label for="rowsPerBed" class="form-label">Rows per Bed</label>
-                            <input type="number" class="form-control" id="rowsPerBed" name="rowsPerBed" placeholder="Enter rows per bed">
-                        </div>
-                        <div class="mb-3">
-                            <label for="lengthOfBed" class="form-label">Length of Bed (m)</label>
-                            <input type="number" class="form-control" id="lengthOfBed" name="lengthOfBed" placeholder="Enter length of bed">
-                        </div>
-                        <div class="mb-3">
-                            <label for="plantSpacingBed" class="form-label">Plant Spacing in Bed (cm)</label>
-                            <input type="number" class="form-control" id="plantSpacingBed" name="plantSpacingBed" placeholder="Enter spacing">
-                        </div>
-                    </div>
-
-                    <!-- Row Section -->
-                    <div id="rowSection" class="d-none">
-                        <div class="mb-3">
-                            <label for="numRows" class="form-label">Number of Rows</label>
-                            <input type="number" class="form-control" id="numRows" name="numRows" placeholder="Enter number of rows">
-                        </div>
-                        <div class="mb-3">
-                            <label for="lengthOfRow" class="form-label">Length of Row (m)</label>
-                            <input type="number" class="form-control" id="lengthOfRow" name="lengthOfRow" placeholder="Enter length of row">
-                        </div>
-                        <div class="mb-3">
-                            <label for="plantSpacingRow" class="form-label">Plant Spacing in Row (cm)</label>
-                            <input type="number" class="form-control" id="plantSpacingRow" name="plantSpacingRow" placeholder="Enter spacing">
-                        </div>
+                        <label for="daysToHarvest" class="form-label">Days from keeping to maturity</label>
                     </div>
 
                     <!-- Individual Section -->
-                    <div id="individualSection" class="d-none">
+                    <div id="individualSection">
                         <div class="mb-3">
-                            <label for="numPlants" class="form-label">Number of Plants</label>
-                            <input type="number" class="form-control" id="numPlants" name="numPlants" placeholder="Enter number of plants">
+                            <label for="numPlants" class="form-label">Number of livestock</label>
+                            <input type="number" class="form-control" id="numPlants" name="numPlants" placeholder="Enter number of livestock">
                         </div>
                     </div>
 
@@ -747,7 +684,7 @@
         let cropId = $("#plantedCropId").val();
 
         let myObject = {
-            recordFor: "crops",
+            recordFor: "livestock",
             plantedCropId: cropId,
             date: date,
             activity: activity,
@@ -764,6 +701,8 @@
         };
 
         let jsonData = JSON.stringify(myObject);
+
+        console.log(jsonData)
 
 
         $.ajax({
@@ -816,7 +755,7 @@
         let cropId = $("#plantedCropId").val();
 
         let myObject = {
-            recordFor: "crops",
+            recordFor: "livestock",
             plantedCropId: cropId,
             date: date,
             receivedFrom: receivedFrom,
@@ -928,7 +867,7 @@
 
             // Perform the AJAX request
             $.ajax({
-                url: '/finance/farm-activities/crops/get/all/' + plantedCropId,
+                url: `/finance/farm-activities/livestock/get/all/` + plantedCropId,
                 contentType: 'application/json'
             }).done(function (accountData) {
 
@@ -1386,7 +1325,7 @@
 
 
 <script>
-    let varietyChoices  =  new Choices(document.getElementById('cropVariety'), {
+    let varietyChoices  =  new Choices(document.getElementById('breed'), {
         searchEnabled: true,
         duplicateItemsAllowed: false,
         renderChoiceLimit: 6,
@@ -1397,11 +1336,11 @@
             varietyChoices.clearStore()
             varietyChoices.setChoices(async () => {
                 try {
-                    let cropVarieties = await getCropVarieties();
+                    let cropVarieties = await getBreeds();
                     return cropVarieties.map(item => {
                         return {
                             value: item.id,   // Assuming 'id' is the key for the value
-                            label: item.name // Assuming 'itemName' is the key for the label
+                            label: item.name + " " + item.livestock.name // Assuming 'itemName' is the key for the label
                         };
                     });
                 } catch (err) {

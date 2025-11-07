@@ -13,7 +13,7 @@ public class DbConnector {
 
     static {
     	
-    	config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/juditon?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8");
+    	config.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/farmcloud?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8");
     	config.setUsername("root");
     	config.setPassword("walgotech");
     	config.setMaximumPoolSize(100);

@@ -13,4 +13,7 @@ public interface FarmActivityRepository extends JpaRepository<FarmActivity, Long
 
     @Query("select f from FarmActivity f where f.plantedCrop.id = ?1")
     List<FarmActivity> findByPlantedCrop_Id(Long id);
+
+    @Query("select f from FarmActivity f where f.farmedLivestock.id = ?1")
+    List<FarmActivity> findByFarmedLivestock_Id(Long id);
 }
